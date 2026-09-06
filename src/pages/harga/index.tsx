@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { 
   Check, 
-  Zap, 
   Crown, 
   MessageCircle, 
   Clock, 
@@ -14,21 +12,6 @@ import {
 
 export default function HargaPage() {
   const whatsappNumber = "62895351878050"
-
-  // Fake Promo Countdown Timer State
-  const [timeLeft, setTimeLeft] = useState({ hours: 5, minutes: 42, seconds: 18 })
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 }
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 }
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 }
-        return { hours: 12, minutes: 0, seconds: 0 }
-      })
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
 
   const getWaLink = (packageName: string, price: string) => {
     const text = encodeURIComponent(
@@ -81,15 +64,6 @@ export default function HargaPage() {
       {/* ================= 2. HERO BANNER ================= */}
       <section className="blush-gradient py-16 sm:py-24 px-6 text-center relative border-b border-[#EBE5DA]">
         <div className="max-w-4xl mx-auto space-y-6 relative z-10">
-          
-          {/* Flash Sale Banner Pill */}
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-[#8C5B00] uppercase bg-white/90 backdrop-blur-xs px-4 py-2 rounded-full border border-[#8C5B00]/20 shadow-xs">
-            <Zap className="w-4 h-4 text-amber-500 fill-amber-500 animate-pulse" /> 
-            <span>Promo Flashsale Hari Ini — Berakhir dalam</span>
-            <span className="bg-[#2A2421] text-white px-2 py-0.5 rounded font-mono text-[11px]">
-              {String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}
-            </span>
-          </div>
 
           <h1 className="font-serif-display text-4xl sm:text-6xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
             Paket Harga Undangan Digital
