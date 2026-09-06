@@ -1,7 +1,6 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import Navbar from "@/components/Navbar"
 import { 
-  Heart, 
   Gift, 
   Users, 
   MapPin, 
@@ -137,42 +136,7 @@ export default function FeaturesPage() {
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
       
       {/* ================= 1. HEADER ================= */}
-      <header className="w-full max-w-7xl mx-auto px-6 sm:px-12 py-6 sm:py-8 flex items-center justify-between z-20 shrink-0 border-b border-[#EBE5DA]/60 bg-[#FBF9F5]/90 backdrop-blur-md sticky top-0">
-        {/* Left Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.25em] uppercase text-[#3D332F]">
-          <Link to="/#template" className="hover:opacity-80 transition-opacity">
-            TEMPLATE
-          </Link>
-          <Link to="/fitur" className="border-b-2 border-[#2A2421] pb-0.5 text-[#2A2421] font-extrabold">
-            FITUR
-          </Link>
-          <Link to="/wedding-planner" className="hover:opacity-80 transition-opacity">
-            WEDDING PLANNER
-          </Link>
-        </nav>
-
-        {/* Center Logo */}
-        <Link to="/" className="mx-auto md:mx-0 flex items-center justify-center group">
-          <img 
-            src="/assets/transaparanlogo.png" 
-            alt="Logo Magis" 
-            className="h-10 sm:h-14 lg:h-16 w-auto object-contain brightness-0 group-hover:scale-105 transition-transform duration-300"
-          />
-        </Link>
-
-        {/* Right Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.25em] uppercase text-[#3D332F]">
-          <Link to="/harga" className="hover:opacity-80 transition-opacity">
-            HARGA
-          </Link>
-          <Link to="/bukutamu" className="hover:opacity-80 transition-opacity">
-            BUKU TAMU
-          </Link>
-          <Link to="/kontak" className="hover:opacity-80 transition-opacity">
-            KONTAK
-          </Link>
-        </nav>
-      </header>
+      <Navbar activePage="fitur" />
 
       {/* ================= 2. HERO BANNER ================= */}
       <section className="blush-gradient py-16 sm:py-24 px-6 text-center relative border-b border-[#EBE5DA]">

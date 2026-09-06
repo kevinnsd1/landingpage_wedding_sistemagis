@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { Link } from "react-router-dom"
+import Navbar from "@/components/Navbar"
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -7,10 +7,7 @@ import {
   LayoutGrid, 
   X, 
   Palette, 
-  Eye, 
-  CheckCircle2, 
-  Sparkles,
-  ArrowRight
+  Eye
 } from "lucide-react"
 import { slides } from "./data/slides"
 import { templateItems } from "./data/templates"
@@ -65,43 +62,7 @@ export default function LandingPage() {
       <div className="min-h-screen blush-gradient flex flex-col justify-between relative">
         
         {/* TOP NAVIGATION BAR */}
-        <header className="w-full max-w-7xl mx-auto px-6 sm:px-12 py-6 sm:py-8 flex items-center justify-between z-20 shrink-0">
-          
-          {/* Left Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.25em] uppercase text-[#3D332F]">
-            <a href="#template" className="border-b border-[#2A2421] pb-0.5 hover:opacity-80 transition-opacity">
-              TEMPLATE
-            </a>
-            <Link to="/fitur" className="hover:opacity-80 transition-opacity">
-              FITUR
-            </Link>
-            <Link to="/wedding-planner" className="hover:opacity-80 transition-opacity">
-              WEDDING PLANNER
-            </Link>
-          </nav>
-
-          {/* Center Logo Image */}
-          <Link to="/" className="mx-auto md:mx-0 flex items-center justify-center">
-            <img 
-              src="/assets/transaparanlogo.png" 
-              alt="Logo Magis" 
-              className="h-12 sm:h-16 lg:h-20 w-auto object-contain brightness-0 cursor-pointer hover:opacity-85 transition-all"
-            />
-          </Link>
-
-          {/* Right Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.25em] uppercase text-[#3D332F]">
-            <Link to="/harga" className="hover:opacity-80 transition-opacity">
-              HARGA
-            </Link>
-            <Link to="/bukutamu" className="hover:opacity-80 transition-opacity">
-              BUKU TAMU
-            </Link>
-            <Link to="/kontak" className="hover:opacity-80 transition-opacity">
-              KONTAK
-            </Link>
-          </nav>
-        </header>
+        <Navbar activePage="home" />
 
         {/* HERO CONTENT */}
         <main className="flex-1 flex items-center justify-between px-4 sm:px-8 relative my-auto py-6 min-h-[480px] sm:min-h-[540px]">
