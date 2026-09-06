@@ -10,9 +10,6 @@ export interface WeddingTheme {
   accentColor: string
 }
 
-export className WeddingThemesData {
-  // Static theme data list
-}
 
 export const weddingThemes: WeddingTheme[] = [
   {
