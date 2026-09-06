@@ -215,7 +215,7 @@ export default function LandingPage() {
                   <div className="w-full md:w-1/2 flex justify-center">
                     <div 
                       onClick={() => setIsThemeGalleryOpen(true)}
-                      className="w-full max-w-md aspect-4/3 bg-[#FBF9F5] border-2 border-dashed border-[#2A2421]/20 rounded-2xl flex flex-col items-center justify-center p-8 text-center space-y-3 shadow-xs hover:border-[#2A2421]/50 transition-all group cursor-pointer"
+                      className="w-full max-w-md aspect-4/3 bg-[#FBF9F5] border-2 border-dashed border-[#2A2421]/20 rounded-2xl flex flex-col items-center justify-center p-8 text-center space-y-3 shadow-xs hover:border-[#2A2421]/50 card-smooth-hover group cursor-pointer"
                     >
                       <div className="w-12 h-12 rounded-full bg-white border border-[#2A2421]/10 flex items-center justify-center text-[#78736A] group-hover:text-[#2A2421] group-hover:scale-110 transition-all">
                         <ImageIcon className="h-6 w-6" />
@@ -249,7 +249,7 @@ export default function LandingPage() {
                       {item.id === "template-1" ? (
                         <Link 
                           to="/demo/theme-1"
-                          className="inline-flex items-center gap-2 border border-[#2A2421] bg-[#2A2421] text-white text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#3D332F] transition-all shadow-xs active:scale-98"
+                          className="inline-flex items-center gap-2 border border-[#2A2421] bg-[#2A2421] text-white text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#3D332F] transition-all shadow-xs active:scale-98 cursor-pointer"
                         >
                           <Eye className="w-4 h-4 text-[#F5C2C9]" /> LIHAT DEMO UNDANGAN (THEME 01)
                         </Link>
@@ -270,7 +270,7 @@ export default function LandingPage() {
           </div>
 
           {/* Bottom Callout to Open Theme Gallery */}
-          <div className="bg-[#F8F5EE] rounded-3xl p-8 sm:p-10 border border-[#EBE5DA] text-center space-y-4 max-w-3xl mx-auto">
+          <div className="bg-[#F8F5EE] rounded-3xl p-8 sm:p-10 border border-[#EBE5DA] text-center space-y-4 max-w-3xl mx-auto card-smooth-hover shadow-sm">
             <h3 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#2A2421]">
               Belum Menemukan Gaya yang Pas?
             </h3>

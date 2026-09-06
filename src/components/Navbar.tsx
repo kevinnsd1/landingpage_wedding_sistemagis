@@ -57,7 +57,7 @@ export default function Navbar({ activePage }: NavbarProps) {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 text-[#2A2421] hover:bg-[#EBE5DA]/50 rounded-lg transition-colors focus:outline-none shrink-0"
+            className="p-2 text-[#2A2421] hover:bg-[#EBE5DA]/50 rounded-lg transition-colors focus:outline-none shrink-0 cursor-pointer"
             aria-label="Toggle navigation menu"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -125,21 +125,21 @@ export default function Navbar({ activePage }: NavbarProps) {
 
       {/* Mobile Slide-down Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden blush-gradient border-b border-[#EBE5DA] px-6 py-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-200">
-          <nav className="flex flex-col space-y-3 text-xs font-bold tracking-widest uppercase text-[#2A2421]">
+        <div className="md:hidden blush-gradient border-b border-[#EBE5DA] px-6 py-6 space-y-4 shadow-xl animate-drawer-down">
+          <nav className="flex flex-col space-y-2 text-xs font-bold tracking-widest uppercase text-[#2A2421]">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
                 onClick={(e) => handleNavClick(link.href, e)}
-                className={`py-2 px-3 rounded-lg flex items-center justify-between transition-colors ${
+                className={`py-2.5 px-3.5 rounded-xl flex items-center justify-between transition-colors duration-150 active:scale-98 group ${
                   isLinkActive(link.href, link.key) 
-                    ? "bg-[#2A2421] text-white font-extrabold" 
-                    : "hover:bg-[#EBE5DA]/50 text-[#3D332F]"
+                    ? "bg-[#2A2421] text-white font-extrabold shadow-xs" 
+                    : "hover:bg-[#EBE5DA]/70 text-[#3D332F]"
                 }`}
               >
                 <span>{link.label}</span>
-                <ArrowRight className="w-3.5 h-3.5 opacity-60" />
+                <ArrowRight className="w-3.5 h-3.5 opacity-60 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
             ))}
           </nav>
@@ -150,7 +150,7 @@ export default function Navbar({ activePage }: NavbarProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full inline-flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold tracking-wider uppercase py-3 rounded-xl transition-all shadow-sm"
+              className="w-full inline-flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-800 active:scale-98 text-white text-xs font-bold tracking-wider uppercase py-3 rounded-xl transition-colors shadow-sm"
             >
               <MessageCircle className="w-4 h-4" /> Hubungi WhatsApp
             </a>

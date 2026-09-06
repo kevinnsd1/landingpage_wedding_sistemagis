@@ -400,7 +400,8 @@ export default function WeddingPlannerPage() {
               </span>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-[#EBE5DA] text-[#78736A] font-mono uppercase">
@@ -433,7 +434,7 @@ export default function WeddingPlannerPage() {
                       <td className="py-3.5 text-center">
                         <button 
                           onClick={() => deleteSavings(s.id)}
-                          className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                          className="text-gray-400 hover:text-red-600 transition-colors p-1 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -442,6 +443,36 @@ export default function WeddingPlannerPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Responsive Cards View */}
+            <div className="block sm:hidden space-y-3">
+              {savings.map((s) => (
+                <div key={s.id} className="p-3.5 rounded-2xl bg-[#FBF9F5] border border-[#EBE5DA] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                      s.source.includes("Pria") 
+                        ? "bg-blue-50 text-blue-700 border border-blue-200" 
+                        : s.source.includes("Wanita") 
+                        ? "bg-rose-50 text-rose-700 border border-rose-200" 
+                        : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                    }`}>
+                      {s.source}
+                    </span>
+                    <span className="text-[10px] text-[#78736A] font-mono">{s.date}</span>
+                  </div>
+                  <p className="text-xs font-medium text-[#2A2421]">{s.note}</p>
+                  <div className="flex items-center justify-between pt-1.5 border-t border-[#EBE5DA]/60">
+                    <span className="font-mono font-bold text-xs text-[#2A2421]">{formatRp(s.amount)}</span>
+                    <button 
+                      onClick={() => deleteSavings(s.id)}
+                      className="text-gray-400 hover:text-red-600 transition-colors p-1 cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -466,18 +497,18 @@ export default function WeddingPlannerPage() {
             </div>
 
             {/* Quick Add Expense Trigger / Form Inline */}
-            <form onSubmit={handleAddExpense} className="bg-white p-4 rounded-2xl border border-[#EBE5DA] flex flex-wrap gap-2 items-center">
+            <form onSubmit={handleAddExpense} className="bg-white p-4 rounded-2xl border border-[#EBE5DA] flex flex-col sm:flex-row flex-wrap gap-2.5 items-stretch sm:items-center w-full md:w-auto shadow-2xs">
               <input 
                 type="text" 
                 placeholder="Nama Pengeluaran / Vendor"
                 value={newExpName}
                 onChange={(e) => setNewExpName(e.target.value)}
-                className="text-xs border border-[#EBE5DA] rounded-lg px-3 py-2 bg-[#FBF9F5] focus:outline-none"
+                className="text-xs border border-[#EBE5DA] rounded-xl px-3.5 py-2.5 bg-[#FBF9F5] focus:outline-none focus:border-[#2A2421] flex-1 min-w-[140px]"
               />
               <select 
                 value={newExpCategory}
                 onChange={(e) => setNewExpCategory(e.target.value)}
-                className="text-xs border border-[#EBE5DA] rounded-lg px-3 py-2 bg-[#FBF9F5] focus:outline-none"
+                className="text-xs border border-[#EBE5DA] rounded-xl px-3.5 py-2.5 bg-[#FBF9F5] focus:outline-none focus:border-[#2A2421] min-w-[140px]"
               >
                 <option value="Venue & Catering">Venue &amp; Catering</option>
                 <option value="Dekorasi & MUA">Dekorasi &amp; MUA</option>
@@ -491,11 +522,11 @@ export default function WeddingPlannerPage() {
                 placeholder="Biaya (Rp)"
                 value={newExpCost}
                 onChange={(e) => setNewExpCost(e.target.value)}
-                className="text-xs border border-[#EBE5DA] rounded-lg px-3 py-2 bg-[#FBF9F5] w-32 focus:outline-none"
+                className="text-xs border border-[#EBE5DA] rounded-xl px-3.5 py-2.5 bg-[#FBF9F5] sm:w-32 focus:outline-none focus:border-[#2A2421]"
               />
               <button 
                 type="submit" 
-                className="bg-[#2A2421] text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#3D332F] transition-all"
+                className="bg-[#2A2421] text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-[#3D332F] transition-all cursor-pointer active:scale-98 shadow-xs"
               >
                 + Tambah
               </button>
@@ -503,8 +534,10 @@ export default function WeddingPlannerPage() {
           </div>
 
           {/* Table Expenses */}
-          <div className="bg-white rounded-3xl border border-[#EBE5DA] shadow-sm overflow-hidden p-6 sm:p-8">
-            <div className="overflow-x-auto">
+          <div className="bg-white rounded-3xl border border-[#EBE5DA] shadow-sm p-4 sm:p-8">
+            
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-[#EBE5DA] text-[#78736A] font-mono uppercase">
@@ -561,7 +594,7 @@ export default function WeddingPlannerPage() {
                       <td className="py-4 text-center">
                         <button 
                           onClick={() => deleteExpense(item.id)}
-                          className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                          className="text-gray-400 hover:text-red-600 transition-colors p-1 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -571,6 +604,64 @@ export default function WeddingPlannerPage() {
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile Responsive Cards View */}
+            <div className="block sm:hidden space-y-3">
+              {expenses.map((item) => (
+                <div key={item.id} className="p-4 rounded-2xl bg-[#FBF9F5] border border-[#EBE5DA] space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-mono font-bold uppercase text-[#8C5B00] bg-[#FBF3DB] px-2.5 py-0.5 rounded-md border border-[#F5E5B8]">
+                      {item.category}
+                    </span>
+                    <button 
+                      onClick={() => deleteExpense(item.id)}
+                      className="text-gray-400 hover:text-red-600 transition-colors p-1 cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <h4 className="text-xs font-extrabold text-[#2A2421]">{item.name}</h4>
+                    <p className="text-sm font-mono font-bold text-[#2A2421]">{formatRp(item.estimatedCost)}</p>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#EBE5DA]/60 flex items-center justify-between">
+                    <span className="text-[10px] text-[#78736A] font-mono">Status:</span>
+                    <button
+                      onClick={() => toggleExpenseStatus(item.id)}
+                      className={`px-3 py-1 rounded-full text-[10px] font-semibold tracking-wide cursor-pointer transition-all ${
+                        item.status === "Lunas"
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200"
+                          : item.status === "DP"
+                          ? "bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200"
+                          : "bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200"
+                      }`}
+                    >
+                      {item.status === "Lunas" && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                          <span>Lunas</span>
+                        </span>
+                      )}
+                      {item.status === "DP" && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span>Sudah DP</span>
+                        </span>
+                      )}
+                      {item.status === "Belum" && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <Circle className="w-3 h-3 text-gray-400 shrink-0" />
+                          <span>Belum Dibayar</span>
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
           </div>
 
         </div>
