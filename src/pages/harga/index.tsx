@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { 
   Check, 
-  Sparkles, 
   Zap, 
   Crown, 
   MessageCircle, 
@@ -146,7 +145,6 @@ export default function HargaPage() {
 
               <div className="pt-4 border-t border-[#F2ECE1] space-y-3 text-xs">
                 {[
-                  "Masa Aktif 6 Bulan",
                   "Maksimal 5 Foto Galeri",
                   "Form RSVP & Buku Tamu Standar",
                   "Petunjuk Lokasi Google Maps",
@@ -179,7 +177,7 @@ export default function HargaPage() {
             
             {/* Top Badge Popular */}
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2A2421] text-white text-[11px] font-mono font-bold tracking-widest uppercase px-4 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" /> Best Seller • Paling Populer
+              Best Seller • Paling Populer
             </div>
 
             <div className="space-y-4 pt-2">
@@ -220,7 +218,6 @@ export default function HargaPage() {
 
               <div className="pt-4 border-t border-[#F2ECE1] space-y-3 text-xs">
                 {[
-                  "Masa Aktif SELAMANYA (Tanpa Batas)",
                   "Galeri Foto HD Unlimited + Video Story",
                   "Bebas Pilih Musik Latar Favorit",
                   "Generator Nama Tamu WA Unlimited",
