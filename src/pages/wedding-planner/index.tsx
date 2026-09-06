@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import Navbar from "@/components/Navbar"
+import SEO from "@/components/SEO"
 import { 
   Wallet, 
   Plus, 
@@ -166,6 +167,12 @@ export default function WeddingPlannerPage() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
+      <SEO 
+        title="Wedding Budget Tracker & Tabungan Pernikahan | Magis Planner"
+        description="Hitung estimasi pengeluaran vendor nikah & kelola tabungan pernikahan bersama pasangan dengan aplikasi Wedding Planner & Budget Tracker Magis."
+        keywords="wedding budget planner, kalkulator budget nikah, tabungan pernikahan bersama, manajemen vendor pernikahan, rincian biaya nikah"
+        canonicalUrl="https://digitalinvitationmagis.com/wedding-planner"
+      />
       
       {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
       <div className="blush-gradient border-b border-[#EBE5DA]">

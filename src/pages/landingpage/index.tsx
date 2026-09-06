@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import Navbar from "@/components/Navbar"
+import SEO from "@/components/SEO"
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -57,6 +58,12 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden select-none">
+      <SEO 
+        title="Magis Invitation | Undangan Digital Pernikahan Eksklusif & Digital Wedding Invitation"
+        description="Platform undangan digital pernikahan terbaik di Indonesia. Desain eksklusif, fitur RSVP otomatis, amplop digital QRIS, musik custom, & wedding budget tracker."
+        keywords="undangan digital, digital wedding invitation, undangan pernikahan digital, buat undangan digital, web pernikahan, buku tamu digital, wedding budget planner, magis invitation"
+        canonicalUrl="https://digitalinvitationmagis.com/"
+      />
       
       {/* ================= 1. HERO SECTION (BLUSH GRADIENT) ================= */}
       <div className="min-h-screen blush-gradient flex flex-col justify-between relative">

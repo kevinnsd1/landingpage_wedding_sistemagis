@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import Navbar from "@/components/Navbar"
+import SEO from "@/components/SEO"
 import { 
   Gift, 
   Users, 
@@ -135,6 +136,12 @@ export default function FeaturesPage() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
+      <SEO 
+        title="Fitur Undangan Digital Pernikahan Lengkap | Magis Invitation"
+        description="Fitur terbaik undangan pernikahan digital: RSVP & Buku Tamu Realtime, Amplop Digital QRIS, Musik Background, Navigasi Peta Google Maps, & Check-in QR Code."
+        keywords="fitur undangan digital, rsvp online wedding, amplop digital qris, buku tamu digital realtime, navigasi peta nikah, qr code checkin pernikahan"
+        canonicalUrl="https://digitalinvitationmagis.com/fitur"
+      />
       
       {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
       <div className="blush-gradient border-b border-[#EBE5DA]">

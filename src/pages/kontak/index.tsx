@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Navbar from "@/components/Navbar"
+import SEO from "@/components/SEO"
 import { 
   MessageCircle, 
   Mail, 
@@ -42,6 +43,12 @@ export default function KontakPage() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
+      <SEO 
+        title="Kontak & Konsultasi WhatsApp Undangan Digital | Magis Invitation"
+        description="Hubungi Tim Magis Invitation via WhatsApp untuk konsultasi pembuatan undangan pernikahan digital, custom tema, atau bantuan teknis 24/7."
+        keywords="kontak undangan digital, CS magis invitation, bantuan whatsapp undangan nikah, konsultasi desain undangan digital"
+        canonicalUrl="https://digitalinvitationmagis.com/kontak"
+      />
       
       {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
       <div className="blush-gradient border-b border-[#EBE5DA]">

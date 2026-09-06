@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar"
+import SEO from "@/components/SEO"
 import { 
   Check, 
   MessageCircle, 
@@ -20,6 +21,12 @@ export default function HargaPage() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
+      <SEO 
+        title="Paket & Harga Undangan Digital Pernikahan | Magis Invitation"
+        description="Pilihan paket harga undangan digital pernikahan murah & hemat mulai dari Rp 50.000. Tanpa biaya tersembunyi, fitur lengkap & desain mewah."
+        keywords="harga undangan digital, paket undangan pernikahan murah, promo undangan online, harga buat web nikah, harga e-invitation"
+        canonicalUrl="https://digitalinvitationmagis.com/harga"
+      />
       
       {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
       <div className="blush-gradient border-b border-[#EBE5DA]">

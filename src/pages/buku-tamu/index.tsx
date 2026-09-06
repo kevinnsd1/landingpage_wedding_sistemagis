@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Navbar from "@/components/Navbar"
+import SEO from "@/components/SEO"
 import { 
   MessageSquare, 
   CheckCircle2, 
@@ -119,6 +120,12 @@ export default function BukuTamuPage() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
+      <SEO 
+        title="Buku Tamu Digital & RSVP Realtime Pernikahan | Magis Invitation"
+        description="Fitur Buku Tamu Digital Interaktif & Konfirmasi RSVP Otomatis. Tamu dapat menuliskan ucapan doa restu dan menerima QR Code Check-in lokasi acara."
+        keywords="buku tamu digital, rsvp pernikahan online, ucapan doa nikah, guestbook digital wedding, checkin qr code tamu"
+        canonicalUrl="https://digitalinvitationmagis.com/bukutamu"
+      />
       
       {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
       <div className="blush-gradient border-b border-[#EBE5DA]">
