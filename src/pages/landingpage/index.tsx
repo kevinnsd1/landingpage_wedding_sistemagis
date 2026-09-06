@@ -57,9 +57,6 @@ export default function LandingPage() {
             <Link to="/wedding-planner" className="hover:opacity-80 transition-opacity">
               WEDDING PLANNER
             </Link>
-            <a href="#tema" className="hover:opacity-80 transition-opacity">
-              TEMA
-            </a>
           </nav>
 
           {/* Center Logo Image */}

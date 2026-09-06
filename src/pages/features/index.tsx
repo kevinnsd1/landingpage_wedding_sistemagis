@@ -149,9 +149,6 @@ export default function FeaturesPage() {
           <Link to="/wedding-planner" className="hover:opacity-80 transition-opacity">
             WEDDING PLANNER
           </Link>
-          <Link to="/#tema" className="hover:opacity-80 transition-opacity">
-            TEMA
-          </Link>
         </nav>
 
         {/* Center Logo */}
@@ -301,9 +298,6 @@ export default function FeaturesPage() {
       {/* ================= 5. CTA CALL TO ACTION ================= */}
       <section className="blush-gradient py-20 px-6 text-center relative overflow-hidden">
         <div className="max-w-3xl mx-auto space-y-8 relative z-10">
-          <div className="inline-flex items-center justify-center p-3 rounded-full bg-white/60 backdrop-blur-xs border border-white/80 text-[#2A2421]">
-            <Heart className="w-6 h-6 fill-[#2A2421] text-[#2A2421]" />
-          </div>
 
           <h2 className="font-serif-display text-3xl sm:text-5xl font-extrabold text-[#2A2421] tracking-tight">
             Siap Membuat Undangan Impian Anda?

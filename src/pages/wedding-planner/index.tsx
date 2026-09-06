@@ -181,9 +181,6 @@ export default function WeddingPlannerPage() {
           <Link to="/wedding-planner" className="border-b-2 border-[#2A2421] pb-0.5 text-[#2A2421] font-extrabold">
             WEDDING PLANNER
           </Link>
-          <Link to="/#tema" className="hover:opacity-80 transition-opacity">
-            TEMA
-          </Link>
         </nav>
 
         {/* Center Logo */}
