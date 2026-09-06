@@ -165,7 +165,7 @@ export default function FeaturesPage() {
           <Link to="/#harga" className="hover:opacity-80 transition-opacity">
             HARGA
           </Link>
-          <Link to="/#bukutamu" className="hover:opacity-80 transition-opacity">
+          <Link to="/bukutamu" className="hover:opacity-80 transition-opacity">
             BUKU TAMU
           </Link>
           <Link to="/#kontak" className="hover:opacity-80 transition-opacity">

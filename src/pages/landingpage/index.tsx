@@ -94,9 +94,9 @@ export default function LandingPage() {
             <a href="#harga" className="hover:opacity-80 transition-opacity">
               HARGA
             </a>
-            <a href="#bukutamu" className="hover:opacity-80 transition-opacity">
+            <Link to="/bukutamu" className="hover:opacity-80 transition-opacity">
               BUKU TAMU
-            </a>
+            </Link>
             <a href="#kontak" className="hover:opacity-80 transition-opacity">
               KONTAK
             </a>
