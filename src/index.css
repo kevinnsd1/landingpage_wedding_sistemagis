@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #F4ACAF;
+    --foreground: #2A2421;
+    --card: #F9C3C5;
+    --card-foreground: #2A2421;
+    --primary: #2A2421;
+    --primary-foreground: #FFFFFF;
+    --border: rgba(42, 36, 33, 0.15);
+  }
+}
+
+@layer utilities {
+  .font-script {
+    font-family: 'Great Vibes', 'Dancing Script', cursive;
+  }
+  .font-serif-display {
+    font-family: 'Playfair Display', 'Instrument Serif', Georgia, serif;
+  }
+}
+
+/* Background Soft Blush Rose Gradient */
+.blush-gradient {
+  background: linear-gradient(180deg, #F6B4B7 0%, #F5ACB0 45%, #F1A2A6 100%);
+}
