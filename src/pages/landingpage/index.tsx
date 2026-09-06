@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { Link } from "react-router-dom"
 import Navbar from "@/components/Navbar"
 import SEO from "@/components/SEO"
 import { 
@@ -66,60 +67,60 @@ export default function LandingPage() {
       />
       
       {/* ================= 1. HERO SECTION (BLUSH GRADIENT) ================= */}
-      <div className="min-h-screen blush-gradient flex flex-col justify-between relative">
+      <div className="blush-gradient flex flex-col justify-between relative min-h-[480px] sm:min-h-screen">
         
         {/* TOP NAVIGATION BAR */}
         <Navbar activePage="home" />
 
         {/* HERO CONTENT */}
-        <main className="flex-1 flex items-center justify-between px-4 sm:px-8 relative my-auto py-6 min-h-[480px] sm:min-h-[540px]">
+        <main className="flex-1 flex items-center justify-center px-4 sm:px-8 relative my-auto py-6 sm:py-8 w-full max-w-7xl mx-auto overflow-hidden">
           
           {/* Left Arrow Button */}
           <button 
             onClick={handlePrev}
-            className="p-3 sm:p-5 text-[#2A2421]/60 hover:text-[#2A2421] hover:scale-125 transition-all cursor-pointer z-30 active:scale-95 shrink-0"
+            className="absolute left-1 sm:left-6 top-1/2 -translate-y-1/2 p-2 sm:p-4 text-[#2A2421]/70 hover:text-[#2A2421] hover:scale-110 transition-all cursor-pointer z-30 active:scale-95 bg-white/20 sm:bg-transparent rounded-full backdrop-blur-xs sm:backdrop-blur-none shadow-xs sm:shadow-none"
             aria-label="Slide Sebelumnya"
           >
-            <ChevronLeft className="h-8 w-8 sm:h-12 sm:w-12 stroke-[1.5]" />
+            <ChevronLeft className="h-5 w-5 sm:h-12 sm:w-12 stroke-[2]" />
           </button>
 
           {/* Center Animated Typographic & Image Banner Composition */}
-          <div className="flex-1 max-w-4xl mx-auto text-center relative z-10 px-2 flex flex-col items-center justify-center min-h-[440px] sm:min-h-[480px]">
+          <div className="w-full max-w-4xl mx-auto text-center relative z-10 px-6 sm:px-2 flex flex-col items-center justify-center overflow-hidden">
             
-            <div className={`w-full transition-opacity duration-300 ease-out will-change-transform ${isFading ? "opacity-0" : "opacity-100"}`}>
+            <div className={`w-full max-w-full transition-opacity duration-300 ease-out will-change-transform ${isFading ? "opacity-0" : "opacity-100"}`}>
               
               {/* Top Subtle Serif Heading */}
-              <span className="font-serif-display text-xs sm:text-sm md:text-base font-semibold tracking-[0.35em] text-white/95 uppercase block">
+              <span className="font-serif-display text-[11px] sm:text-sm md:text-base font-semibold tracking-[0.2em] sm:tracking-[0.35em] text-white/95 uppercase block mb-1">
                 {activeSlideData.subtitle}
               </span>
 
               {/* Main Huge Bold Serif Heading */}
-              <div className="relative my-1">
-                <h1 className="font-serif-display text-5xl sm:text-7xl md:text-8xl lg:text-[110px] font-black tracking-[0.2em] text-white uppercase leading-none drop-shadow-xs">
+              <div className="relative my-1 max-w-full overflow-hidden">
+                <h1 className="font-serif-display text-3xl sm:text-6xl md:text-8xl lg:text-[110px] font-black tracking-normal sm:tracking-[0.2em] text-white uppercase leading-tight sm:leading-none drop-shadow-xs break-words">
                   {activeSlideData.title}
                 </h1>
 
                 {/* Overlapping Dark Cursive Calligraphy */}
-                <div className="font-script text-5xl sm:text-7xl md:text-8xl lg:text-[110px] text-[#2A2421] -mt-8 sm:-mt-14 md:-mt-20 lg:-mt-24 tracking-normal transform -rotate-4 select-none font-bold relative z-20">
+                <div className="font-script text-3xl sm:text-6xl md:text-8xl lg:text-[110px] text-[#2A2421] -mt-3 sm:-mt-10 md:-mt-20 lg:-mt-24 tracking-normal transform -rotate-4 select-none font-bold relative z-20 break-words leading-tight sm:leading-none">
                   {activeSlideData.scriptText}
                 </div>
               </div>
 
               {/* Slide Badge Pill */}
               <div className="pt-2">
-                <span className="inline-block px-5 py-1.5 rounded-full bg-white text-[#2A2421] text-xs sm:text-sm font-semibold tracking-wide shadow-xs border border-[#2A2421]/10">
+                <span className="inline-block px-4 sm:px-5 py-1.5 rounded-full bg-white text-[#2A2421] text-[11px] sm:text-sm font-semibold tracking-normal sm:tracking-wide shadow-xs border border-[#2A2421]/10 max-w-[85vw] leading-tight">
                   {activeSlideData.badgeText}
                 </span>
               </div>
 
               {/* Slide Image Banner Showcase (Only rendered when imageSrc exists) */}
               {activeSlideData.imageSrc && (
-                <div className="pt-5 flex justify-center items-center">
-                  <div className="relative max-w-xs sm:max-w-md md:max-w-lg rounded-2xl overflow-hidden shadow-2xl border-4 border-white/70 bg-white/10 backdrop-blur-xs transform hover:scale-[1.01] transition-transform duration-300">
+                <div className="pt-4 sm:pt-5 flex justify-center items-center">
+                  <div className="relative max-w-[240px] sm:max-w-md md:max-w-lg rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border-2 sm:border-4 border-white/70 bg-white/10 backdrop-blur-xs transform hover:scale-[1.01] transition-transform duration-300">
                     <img 
                       src={activeSlideData.imageSrc} 
                       alt={activeSlideData.title}
-                      className="w-full h-auto object-cover max-h-[160px] sm:max-h-[220px]"
+                      className="w-full h-auto object-cover max-h-[140px] sm:max-h-[220px]"
                     />
                   </div>
                 </div>
@@ -142,16 +143,16 @@ export default function LandingPage() {
           {/* Right Arrow Button */}
           <button 
             onClick={handleNext}
-            className="p-3 sm:p-5 text-[#2A2421]/60 hover:text-[#2A2421] hover:scale-125 transition-all cursor-pointer z-30 active:scale-95 shrink-0"
+            className="absolute right-1 sm:right-6 top-1/2 -translate-y-1/2 p-2 sm:p-4 text-[#2A2421]/70 hover:text-[#2A2421] hover:scale-110 transition-all cursor-pointer z-30 active:scale-95 bg-white/20 sm:bg-transparent rounded-full backdrop-blur-xs sm:backdrop-blur-none shadow-xs sm:shadow-none"
             aria-label="Slide Selanjutnya"
           >
-            <ChevronRight className="h-8 w-8 sm:h-12 sm:w-12 stroke-[1.5]" />
+            <ChevronRight className="h-5 w-5 sm:h-12 sm:w-12 stroke-[2]" />
           </button>
 
         </main>
 
         {/* BOTTOM CAROUSEL DOT INDICATORS */}
-        <footer className="w-full max-w-7xl mx-auto px-6 py-6 flex flex-col items-center gap-2.5 z-20 shrink-0">
+        <footer className="w-full max-w-7xl mx-auto px-6 py-3 sm:py-6 flex flex-col items-center gap-2 z-20 shrink-0">
           <div className="flex items-center gap-3">
             {slides.map((slide, index) => (
               <button
@@ -245,12 +246,21 @@ export default function LandingPage() {
                     </p>
 
                     <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
-                      <button 
-                        onClick={() => setIsThemeGalleryOpen(true)}
-                        className="inline-flex items-center gap-2 border border-[#2A2421] text-[#2A2421] text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#2A2421] hover:text-white transition-all cursor-pointer shadow-2xs active:scale-98"
-                      >
-                        <Eye className="w-4 h-4" /> {item.buttonText}
-                      </button>
+                      {item.id === "template-1" ? (
+                        <Link 
+                          to="/demo/theme-1"
+                          className="inline-flex items-center gap-2 border border-[#2A2421] bg-[#2A2421] text-white text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#3D332F] transition-all shadow-xs active:scale-98"
+                        >
+                          <Eye className="w-4 h-4 text-[#F5C2C9]" /> LIHAT DEMO UNDANGAN (THEME 01)
+                        </Link>
+                      ) : (
+                        <button 
+                          onClick={() => setIsThemeGalleryOpen(true)}
+                          className="inline-flex items-center gap-2 border border-[#2A2421] text-[#2A2421] text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#2A2421] hover:text-white transition-all cursor-pointer shadow-2xs active:scale-98"
+                        >
+                          <Eye className="w-4 h-4" /> {item.buttonText}
+                        </button>
+                      )}
                     </div>
                   </div>
 
