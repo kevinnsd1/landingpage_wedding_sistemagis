@@ -14,7 +14,7 @@ import {
 } from "lucide-react"
 import { slides } from "./data/slides"
 import { templateItems } from "./data/templates"
-import { weddingThemes, WeddingTheme } from "./data/themes"
+import { weddingThemes, type WeddingTheme } from "./data/themes"
 
 export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = useState(0)
