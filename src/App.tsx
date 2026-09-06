@@ -4,6 +4,7 @@ import FeaturesPage from "@/pages/features"
 import WeddingPlannerPage from "@/pages/wedding-planner"
 import BukuTamuPage from "@/pages/buku-tamu"
 import KontakPage from "@/pages/kontak"
+import HargaPage from "@/pages/harga"
 
 export default function App() {
   return (
@@ -17,6 +18,8 @@ export default function App() {
         <Route path="/buku-tamu" element={<BukuTamuPage />} />
         <Route path="/kontak" element={<KontakPage />} />
         <Route path="/contact" element={<KontakPage />} />
+        <Route path="/harga" element={<HargaPage />} />
+        <Route path="/pricing" element={<HargaPage />} />
       </Routes>
     </BrowserRouter>
   )

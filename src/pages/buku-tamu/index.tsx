@@ -149,7 +149,7 @@ export default function BukuTamuPage() {
 
         {/* Right Nav */}
         <nav className="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.25em] uppercase text-[#3D332F]">
-          <Link to="/#harga" className="hover:opacity-80 transition-opacity">
+          <Link to="/harga" className="hover:opacity-80 transition-opacity">
             HARGA
           </Link>
           <Link to="/bukutamu" className="border-b-2 border-[#2A2421] pb-0.5 text-[#2A2421] font-extrabold">

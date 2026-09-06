@@ -91,9 +91,9 @@ export default function LandingPage() {
 
           {/* Right Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 text-[11px] font-bold tracking-[0.25em] uppercase text-[#3D332F]">
-            <a href="#harga" className="hover:opacity-80 transition-opacity">
+            <Link to="/harga" className="hover:opacity-80 transition-opacity">
               HARGA
-            </a>
+            </Link>
             <Link to="/bukutamu" className="hover:opacity-80 transition-opacity">
               BUKU TAMU
             </Link>
