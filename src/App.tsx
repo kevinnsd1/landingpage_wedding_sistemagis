@@ -3,6 +3,7 @@ import LandingPage from "@/pages/landingpage"
 import FeaturesPage from "@/pages/features"
 import WeddingPlannerPage from "@/pages/wedding-planner"
 import BukuTamuPage from "@/pages/buku-tamu"
+import KontakPage from "@/pages/kontak"
 
 export default function App() {
   return (
@@ -14,6 +15,8 @@ export default function App() {
         <Route path="/wo" element={<WeddingPlannerPage />} />
         <Route path="/bukutamu" element={<BukuTamuPage />} />
         <Route path="/buku-tamu" element={<BukuTamuPage />} />
+        <Route path="/kontak" element={<KontakPage />} />
+        <Route path="/contact" element={<KontakPage />} />
       </Routes>
     </BrowserRouter>
   )

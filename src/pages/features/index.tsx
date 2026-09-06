@@ -168,7 +168,7 @@ export default function FeaturesPage() {
           <Link to="/bukutamu" className="hover:opacity-80 transition-opacity">
             BUKU TAMU
           </Link>
-          <Link to="/#kontak" className="hover:opacity-80 transition-opacity">
+          <Link to="/kontak" className="hover:opacity-80 transition-opacity">
             KONTAK
           </Link>
         </nav>

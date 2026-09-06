@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { 
-  BookOpen, 
   MessageSquare, 
   Users, 
   CheckCircle2, 
@@ -156,7 +155,7 @@ export default function BukuTamuPage() {
           <Link to="/bukutamu" className="border-b-2 border-[#2A2421] pb-0.5 text-[#2A2421] font-extrabold">
             BUKU TAMU
           </Link>
-          <Link to="/#kontak" className="hover:opacity-80 transition-opacity">
+          <Link to="/kontak" className="hover:opacity-80 transition-opacity">
             KONTAK
           </Link>
         </nav>
@@ -165,9 +164,6 @@ export default function BukuTamuPage() {
       {/* ================= 2. HERO BANNER ================= */}
       <section className="blush-gradient py-16 sm:py-24 px-6 text-center relative border-b border-[#EBE5DA]">
         <div className="max-w-4xl mx-auto space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#8C5B00] uppercase bg-white/80 backdrop-blur-xs px-4 py-1.5 rounded-full border border-[#8C5B00]/20 shadow-xs">
-            <BookOpen className="w-3.5 h-3.5" /> Buku Tamu Digital &amp; Realtime RSVP System
-          </div>
 
           <h1 className="font-serif-display text-4xl sm:text-6xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
             Buku Tamu Digital &amp; Ucapan Doa
