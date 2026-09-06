@@ -43,36 +43,37 @@ export default function KontakPage() {
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
       
-      {/* ================= 1. HEADER ================= */}
-      <Navbar activePage="kontak" />
+      {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
+      <div className="blush-gradient border-b border-[#EBE5DA]">
+        <Navbar activePage="kontak" />
 
-      {/* ================= 2. HERO BANNER ================= */}
-      <section className="blush-gradient py-16 sm:py-24 px-6 text-center relative border-b border-[#EBE5DA]">
-        <div className="max-w-4xl mx-auto space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#8C5B00] uppercase bg-white/80 backdrop-blur-xs px-4 py-1.5 rounded-full border border-[#8C5B00]/20 shadow-xs">
-            <Headphones className="w-3.5 h-3.5" /> Layanan Bantuan &amp; Konsultasi WhatsApp
+        <section className="py-16 sm:py-24 px-6 text-center relative">
+          <div className="max-w-4xl mx-auto space-y-4 relative z-10">
+            <div className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#8C5B00] uppercase bg-white/80 backdrop-blur-xs px-4 py-1.5 rounded-full border border-[#8C5B00]/20 shadow-xs">
+              <Headphones className="w-3.5 h-3.5" /> Layanan Bantuan &amp; Konsultasi WhatsApp
+            </div>
+
+            <h1 className="font-serif-display text-4xl sm:text-6xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
+              Hubungi Tim Magis
+            </h1>
+
+            <p className="text-sm sm:text-base text-[#5A504A] max-w-2xl mx-auto font-light leading-relaxed">
+              Punya pertanyaan mengenai templat, harga, atau butuh bantuan pembuatan undangan pernikahan Anda? Tim kami siap membantu Anda kapan saja via WhatsApp.
+            </p>
+
+            <div className="pt-4 flex justify-center">
+              <a 
+                href={waUrl}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 bg-[#25D366] text-white text-xs font-bold tracking-[0.18em] uppercase px-8 py-4 rounded-xl hover:bg-[#20bd5a] transition-all shadow-md active:scale-98 cursor-pointer"
+              >
+                <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" /> Chat WhatsApp: {formattedPhone} <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
           </div>
-
-          <h1 className="font-serif-display text-4xl sm:text-6xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
-            Hubungi Tim Magis
-          </h1>
-
-          <p className="text-sm sm:text-base text-[#5A504A] max-w-2xl mx-auto font-light leading-relaxed">
-            Punya pertanyaan mengenai templat, harga, atau butuh bantuan pembuatan undangan pernikahan Anda? Tim kami siap membantu Anda kapan saja via WhatsApp.
-          </p>
-
-          <div className="pt-4 flex justify-center">
-            <a 
-              href={waUrl}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-[#25D366] text-white text-xs font-bold tracking-[0.18em] uppercase px-8 py-4 rounded-xl hover:bg-[#20bd5a] transition-all shadow-md active:scale-98 cursor-pointer"
-            >
-              <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" /> Chat WhatsApp: {formattedPhone} <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ================= 3. CONTACT INFO CARDS ================= */}
       <section className="max-w-7xl mx-auto px-6 sm:px-12 -mt-8 relative z-30">

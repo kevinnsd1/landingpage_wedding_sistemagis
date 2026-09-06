@@ -21,22 +21,23 @@ export default function HargaPage() {
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
       
-      {/* ================= 1. HEADER ================= */}
-      <Navbar activePage="harga" />
+      {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
+      <div className="blush-gradient border-b border-[#EBE5DA]">
+        <Navbar activePage="harga" />
 
-      {/* ================= 2. HERO BANNER ================= */}
-      <section className="blush-gradient py-16 sm:py-24 px-6 text-center relative border-b border-[#EBE5DA]">
-        <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+        <section className="py-16 sm:py-24 px-6 text-center relative">
+          <div className="max-w-4xl mx-auto space-y-6 relative z-10">
 
-          <h1 className="font-serif-display text-4xl sm:text-6xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
-            Paket Harga Undangan Digital
-          </h1>
+            <h1 className="font-serif-display text-4xl sm:text-6xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
+              Paket Harga Undangan Digital
+            </h1>
 
-          <p className="text-sm sm:text-base text-[#5A504A] max-w-2xl mx-auto font-light leading-relaxed">
-            Pilihan paket hemat, tanpa biaya tersembunyi. Dapatkan diskon spesial hingga <span className="font-bold text-[#8C5B00]">68%</span> untuk pemesanan hari ini!
-          </p>
-        </div>
-      </section>
+            <p className="text-sm sm:text-base text-[#5A504A] max-w-2xl mx-auto font-light leading-relaxed">
+              Pilihan paket hemat, tanpa biaya tersembunyi. Dapatkan diskon spesial hingga <span className="font-bold text-[#8C5B00]">68%</span> untuk pemesanan hari ini!
+            </p>
+          </div>
+        </section>
+      </div>
 
       {/* ================= 3. PRICING CARDS SECTION ================= */}
       <section className="max-w-7xl mx-auto px-6 sm:px-12 -mt-10 relative z-30 mb-20">

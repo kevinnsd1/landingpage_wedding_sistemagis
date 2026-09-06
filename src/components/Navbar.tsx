@@ -28,7 +28,7 @@ export default function Navbar({ activePage }: NavbarProps) {
   ]
 
   return (
-    <header className="w-full bg-[#FBF9F5]/95 backdrop-blur-md sticky top-0 z-50 border-b border-[#EBE5DA]/80 transition-all">
+    <header className="w-full bg-transparent sticky top-0 z-50 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 sm:py-5 flex items-center justify-between">
         
         {/* Mobile Header: Logo + Hamburger Button */}
@@ -110,7 +110,7 @@ export default function Navbar({ activePage }: NavbarProps) {
 
       {/* Mobile Slide-down Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-[#FBF9F5] border-b border-[#EBE5DA] px-6 py-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-200">
+        <div className="md:hidden blush-gradient border-b border-[#EBE5DA] px-6 py-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-200">
           <nav className="flex flex-col space-y-3 text-xs font-bold tracking-widest uppercase text-[#2A2421]">
             {navLinks.map((link) => (
               <a

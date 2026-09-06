@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import Navbar from "@/components/Navbar"
 import { 
   Gift, 
@@ -135,44 +136,45 @@ export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#2A2421] font-sans flex flex-col justify-between relative overflow-hidden">
       
-      {/* ================= 1. HEADER ================= */}
-      <Navbar activePage="fitur" />
+      {/* ================= 1. HEADER & HERO BANNER (BLUSH GRADIENT) ================= */}
+      <div className="blush-gradient border-b border-[#EBE5DA]">
+        <Navbar activePage="fitur" />
 
-      {/* ================= 2. HERO BANNER ================= */}
-      <section className="blush-gradient py-16 sm:py-24 px-6 text-center relative border-b border-[#EBE5DA]">
-        <div className="max-w-4xl mx-auto space-y-6">
+        <section className="py-16 sm:py-24 px-6 text-center relative">
+          <div className="max-w-4xl mx-auto space-y-6">
 
-          <h1 className="font-serif-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
-            Fitur Lengkap Undangan Digital
-          </h1>
+            <h1 className="font-serif-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#2A2421] leading-tight">
+              Fitur Lengkap Undangan Digital
+            </h1>
 
-          <p className="text-sm sm:text-base text-[#5A504A] max-w-2xl mx-auto font-light leading-relaxed">
-            Dirancang khusus untuk menghadirkan pengalaman indah, praktis, dan eksklusif bagi Anda dan seluruh tamu undangan di hari bahagia.
-          </p>
+            <p className="text-sm sm:text-base text-[#5A504A] max-w-2xl mx-auto font-light leading-relaxed">
+              Dirancang khusus untuk menghadirkan pengalaman indah, praktis, dan eksklusif bagi Anda dan seluruh tamu undangan di hari bahagia.
+            </p>
 
-          {/* Quick Filter Tabs */}
-          <div className="pt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            {[
-              { id: "all", label: "Semua Fitur" },
-              { id: "interaktif", label: "RSVP & Amplop Digital" },
-              { id: "media", label: "Galeri & Musik" },
-              { id: "acara", label: "Peta & Keamanan" }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2 text-xs font-semibold rounded-full transition-all cursor-pointer ${
-                  activeTab === tab.id
-                    ? "bg-[#2A2421] text-white shadow-md scale-105"
-                    : "bg-white/80 text-[#2A2421] hover:bg-white border border-[#2A2421]/10"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+            {/* Quick Filter Tabs */}
+            <div className="pt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+              {[
+                { id: "all", label: "Semua Fitur" },
+                { id: "interaktif", label: "RSVP & Amplop Digital" },
+                { id: "media", label: "Galeri & Musik" },
+                { id: "acara", label: "Peta & Keamanan" }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-5 py-2 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                    activeTab === tab.id
+                      ? "bg-[#2A2421] text-white shadow-md scale-105"
+                      : "bg-white/80 text-[#2A2421] hover:bg-white border border-[#2A2421]/10"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ================= 3. MAIN FEATURES GRID ================= */}
       <section className="max-w-7xl mx-auto px-6 sm:px-12 py-16 sm:py-24">
