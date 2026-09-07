@@ -9,8 +9,8 @@ interface NavbarProps {
 export default function Navbar({ activePage }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
-  const whatsappNumber = "62895351878050"
-  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Halo Magis Invitation, saya berminat membuat undangan digital. Mohon informasi selengkapnya.")}`
+  const whatsappNumber = ""
+  const waUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Halo Magis Invitation, saya berminat membuat undangan digital. Mohon informasi selengkapnya.")}` : "#"
 
   const isLinkActive = (path: string, key?: string) => {
     if (activePage && key === activePage) return true

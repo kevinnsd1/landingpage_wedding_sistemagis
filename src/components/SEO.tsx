@@ -94,7 +94,7 @@ export default function SEO({
           },
           "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+62895351878050",
+            "telephone": "",
             "contactType": "customer service",
             "availableLanguage": ["Indonesian", "English"]
           }

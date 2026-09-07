@@ -13,10 +13,10 @@ import {
 } from "lucide-react"
 
 export default function KontakPage() {
-  const whatsappNumber = "62895351878050"
-  const formattedPhone = "0895-3518-78050"
+  const whatsappNumber = ""
+  const formattedPhone = ""
   const defaultWaMessage = encodeURIComponent("Halo Magis Invitation, saya ingin berkonsultasi mengenai pemesanan undangan digital.")
-  const waUrl = `https://wa.me/${whatsappNumber}?text=${defaultWaMessage}`
+  const waUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${defaultWaMessage}` : "#"
 
   // Form state
   const [name, setName] = useState("")
@@ -75,7 +75,7 @@ export default function KontakPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-[#25D366] text-white text-xs font-bold tracking-[0.18em] uppercase px-8 py-4 rounded-xl hover:bg-[#20bd5a] transition-all shadow-md active:scale-98 cursor-pointer"
               >
-                <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" /> Chat WhatsApp: {formattedPhone} <ArrowRight className="w-4 h-4" />
+                <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" /> Chat WhatsApp{formattedPhone ? `: ${formattedPhone}` : ""} <ArrowRight className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function KontakPage() {
                 Official WhatsApp
               </span>
               <h3 className="font-serif-display text-2xl font-extrabold text-[#2A2421]">
-                {formattedPhone}
+                {formattedPhone || "-"}
               </h3>
             </div>
             <p className="text-xs text-[#78736A] font-light">
@@ -247,7 +247,7 @@ export default function KontakPage() {
                 type="submit"
                 className="w-full inline-flex items-center justify-center gap-2 bg-[#2A2421] text-white text-xs font-bold tracking-[0.15em] uppercase py-4 rounded-xl hover:bg-[#3D332F] transition-all shadow-sm cursor-pointer"
               >
-                <Send className="w-4 h-4 text-emerald-400" /> Kirim via WhatsApp ({formattedPhone})
+                <Send className="w-4 h-4 text-emerald-400" /> Kirim via WhatsApp{formattedPhone ? ` (${formattedPhone})` : ""}
               </button>
             </form>
           </div>
@@ -305,7 +305,7 @@ export default function KontakPage() {
             <img src="/assets/transaparanlogo.png" alt="Logo" className="h-6 w-auto brightness-0" />
             <span className="font-serif-display font-bold text-sm text-[#2A2421]">Magis Invitation Customer Service</span>
           </div>
-          <p>© 2026 Magis Tech. WA: {formattedPhone}</p>
+          <p>© 2026 Magis Tech.{formattedPhone ? ` WA: ${formattedPhone}` : ""}</p>
         </div>
       </footer>
 

@@ -10,9 +10,10 @@ import {
 } from "lucide-react"
 
 export default function HargaPage() {
-  const whatsappNumber = "62895351878050"
+  const whatsappNumber = ""
 
   const getWaLink = (packageName: string, price: string) => {
+    if (!whatsappNumber) return "#"
     const text = encodeURIComponent(
       `Halo Magis Invitation, saya berminat memesan *${packageName}* dengan Harga Promo *${price}*. Mohon informasi alur pemesanannya.`
     )
