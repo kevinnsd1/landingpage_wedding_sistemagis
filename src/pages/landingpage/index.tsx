@@ -206,17 +206,15 @@ export default function LandingPage() {
           <div className="space-y-20 sm:space-y-28">
             {templateItems.map((item, index) => {
               const isEven = index % 2 === 0
-              const themeMatch = weddingThemes.find(t => t.title.toLowerCase().includes(item.title.toLowerCase().split(' ')[0])) || weddingThemes[0]
-
               return (
                 <div 
                   key={item.id} 
-                  className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center justify-between gap-10 lg:gap-16 animate-in fade-in slide-in-from-bottom-6 duration-700`}
+                  className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center justify-between gap-10 lg:gap-16`}
                 >
                   {/* Frame Placeholder */}
                   <div className="w-full md:w-1/2 flex justify-center">
                     <div 
-                      onClick={() => setActivePreviewTheme(themeMatch)}
+                      onClick={() => setIsThemeGalleryOpen(true)}
                       className="w-full max-w-md aspect-4/3 bg-[#FBF9F5] border-2 border-dashed border-[#2A2421]/20 rounded-2xl flex flex-col items-center justify-center p-8 text-center space-y-3 shadow-xs hover:border-[#2A2421]/50 card-smooth-hover group cursor-pointer"
                     >
                       <div className="w-12 h-12 rounded-full bg-white border border-[#2A2421]/10 flex items-center justify-center text-[#78736A] group-hover:text-[#2A2421] group-hover:scale-110 transition-all">
@@ -248,12 +246,21 @@ export default function LandingPage() {
                     </p>
 
                     <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
-                      <button 
-                        onClick={() => setActivePreviewTheme(themeMatch)}
-                        className="inline-flex items-center gap-2 border border-[#2A2421] text-[#2A2421] text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#2A2421] hover:text-white transition-all cursor-pointer shadow-2xs active:scale-98"
-                      >
-                        <Eye className="w-4 h-4" /> {item.buttonText}
-                      </button>
+                      {item.id === "template-1" ? (
+                        <Link 
+                          to="/demo/theme-1"
+                          className="inline-flex items-center gap-2 border border-[#2A2421] text-[#2A2421] text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#2A2421] hover:text-white transition-all cursor-pointer shadow-2xs active:scale-98"
+                        >
+                          <Eye className="w-4 h-4" /> {item.buttonText}
+                        </Link>
+                      ) : (
+                        <button 
+                          onClick={() => setIsThemeGalleryOpen(true)}
+                          className="inline-flex items-center gap-2 border border-[#2A2421] text-[#2A2421] text-xs font-bold tracking-[0.2em] uppercase px-7 py-3 rounded-md hover:bg-[#2A2421] hover:text-white transition-all cursor-pointer shadow-2xs active:scale-98"
+                        >
+                          <Eye className="w-4 h-4" /> {item.buttonText}
+                        </button>
+                      )}
                     </div>
                   </div>
 
@@ -481,16 +488,8 @@ export default function LandingPage() {
                 onClick={() => setActivePreviewTheme(null)}
                 className="w-full sm:w-auto border border-[#2A2421] text-[#2A2421] text-xs font-bold tracking-[0.15em] uppercase px-6 py-3 rounded-xl hover:bg-[#2A2421] hover:text-white transition-all cursor-pointer"
               >
-                Kembali
+                Kembali ke Galeri
               </button>
-              {activePreviewTheme.id === "classic-floral" && (
-                <Link
-                  to="/demo/theme-1"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-[#8C5B00] bg-[#FBF3DB] text-[#8C5B00] hover:bg-[#8C5B00] hover:text-white text-xs font-bold tracking-[0.15em] uppercase px-6 py-3 rounded-xl transition-all cursor-pointer"
-                >
-                  <Eye className="w-4 h-4" /> Buka Live Demo
-                </Link>
-              )}
               <button 
                 onClick={() => { setActivePreviewTheme(null); setIsThemeGalleryOpen(false); }}
                 className="w-full sm:w-auto bg-[#2A2421] text-white text-xs font-bold tracking-[0.15em] uppercase px-6 py-3 rounded-xl hover:bg-[#3D332F] transition-all cursor-pointer shadow-md"
