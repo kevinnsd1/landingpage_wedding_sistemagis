@@ -90,7 +90,7 @@ export default function SEO({
           "url": "https://digitalinvitationmagis.com",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://digitalinvitationmagis.com/assets/transaparanlogo.png"
+            "url": "https://digitalinvitationmagis.com/assets/LogoKisah.png"
           },
           "contactPoint": {
             "@type": "ContactPoint",

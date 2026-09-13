@@ -351,17 +351,14 @@ export default function LandingPage() {
       {/* FOOTER */}
       <footer className="bg-[#FBF9F5] border-t border-[#EBE5DA] py-8 text-center text-xs text-[#78736A]">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center group">
             <img
-              src="/assets/transaparanlogo.png"
-              alt="Logo"
-              className="h-6 w-auto brightness-0"
+              src="/assets/LogoKisah.png"
+              alt="Kisah Magis"
+              className="h-8 w-auto object-contain brightness-0"
             />
-            <span className="font-serif-display font-bold text-sm text-[#2A2421]">
-              Magis Invitation
-            </span>
-          </div>
-          <p>© 2026 Magis Tech. Undangan Digital Wedding Minimalis.</p>
+          </Link>
+          <p>© 2026 KisahMagis. Undangan Digital Wedding Minimalis &amp; Eksklusif.</p>
         </div>
       </footer>
 

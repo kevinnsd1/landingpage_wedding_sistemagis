@@ -49,9 +49,9 @@ export default function Navbar({ activePage }: NavbarProps) {
         <div className="flex items-center justify-between w-full md:hidden">
           <Link to="/" className="flex items-center" onClick={() => setIsMobileMenuOpen(false)}>
             <img 
-              src="/assets/transaparanlogo.png" 
-              alt="Logo Magis" 
-              className="h-8 sm:h-10 w-auto object-contain brightness-0 shrink-0"
+              src="/assets/LogoKisah.png" 
+              alt="Kisah Magis" 
+              className="h-9 sm:h-10 w-auto object-contain brightness-0 shrink-0"
             />
           </Link>
           <button
@@ -92,9 +92,9 @@ export default function Navbar({ activePage }: NavbarProps) {
           {/* Center Logo */}
           <Link to="/" className="flex items-center justify-center group shrink-0 mx-4">
             <img 
-              src="/assets/transaparanlogo.png" 
-              alt="Logo Magis" 
-              className="h-12 lg:h-16 w-auto object-contain brightness-0 group-hover:scale-105 transition-transform duration-300"
+              src="/assets/LogoKisah.png" 
+              alt="Kisah Magis" 
+              className="h-12 lg:h-14 w-auto object-contain brightness-0 group-hover:scale-105 transition-transform duration-300"
             />
           </Link>
 

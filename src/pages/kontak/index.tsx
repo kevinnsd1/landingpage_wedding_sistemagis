@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import Navbar from "@/components/Navbar"
 import SEO from "@/components/SEO"
 import { 
@@ -301,11 +302,10 @@ export default function KontakPage() {
       {/* ================= 5. FOOTER ================= */}
       <footer className="bg-[#FBF9F5] border-t border-[#EBE5DA] py-8 text-center text-xs text-[#78736A]">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <img src="/assets/transaparanlogo.png" alt="Logo" className="h-6 w-auto brightness-0" />
-            <span className="font-serif-display font-bold text-sm text-[#2A2421]">Magis Invitation Customer Service</span>
-          </div>
-          <p>© 2026 Magis Tech.{formattedPhone ? ` WA: ${formattedPhone}` : ""}</p>
+          <Link to="/" className="flex items-center group">
+            <img src="/assets/LogoKisah.png" alt="Kisah Magis" className="h-8 w-auto object-contain brightness-0" />
+          </Link>
+          <p>© 2026 KisahMagis.{formattedPhone ? ` WA: ${formattedPhone}` : ""}</p>
         </div>
       </footer>
 
