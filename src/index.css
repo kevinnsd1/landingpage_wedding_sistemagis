@@ -99,3 +99,78 @@ html {
   box-shadow: 0 16px 32px -8px rgba(42, 36, 33, 0.12);
 }
 
+/* Anime Sky Theme & Cloud Animations */
+.sky-gradient {
+  background: linear-gradient(180deg, #1d6fa5 0%, #3685bc 35%, #5a9ec7 70%, #90c8e6 100%);
+}
+
+@keyframes floatCloudLeft {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(20px) translateY(-12px);
+  }
+}
+
+@keyframes floatCloudRight {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-25px) translateY(-10px);
+  }
+}
+
+@keyframes floatCharacterSway {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(1.5deg);
+  }
+}
+
+.animate-cloud-left {
+  animation: floatCloudLeft 12s ease-in-out infinite;
+}
+
+.animate-cloud-right {
+  animation: floatCloudRight 14s ease-in-out infinite;
+}
+
+.animate-character-sway {
+  animation: floatCharacterSway 7s ease-in-out infinite;
+}
+
+@keyframes cameraPanDown {
+  0% {
+    transform: translateY(-16vh) scale(1.06);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes characterCameraFocus {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-camera-pan-down {
+  animation: cameraPanDown 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-character-focus {
+  animation: characterCameraFocus 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, floatCharacterSway 7s ease-in-out 1.8s infinite;
+}
+
+
