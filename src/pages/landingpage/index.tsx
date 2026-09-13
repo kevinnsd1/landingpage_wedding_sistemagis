@@ -10,7 +10,6 @@ import {
   X,
   Palette,
   Eye,
-  Sparkles,
 } from "lucide-react";
 import { slides } from "./data/slides";
 import { templateItems } from "./data/templates";

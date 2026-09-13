@@ -1,59 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import SEO from "@/components/SEO";
 import karakterPng from "./assets/karakter.png";
 import karakterImg from "./assets/karakter2.jpeg";
 import multoAudio from "./assets/multo.mp3";
 import {
-  Heart,
-  Calendar,
-  MapPin,
   VolumeX,
   Volume2,
-  Copy,
-  Check,
-  Send,
-  Sparkles,
 } from "lucide-react";
-
-interface WishMessage {
-  id: string;
-  name: string;
-  attendance: "Hadir" | "Tidak Hadir" | "Ragu-ragu";
-  pax: number;
-  message: string;
-  time: string;
-}
-
-const initialWishes: WishMessage[] = [
-  {
-    id: "w1",
-    name: "Budi Santoso & Partner",
-    attendance: "Hadir",
-    pax: 2,
-    message:
-      "Selamat ya Ahmad & Anisa! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin!",
-    time: "2 jam yang lalu",
-  },
-  {
-    id: "w2",
-    name: "Keluarga Besar Dr. Hendra",
-    attendance: "Hadir",
-    pax: 4,
-    message:
-      "Barakallahu lakuma wa baraka 'alaikuma wa jama'a bainakuma fii khair. InsyaAllah kami hadir!",
-    time: "4 jam yang lalu",
-  },
-  {
-    id: "w3",
-    name: "Siti Rahmawati",
-    attendance: "Hadir",
-    pax: 1,
-    message:
-      "Happy Wedding sahabatku Nisa! Semoga lancar sampai hari-H dan selalu bahagia bersama suami tercinta.",
-    time: "1 hari yang lalu",
-  },
-];
 
 export default function Theme1Page() {
   const [searchParams] = useSearchParams();
@@ -63,54 +17,9 @@ export default function Theme1Page() {
   // State
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [copiedBank, setCopiedBank] = useState<string | null>(null);
 
   // Audio Ref
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // RSVP Form State
-  const [rsvpName, setRsvpName] = useState(
-    guestName !== "Tamu Undangan" ? guestName : "",
-  );
-  const [rsvpAttendance, setRsvpAttendance] = useState<
-    "Hadir" | "Tidak Hadir" | "Ragu-ragu"
-  >("Hadir");
-  const [rsvpPax, setRsvpPax] = useState<number>(2);
-  const [rsvpMessage, setRsvpMessage] = useState("");
-  const [wishes, setWishes] = useState<WishMessage[]>(initialWishes);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Countdown state
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    // Target date: 30 days from now
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 30);
-
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const difference = targetDate.getTime() - now;
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor(
-            (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-          ),
-          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((difference % (1000 * 60)) / 1000),
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const smoothScrollTo = (targetY: number, duration: number = 700) => {
     const startY = window.scrollY || window.pageYOffset;
@@ -167,34 +76,6 @@ export default function Theme1Page() {
       audioRef.current.play().catch((err) => console.log("Audio play error:", err));
       setIsPlaying(true);
     }
-  };
-
-  const handleCopy = (text: string, bankId: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedBank(bankId);
-    setTimeout(() => setCopiedBank(null), 2500);
-  };
-
-  const handleRsvpSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!rsvpName || !rsvpMessage) return;
-
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      const newWish: WishMessage = {
-        id: Date.now().toString(),
-        name: rsvpName,
-        attendance: rsvpAttendance,
-        pax: rsvpAttendance === "Hadir" ? rsvpPax : 0,
-        message: rsvpMessage,
-        time: "Baru saja",
-      };
-
-      setWishes([newWish, ...wishes]);
-      setRsvpMessage("");
-      setIsSubmitting(false);
-    }, 600);
   };
 
   return (
