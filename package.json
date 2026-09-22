@@ -1,0 +1,21 @@
+{
+  "name": "kisahmagis-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"web,api\" -c \"cyan,green\" \"npm run dev -w @kisahmagis/web\" \"npm run dev -w @kisahmagis/api\"",
+    "dev:web": "npm run dev -w @kisahmagis/web",
+    "dev:api": "npm run dev -w @kisahmagis/api",
+    "build": "npm run build --workspaces --if-present",
+    "db:generate": "npm run db:generate -w @kisahmagis/api",
+    "db:push": "npm run db:push -w @kisahmagis/api"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

@@ -1,0 +1,15 @@
+<svg width="240" height="60" viewBox="0 0 240 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Heart Line Mark -->
+  <g transform="translate(10, 8)">
+    <!-- Infinity Heart Ribbon Curve -->
+    <path d="M22 36C22 36 6 27 6 16C6 9.37 11.37 4 18 4C22.24 4 25.96 6.2 28 9.5C30.04 6.2 33.76 4 38 4C44.63 4 50 9.37 50 16C50 27 34 36 34 36" stroke="#FC9FB1" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 16C18 21.5 28 29 28 29C28 29 38 21.5 38 16" stroke="#FCBACB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Gentle Sparkle -->
+    <circle cx="43" cy="8" r="1.5" fill="#FFEAAB" />
+    <circle cx="12" cy="11" r="1" fill="#B9DCA9" />
+  </g>
+
+  <!-- Brand Wordmark -->
+  <text x="75" y="34" font-family="'Quintessential', cursive, serif" font-size="25" fill="#263238" font-weight="600" letter-spacing="0.5">Kisah<tspan fill="#FC9FB1">Magis</tspan></text>
+  <text x="76" y="47" font-family="'Inter', sans-serif" font-size="8.5" fill="#667085" letter-spacing="1.8" font-weight="500">DIGITAL WEDDING SYSTEM</text>
+</svg>
