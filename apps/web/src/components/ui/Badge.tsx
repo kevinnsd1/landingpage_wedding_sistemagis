@@ -8,11 +8,11 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export function Badge({ className, variant = 'primary', size = 'sm', children, ...props }: BadgeProps) {
   const variants = {
-    primary: 'bg-slate-100 text-slate-800 border border-slate-200',
-    success: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    warning: 'bg-amber-50 text-amber-700 border border-amber-200',
-    error: 'bg-rose-50 text-rose-700 border border-rose-200',
-    neutral: 'bg-neutral-100 text-neutral-600 border border-neutral-200',
+    primary: 'bg-[#FCBACB]/30 text-[#7D4050] border border-[#FCBACB]',
+    success: 'bg-[#B9DCA9]/30 text-[#3D6420] border border-[#B9DCA9]',
+    warning: 'bg-[#FFEAAB]/40 text-[#7A5D00] border border-[#FFEAAB]',
+    error: 'bg-[#FBE1E7] text-[#B83D58] border border-[#F7C6D2]',
+    neutral: 'bg-neutral-100 text-[#263238] border border-neutral-200',
   };
 
   const sizes = {

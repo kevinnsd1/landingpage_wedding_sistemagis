@@ -22,7 +22,6 @@ export function Navbar({ onNavigate, currentView = 'landing', isLoggedIn = false
           <BrandLogo
             variant="horizontal"
             imgClassName="h-9 hover:scale-[1.02] transition-transform duration-200"
-            subtitle="Sistemagis Wedding Platform"
           />
         </div>
 

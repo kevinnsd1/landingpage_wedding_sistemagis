@@ -31,6 +31,10 @@ export function AuroraTheme({
     config, galleryImages, isPreview, invitationState, rsvpForm,
   };
 
+  const themeData = config.themeData || {};
+  const coverVideoUrl = themeData.coverVideoUrl as string | undefined;
+  const greetingText = (themeData.greetingText as string) || 'A Special Celebration';
+
   return (
     <div className="relative min-h-screen antialiased overflow-x-hidden" style={{ background: 'var(--theme-bg)', color: 'var(--theme-text)', fontFamily: 'var(--font-body)' }}>
       <Lightbox
@@ -43,17 +47,30 @@ export function AuroraTheme({
 
       {/* ── Aurora Cover Overlay (Cinematic Dark) ───────────────────────── */}
       {!isOpened && !isPreview && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-between p-6 text-center animate-in fade-in duration-300" style={{ background: 'var(--theme-bg)', color: 'var(--theme-text)' }}>
-          <div className="pt-12">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-between p-6 text-center animate-in fade-in duration-300 overflow-hidden" style={{ background: 'var(--theme-bg)', color: 'var(--theme-text)' }}>
+          {coverVideoUrl && (
+            <>
+              <video 
+                src={coverVideoUrl} 
+                className="absolute inset-0 w-full h-full object-cover z-0 opacity-40 grayscale"
+                autoPlay loop muted playsInline
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] via-transparent to-[var(--theme-bg)] z-0" />
+            </>
+          )}
+
+          <div className="relative z-10 pt-12">
             <span className="text-[10px] uppercase tracking-[0.4em] font-medium" style={{ color: 'var(--theme-text-muted)' }}>
-              A Special Celebration
+              {greetingText}
             </span>
           </div>
 
-          <div className="max-w-md my-auto flex flex-col items-center">
-            <div className="w-28 h-28 rounded-full overflow-hidden mb-6 grayscale hover:grayscale-0 transition-all duration-500" style={{ border: '1px solid var(--theme-border)' }}>
-              <img src={wedding.coverPhoto || wedding.groomPhoto} alt={wedding.title} className="w-full h-full object-cover" />
-            </div>
+          <div className="relative z-10 max-w-md my-auto flex flex-col items-center">
+            {!coverVideoUrl && (
+              <div className="w-28 h-28 rounded-full overflow-hidden mb-6 grayscale hover:grayscale-0 transition-all duration-500" style={{ border: '1px solid var(--theme-border)' }}>
+                <img src={wedding.coverPhoto || wedding.groomPhoto} alt={wedding.title} className="w-full h-full object-cover" />
+              </div>
+            )}
             <h1 className="text-4xl sm:text-5xl mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
               {wedding.groomName.split(' ')[0]} &amp; {wedding.brideName.split(' ')[0]}
             </h1>
@@ -61,7 +78,7 @@ export function AuroraTheme({
               {formatDateIndo(wedding.weddingDate)}
             </p>
 
-            <div className="px-6 py-4 rounded-lg mb-8 max-w-xs w-full" style={{ background: 'var(--theme-surface)', border: '1px solid var(--theme-border)' }}>
+            <div className="px-6 py-4 rounded-lg mb-8 max-w-xs w-full backdrop-blur-sm" style={{ background: 'var(--theme-surface)', border: '1px solid var(--theme-border)' }}>
               <span className="text-[9px] uppercase tracking-widest block mb-1" style={{ color: 'var(--theme-text-muted)' }}>
                 Undangan Resmi Untuk:
               </span>

@@ -23,6 +23,33 @@ export const auroraThemeMeta: ThemeMetadata = {
     { key: 'surface', label: 'Warna Kartu / Konten', type: 'color' },
     { key: 'text', label: 'Warna Teks Utama', type: 'color' },
   ],
+  customFields: [
+    {
+      key: 'coverVideoUrl',
+      label: 'Video Latar Belakang Cover',
+      description: 'Unggah video singkat (MP4) untuk efek cinematic di halaman sampul.',
+      type: 'video',
+    },
+    {
+      key: 'animationIntensity',
+      label: 'Intensitas Animasi',
+      description: 'Seberapa dramatis efek parallax dan fade pada elemen UI.',
+      type: 'select',
+      options: [
+        { label: 'Lembut (Subtle)', value: 'subtle' },
+        { label: 'Standar (Normal)', value: 'normal' },
+        { label: 'Dramatis (Cinematic)', value: 'dramatis' }
+      ],
+      defaultValue: 'normal',
+    },
+    {
+      key: 'greetingText',
+      label: 'Teks Sambutan Khusus',
+      description: 'Muncul sebelum nama mempelai di cover.',
+      type: 'text',
+      defaultValue: 'Pernikahan dari',
+    }
+  ],
   defaultFonts: {
     heading: 'Cormorant Garamond',
     body: 'Inter',

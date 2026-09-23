@@ -70,6 +70,12 @@ export interface InvitationConfig {
    */
   customTokens?: Record<string, string>;
 
+  /** 
+   * themeData — Menyimpan data dinamis spesifik tema (seperti background video) 
+   * berdasarkan schema customFields dari tema tersebut.
+   */
+  themeData?: Record<string, any>;
+
   sections: SectionConfig[];
   music: {
     enabled: boolean;

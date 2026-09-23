@@ -20,3 +20,20 @@ export interface PlannerTask {
   createdAt: string;
   updatedAt: string;
 }
+
+export type MilestoneCategory = 'ceremony' | 'traditional' | 'meeting' | 'deadline' | 'other';
+
+export interface WeddingMilestone {
+  id: string;
+  weddingId: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  time?: string; // HH:mm
+  venue?: string;
+  category: MilestoneCategory;
+  description?: string;
+  isCompleted: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+

@@ -32,6 +32,11 @@ import guests from './routes/guests.js';
 import planner from './routes/planner.js';
 import budget from './routes/budget.js';
 import vendors from './routes/vendors.js';
+import milestones from './routes/milestones.js';
+import seserahan from './routes/seserahan.js';
+import uploadRoute from './routes/upload.js';
+import themesRoute from './routes/themes.js';
+import { serveStatic } from '@hono/node-server/serve-static';
 
 // Mount routes
 app.route('/api/auth', auth);
@@ -41,6 +46,14 @@ app.route('/api/guests', guests);
 app.route('/api/planner', planner);
 app.route('/api/budget', budget);
 app.route('/api/vendors', vendors);
+app.route('/api/milestones', milestones);
+app.route('/api/seserahan', seserahan);
+app.route('/api/upload', uploadRoute);
+app.route('/api/themes', themesRoute);
+
+// Serve static uploads
+app.use('/uploads/*', serveStatic({ root: './' }));
+
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 console.log(`Server is running on port ${port}`);

@@ -5,3 +5,5 @@ export * from './guest';
 export * from './planner';
 export * from './budget';
 export * from './vendor';
+export * from './seserahan';
+
