@@ -15,6 +15,7 @@ import { Wedding, GiftAccount } from '@/types/wedding';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { MediaUploader } from '@/components/ui/MediaUploader';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateIndo } from '@/lib/utils';
 
@@ -236,11 +237,12 @@ export function SettingsTab({
             placeholder="Putra pertama dari Bpk. ... & Ibu ..."
             required
           />
-          <Input
-            label="URL Foto Mempelai Pria"
+          <MediaUploader
+            label="Unggah Foto Mempelai Pria"
+            description="Pilih foto profil pria untuk ditampilkan di undangan."
+            accept="image/*"
             value={formData.groomPhoto || ''}
-            onChange={(e) => setFormData((prev) => ({ ...prev, groomPhoto: e.target.value }))}
-            placeholder="https://..."
+            onChange={(url) => setFormData((prev) => ({ ...prev, groomPhoto: url }))}
           />
         </div>
 
@@ -270,11 +272,12 @@ export function SettingsTab({
             placeholder="Putri kedua dari Bpk. ... & Ibu ..."
             required
           />
-          <Input
-            label="URL Foto Mempelai Wanita"
+          <MediaUploader
+            label="Unggah Foto Mempelai Wanita"
+            description="Pilih foto profil wanita untuk ditampilkan di undangan."
+            accept="image/*"
             value={formData.bridePhoto || ''}
-            onChange={(e) => setFormData((prev) => ({ ...prev, bridePhoto: e.target.value }))}
-            placeholder="https://..."
+            onChange={(url) => setFormData((prev) => ({ ...prev, bridePhoto: url }))}
           />
         </div>
       </Card>

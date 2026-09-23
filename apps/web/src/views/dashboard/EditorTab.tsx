@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Palette,
   Eye,
@@ -12,6 +12,7 @@ import {
   Share2,
   Sparkles,
   RotateCcw,
+  Settings,
 } from 'lucide-react';
 import { Wedding } from '@/types/wedding';
 import { Invitation, ThemeId, SectionType, ThemeColors } from '@/types/invitation';
@@ -19,8 +20,10 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
+import { MediaUploader } from '@/components/ui/MediaUploader';
 import { InvitationView } from '@/views/InvitationView';
 import { getAllThemes } from '@/themes';
+import { api } from '@/lib/api';
 
 export interface EditorTabProps {
   wedding: Wedding;
@@ -38,8 +41,13 @@ export function EditorTab({
   onShowToast,
 }: EditorTabProps) {
   const [config, setConfig] = useState(invitation.config);
-  const [activeSubTab, setActiveSubTab] = useState<'theme' | 'colors' | 'sections' | 'music' | 'quote'>('theme');
+  const [activeSubTab, setActiveSubTab] = useState<'theme' | 'colors' | 'sections' | 'music' | 'quote' | 'theme-settings'>('theme');
   const [isSaving, setIsSaving] = useState(false);
+  const [dbThemes, setDbThemes] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.getThemes().then(setDbThemes).catch(console.error);
+  }, []);
 
   const availableThemes = getAllThemes();
   const activeTheme = availableThemes.find((t) => t.id === config.themeId) || availableThemes[0];
@@ -82,6 +90,16 @@ export function EditorTab({
       ...prev,
       colors: {
         ...(prev.colors || {}),
+        [key]: value,
+      },
+    }));
+  };
+
+  const handleThemeDataChange = (key: string, value: any) => {
+    setConfig((prev) => ({
+      ...prev,
+      themeData: {
+        ...(prev.themeData || {}),
         [key]: value,
       },
     }));
@@ -174,7 +192,7 @@ export function EditorTab({
             size="sm"
             onClick={handleSave}
             isLoading={isSaving}
-            icon={<Save className="w-3.5 h-3.5 text-[#263238]" />}
+            icon={<Save className="w-3.5 h-3.5 text-white" />}
           >
             Simpan Perubahan
           </Button>
@@ -242,6 +260,19 @@ export function EditorTab({
               <Type className="w-3.5 h-3.5" />
               Kutipan
             </button>
+            {activeTheme.customFields && activeTheme.customFields.length > 0 && (
+              <button
+                onClick={() => setActiveSubTab('theme-settings')}
+                className={`flex-1 py-2 rounded-md flex items-center justify-center gap-1.5 transition-all ${
+                  activeSubTab === 'theme-settings'
+                    ? 'bg-white text-[#263238] shadow-xs'
+                    : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                <Settings className="w-3.5 h-3.5" />
+                Spesifik
+              </button>
+            )}
           </div>
 
           {/* Sub-tab 1: Themes */}
@@ -250,15 +281,21 @@ export function EditorTab({
               <h3 className="text-sm font-semibold text-[#263238]">Pilih Gaya Tema</h3>
               <div className="space-y-3">
                 {availableThemes.map((m) => {
+                  const dbTheme = dbThemes.find((t) => t.id === m.id);
+                  const isCustom = dbTheme?.isCustom || false;
+                  const packageName = dbTheme?.package?.name || 'Standard';
                   const isSelected = config.themeId === m.id;
+                  
                   return (
                     <div
                       key={m.id}
-                      onClick={() => handleThemeChange(m.id)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                        isSelected
+                      onClick={() => !isCustom && handleThemeChange(m.id)}
+                      className={`p-4 rounded-xl border-2 transition-all ${
+                        isCustom ? 'cursor-not-allowed opacity-80 border-dashed border-neutral-300' : 'cursor-pointer'
+                      } ${
+                        isSelected && !isCustom
                           ? 'border-slate-900 bg-neutral-50/70 shadow-xs'
-                          : 'border-neutral-200 hover:border-neutral-300 bg-white'
+                          : !isCustom ? 'border-neutral-200 hover:border-neutral-300 bg-white' : 'bg-neutral-50'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1.5">
@@ -278,17 +315,31 @@ export function EditorTab({
                             />
                           </div>
                           <span className="text-sm font-semibold text-neutral-900">{m.name}</span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-500 font-medium">
-                            v{m.version}
-                          </span>
+                          <Badge variant={isCustom ? 'warning' : 'primary'} size="sm">
+                            {packageName}
+                          </Badge>
                         </div>
-                        {isSelected && (
+                        {isSelected && !isCustom && (
                           <span className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs shadow-xs">
                             <Check className="w-3.5 h-3.5 stroke-[3]" />
                           </span>
                         )}
+                        {isCustom && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={(e) => { e.stopPropagation(); alert('Silakan hubungi Admin untuk konsultasi tema kustom.'); }}
+                          >
+                            Konsultasi Admin
+                          </Button>
+                        )}
                       </div>
                       <p className="text-xs text-neutral-500 leading-relaxed pl-8">{m.description}</p>
+                      {isCustom && (
+                        <p className="text-[10px] text-amber-600 mt-2 pl-8 font-medium italic">
+                          Tema ini 100% dibuat khusus dan tidak dapat dipilih secara langsung.
+                        </p>
+                      )}
                     </div>
                   );
                 })}
@@ -435,13 +486,15 @@ export function EditorTab({
                 }
               />
 
-              <Input
-                label="URL Audio (MP3)"
+              <MediaUploader
+                label="Unggah File Audio (MP3/WAV)"
+                description="Pilih lagu untuk diputar di latar belakang."
+                accept="audio/*"
                 value={config.music.url}
-                onChange={(e) =>
+                onChange={(url) =>
                   setConfig((prev) => ({
                     ...prev,
-                    music: { ...prev.music, url: e.target.value },
+                    music: { ...prev.music, url },
                   }))
                 }
               />
@@ -482,10 +535,94 @@ export function EditorTab({
               />
             </Card>
           )}
+
+          {/* Sub-tab 5: Theme Specific Settings */}
+          {activeSubTab === 'theme-settings' && activeTheme.customFields && (
+            <Card className="space-y-6">
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900">Pengaturan Khusus Tema</h3>
+                <p className="text-xs text-neutral-500">
+                  Konfigurasi eksklusif yang hanya ada pada tema <strong>{activeTheme.name}</strong>.
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                {activeTheme.customFields.map((field) => {
+                  const currentValue = config.themeData?.[field.key] ?? field.defaultValue ?? '';
+                  
+                  return (
+                    <div key={field.key} className="space-y-1.5">
+                      {field.type === 'image' || field.type === 'video' ? (
+                        <MediaUploader
+                          label={field.label}
+                          description={field.description}
+                          value={currentValue}
+                          onChange={(url) => handleThemeDataChange(field.key, url)}
+                          accept={field.type === 'video' ? 'video/*' : 'image/*'}
+                        />
+                      ) : field.type === 'select' ? (
+                        <div className="space-y-1.5">
+                          <label className="block text-sm font-medium text-slate-700">{field.label}</label>
+                          {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
+                          <select
+                            value={currentValue}
+                            onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
+                            className="w-full bg-white border border-neutral-200 text-sm rounded-md p-2.5 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 text-slate-900"
+                          >
+                            {field.options?.map((opt) => (
+                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                          </select>
+                        </div>
+                      ) : field.type === 'textarea' ? (
+                        <div className="space-y-1.5">
+                          <label className="block text-sm font-medium text-slate-700">{field.label}</label>
+                          {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
+                          <textarea
+                            rows={3}
+                            value={currentValue}
+                            onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
+                            className="w-full bg-white border border-neutral-200 text-sm rounded-md p-3 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 text-slate-900 resize-none"
+                          />
+                        </div>
+                      ) : field.type === 'boolean' ? (
+                         <div className="flex items-center justify-between p-3 rounded-lg bg-[#FCFCFC] border border-neutral-100">
+                          <div>
+                            <span className="block text-sm font-medium text-slate-700">{field.label}</span>
+                            {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleThemeDataChange(field.key, !currentValue)}
+                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${
+                              currentValue ? 'bg-slate-900' : 'bg-neutral-200'
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                                currentValue ? 'translate-x-4' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      ) : (
+                        <Input
+                          label={field.label}
+                          value={currentValue}
+                          onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
+                          placeholder={field.description}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+          )}
         </div>
 
         {/* Right Preview Frame (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col items-center">
+        <div className="lg:col-span-7 flex flex-col items-center lg:sticky lg:top-4">
           <div className="w-full flex items-center justify-between mb-3 px-2">
             <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
               <Smartphone className="w-4 h-4 text-neutral-400" />

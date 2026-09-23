@@ -227,7 +227,7 @@ export function BudgetTab({
               variant="primary"
               size="sm"
               onClick={openAddModal}
-              icon={<Plus className="w-4 h-4 text-[#263238]" />}
+              icon={<Plus className="w-4 h-4 text-white" />}
             >
               Tambah Pos Biaya
             </Button>

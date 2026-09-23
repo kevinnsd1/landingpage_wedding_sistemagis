@@ -1,21 +1,33 @@
 :root {
-  --color-brand-primary: #0F172A;
+  --color-brand-primary: #263238;
   --color-brand-primary-hover: #1E293B;
-  --color-brand-secondary: #475569;
+  --color-brand-secondary: #667085;
   --color-brand-background: #FCFCFC;
   --color-surface: #FFFFFF;
 
+  /* Pink / Blush Palette */
+  --color-brand-pink: #FCBACB;
   --color-brand-pink-accent: #FC9FB1;
+  --color-brand-pink-text: #7D4050;
+
+  /* Green / Sage Palette */
   --color-brand-green: #74A12E;
   --color-brand-green-soft: #B9DCA9;
-  --color-brand-yellow: #FFEAAB;
+  --color-brand-green-text: #3D6420;
 
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-border: #E5E7EB;
+  /* Cream / Warm Yellow Palette */
+  --color-brand-yellow: #FFEAAB;
+  --color-brand-cream-soft: #FFF9E6;
+  --color-brand-yellow-text: #7A5D00;
+
+  /* Typography & Structure */
+  --color-text-primary: #263238;
+  --color-text-secondary: #667085;
+  --color-border: #E8E8E8;
   --color-border-subtle: #F1F5F9;
-  --color-error: #EF4444;
-  --color-error-soft: #FEF2F2;
+  --color-error: #D9536F;
+  --color-error-soft: #FBE1E7;
+  --color-error-text: #B83D58;
 
   --radius-sm: 8px;
   --radius-md: 12px;

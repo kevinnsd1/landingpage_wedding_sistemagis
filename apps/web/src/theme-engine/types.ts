@@ -156,6 +156,17 @@ export interface ThemeCapabilities {
 // Theme Metadata & Definition
 // ---------------------------------------------------------------------------
 
+export type FieldType = 'text' | 'textarea' | 'image' | 'video' | 'select' | 'boolean';
+
+export interface CustomFieldDefinition {
+  key: string;
+  label: string;
+  description?: string;
+  type: FieldType;
+  options?: { label: string; value: string }[];
+  defaultValue?: any;
+}
+
 export interface CustomizableColor {
   key: string; // e.g. "primary", "text", "surface"
   label: string; // e.g. "Warna Utama"
@@ -172,6 +183,7 @@ export interface ThemeMetadata {
   previewColor: string;
   thumbnail?: string;
   customizableColors?: CustomizableColor[];
+  customFields?: CustomFieldDefinition[];
 
   /** Warna default tema — basis dari token */
   defaultColors: ThemeColors;

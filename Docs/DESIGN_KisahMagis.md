@@ -230,39 +230,34 @@ These functional colors should not replace the core brand palette.
 
 ---
 
-# 5. Color Usage
+# 5. Color Usage & Harmony
 
-## 5.1 Primary Usage
+KisahMagis menggunakan palet multi-warna pastel yang seimbang (tidak melulu pink), memadukan kehangatan pernikahan romantis dengan kejelasan visual dashboard produktif:
 
-`#FCBACB`
+## 5.1 Pink Pastel (Blush & Romantic Accent)
 
-Use for:
+- `#FCBACB` (Pink Soft): Soft pastel background, badge container, delicate borders.
+- `#FC9FB1` (Pink Accent): Secondary brand accent, selected state indicator, heart accents.
+- `#7D4050` / `#832B42` (Pink Deep Text): Warna teks kontras tinggi di atas latar `#FCBACB` (WCAG AA 5.5:1+).
 
-- Primary buttons
-- Active navigation
-- Brand accents
-- Important CTA
-- Selected states
-- Invitation accents
+## 5.2 Hijau Pastel & Sage (Progress, Success & Vitality)
 
-## 5.2 Secondary Pink
+- `#B9DCA9` (Pastel Green Soft): Background status 'Selesai', indikator progres siap antar, badge RSVP hadir.
+- `#74A12E` (Sage/Olive Green): Checkmark aktif, node timeline selesai, highlight nilai positif.
+- `#3D6420` (Green Deep Text): Warna teks kontras tinggi di atas latar `#B9DCA9`.
 
-`#FC9FB1`
+## 5.3 Cream & Warm Yellow (Milestones, Budget & Warmth)
 
-Use for:
+- `#FFEAAB` (Cream Yellow): Highlight tenggat waktu, kartu pos anggaran, badge status menunggu/pending.
+- `#FFF9E6` (Cream Soft): Soft container background untuk card preview.
+- `#7A5D00` (Cream Deep Text): Warna teks kontras tinggi di atas latar `#FFEAAB`.
 
-- Hover/active accents
-- Stronger decorative elements
-- Illustration details
-- Gradient endpoints
+## 5.4 Neutral Charcoal & Off-White (Structure, Contrast & Typography)
 
-## 5.3 Off White
-
-`#FCFCFC`
-
-Use as the primary application background.
-
-Avoid using pure white everywhere because the softer off-white creates a warmer visual identity.
+- `#263238` (Deep Charcoal Slate): Warna teks utama antarmuka, heading, icon tegas, dan latar tombol Primary Solid dengan teks putih.
+- `#667085` (Text Secondary): Label pendukung, keterangan tanggal, placeholder.
+- `#E8E8E8` / `#F1F5F9`: Border pembatas kartu, tabel, dan form input.
+- `#FCFCFC`: Warna latar belakang utama seluruh aplikasi (off-white hangat).
 
 ## 5.4 Green
 
@@ -629,52 +624,42 @@ Do not use gradients across every component.
 
 # 15. Buttons
 
-## 15.1 Primary Button
+Tombol di KisahMagis mengedepankan kualitas estetika, kejelasan hirarki visual, dan bebas dari gradasi artifisial yang berlebihan.
+
+## 15.1 Primary Solid Button (Authoritative Action)
+
+Digunakan untuk aksi utama (CTA penting, Tambah Tugas, Simpan Perubahan):
 
 ```text
-Background: #FCBACB
+Background: #263238
 Text: #FFFFFF
+Icon: #FFFFFF (stroke-current, kontras tajam WCAG AAA)
+Radius: 12px (rounded-xl)
+Height: 38–42px
+Hover: #1E293B
+Active: scale(0.98)
+```
+
+## 15.2 Pastel Accent Buttons (Dual & Contextual Actions)
+
+Digunakan untuk aksi pelengkap atau aksi kategori (misal: Tambah Acara di samping Tambah Tugas):
+
+- **Pastel Sage Green**: `bg-[#B9DCA9]/25 hover:bg-[#B9DCA9]/45 text-[#3D6420] border border-[#B9DCA9]`
+- **Pastel Cream**: `bg-[#FFEAAB]/35 hover:bg-[#FFEAAB]/55 text-[#7A5D00] border border-[#FFEAAB]`
+- **Pastel Pink**: `bg-[#FCBACB]/25 hover:bg-[#FCBACB]/45 text-[#7D4050] border border-[#FCBACB]`
+
+## 15.3 Secondary & Outline Button
+
+```text
+Background: #FFFFFF
+Border: #E8E8E8 (hover: #CBD5E1)
+Text: #263238
 Radius: 12px
-Height: 40–44px
 ```
 
-Example:
+## 15.4 Anti-Gradient Rule
 
-```text
-[  Buat Undangan  ]
-```
-
-## 15.2 Secondary Button
-
-```text
-Background: transparent
-Border: #FCBACB
-Text: #FC9FB1
-```
-
-## 15.3 Tertiary
-
-Text-only.
-
-Use for:
-
-- Cancel
-- Learn more
-- Secondary navigation
-
-## 15.4 Hover
-
-Primary hover should transition toward:
-
-```text
-#FC9FB1
-```
-
-Transition:
-
-```text
-150–200ms ease
-```
+Hindari gradasi neon/jenuh seperti `from-rose-500 to-pink-600` pada tombol UI. Gunakan warna solid berbobot atau paduan pastel transparan yang tenang, bersih, dan berkelas.
 
 ---
 
@@ -758,33 +743,42 @@ Text: #B83D58
 
 ## Dashboard Navigation
 
-Desktop:
+Navigasi sidebar dashboard KisahMagis dirancang bersih, terstruktur, dan memisahkan secara jelas antara pilar **Undangan Digital** dan **Perencanaan Acara (Planning)** tanpa mengurangi item navigasi maupun informasi:
 
 ```text
 ┌──────────────────────────────────────┐
-│ Logo                                 │
+│ Brand Logo                           │
+├──────────────────────────────────────┤
+│ Couple Card (Live/Draft, Slug, Web)  │
+├──────────────────────────────────────┤
+│ Ringkasan (Overview)                 │
 │                                      │
-│ Dashboard                            │
-│ Wedding                              │
-│ Invitation                           │
-│ Guests                               │
-│ Planner                              │
-│ Budget                               │
-│ Vendors                              │
-│ Media                                │
+│ • UNDANGAN DIGITAL                   │
+│   - Profil Pernikahan                │
+│   - Editor Undangan                  │
+│   - Galeri & Musik                   │
+│   - Buku Tamu & RSVP                 │
 │                                      │
-│ Settings                             │
+│ • PERENCANAAN ACARA                  │
+│   - Wedding Planner                  │
+│   - Seserahan & Hantaran             │
+│   - Anggaran & Biaya                 │
+│   - Direktori Vendor                 │
+│                                      │
+│ PENGATURAN                           │
+│   - Pengaturan & Akun                │
+├──────────────────────────────────────┤
+│ User Profile & Logout                │
 └──────────────────────────────────────┘
 ```
 
-Active item:
-
-```text
-background: rgba(252, 186, 203, 0.20)
-text: #D96F88
-```
-
-Use icon + text.
+### Unified Active State:
+Semua item navigasi aktif menggunakan satu warna standar brand yang konsisten, bersih, dan berbobot tanpa switching warna artifisial antar-seksi:
+- **Background**: `rgba(252, 186, 203, 0.20)` (`bg-[#FCBACB]/20`)
+- **Border**: `rgba(252, 186, 203, 0.60)`
+- **Text**: `#7D4050` (Pink Deep, WCAG AA 5.5:1+)
+- **Icon**: `#832B42` (Stroke-current dengan kontras tajam)
+- **Inactive Item**: `text-[#667085]` dengan hover `text-[#263238] bg-neutral-100/70`
 
 ---
 
@@ -1981,3 +1975,9 @@ Current:
 Design System v1.0
 ```
 
+---
+
+# 60. Theme Development
+
+Untuk panduan teknis bagi developer dalam membuat tema kustom menggunakan Dynamic Theme Engine, silakan rujuk ke dokumen berikut:
+[Theme Development Guide](./THEME_DEVELOPMENT.md)

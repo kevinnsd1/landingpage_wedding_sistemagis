@@ -158,44 +158,44 @@ export function GuestsTab({
       {/* RSVP Quick Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <Card className="p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-neutral-100 text-slate-800 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-neutral-100 text-[#263238] flex items-center justify-center flex-shrink-0">
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Total Tamu</p>
-            <p className="text-xl font-bold text-neutral-900">{guests.length}</p>
+            <p className="text-xs text-[#667085] font-medium">Total Tamu</p>
+            <p className="text-xl font-bold text-[#263238]">{guests.length}</p>
           </div>
         </Card>
 
         <Card className="p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#B9DCA9]/30 text-[#3D6420] flex items-center justify-center flex-shrink-0 border border-[#B9DCA9]/40">
             <UserCheck className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Konfirmasi Hadir</p>
-            <p className="text-xl font-bold text-emerald-700">{attendingCount} Orang</p>
+            <p className="text-xs text-[#667085] font-medium">Konfirmasi Hadir</p>
+            <p className="text-xl font-bold text-[#3D6420]">{attendingCount} Orang</p>
           </div>
         </Card>
 
         <Card className="p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#FCBACB]/30 text-[#7D4050] flex items-center justify-center flex-shrink-0 border border-[#FCBACB]/50">
             <UserX className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Berhalangan</p>
-            <p className="text-xl font-bold text-rose-700">
+            <p className="text-xs text-[#667085] font-medium">Berhalangan</p>
+            <p className="text-xl font-bold text-[#7D4050]">
               {rsvps.filter((r) => r.attendance === 'declined').length} Tamu
             </p>
           </div>
         </Card>
 
         <Card className="p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#FFEAAB]/40 text-[#7A5D00] flex items-center justify-center flex-shrink-0 border border-[#FFEAAB]/60">
             <Clock className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Belum Konfirmasi</p>
-            <p className="text-xl font-bold text-amber-700">
+            <p className="text-xs text-[#667085] font-medium">Belum Konfirmasi</p>
+            <p className="text-xl font-bold text-[#7A5D00]">
               {guests.filter((g) => g.rsvpStatus === 'pending').length} Tamu
             </p>
           </div>
@@ -215,7 +215,7 @@ export function GuestsTab({
             variant="primary"
             size="sm"
             onClick={openAddModal}
-            icon={<UserPlus className="w-4 h-4 text-[#263238]" />}
+            icon={<UserPlus className="w-4 h-4 text-white" />}
           >
             Tambah Tamu
           </Button>

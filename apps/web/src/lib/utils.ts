@@ -13,6 +13,8 @@ export function formatRupiah(amount: number): string {
   }).format(amount);
 }
 
+export const formatCurrency = formatRupiah;
+
 export function formatDateIndo(dateStr?: string | null): string {
   if (!dateStr || dateStr.trim() === '' || dateStr === 'Akan Datang') {
     return 'Belum ditentukan';

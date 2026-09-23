@@ -138,6 +138,65 @@ export const vendors = pgTable('vendors', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+export const weddingMilestones = pgTable('wedding_milestones', {
+  id: serial('id').primaryKey(),
+  weddingId: integer('wedding_id').references(() => weddings.id, { onDelete: 'cascade' }).notNull(),
+  title: varchar('title', { length: 255 }).notNull(),
+  date: timestamp('date'),
+  time: varchar('time', { length: 100 }),
+  location: varchar('location', { length: 255 }),
+  category: varchar('category', { length: 100 }).notNull(), // 'lamaran', 'pengajian', 'siraman', 'akad', 'resepsi', 'lainnya'
+  description: text('description'),
+  isCompleted: boolean('is_completed').default(false).notNull(),
+  pic: varchar('pic', { length: 255 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const seserahanBoxes = pgTable('seserahan_boxes', {
+  id: serial('id').primaryKey(),
+  weddingId: integer('wedding_id').references(() => weddings.id, { onDelete: 'cascade' }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  category: varchar('category', { length: 100 }),
+  recipient: varchar('recipient', { length: 50 }).notNull(), // 'groom_to_bride' | 'bride_to_groom'
+  status: varchar('status', { length: 50 }).default('planned').notNull(), // 'planned', 'purchased', 'decorating', 'ready'
+  estimatedCost: integer('estimated_cost').default(0),
+  vendor: varchar('vendor', { length: 255 }),
+  notes: text('notes'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const seserahanItems = pgTable('seserahan_items', {
+  id: serial('id').primaryKey(),
+  boxId: integer('box_id').references(() => seserahanBoxes.id, { onDelete: 'cascade' }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  estimatedCost: integer('estimated_cost').default(0),
+  actualCost: integer('actual_cost').default(0),
+  isPurchased: boolean('is_purchased').default(false).notNull(),
+  notes: text('notes'),
+});
+
+export const packages = pgTable('packages', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 100 }).notNull(), // 'Free', 'Premium'
+  price: integer('price').default(0),
+  features: jsonb('features').default([]),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const themes = pgTable('themes', {
+  id: varchar('id', { length: 100 }).primaryKey(), // e.g. 'cinematic'
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  isActive: boolean('is_active').default(true).notNull(),
+  isCustom: boolean('is_custom').default(false).notNull(),
+  packageId: integer('package_id').references(() => packages.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   weddings: many(weddings),
@@ -162,4 +221,29 @@ export const weddingsRelations = relations(weddings, ({ one, many }) => ({
   boards: many(plannerBoards),
   budgetItems: many(budgetItems),
   vendors: many(vendors),
+  milestones: many(weddingMilestones),
+  seserahanBoxes: many(seserahanBoxes),
 }));
+
+export const seserahanBoxesRelations = relations(seserahanBoxes, ({ many }) => ({
+  items: many(seserahanItems),
+}));
+
+export const seserahanItemsRelations = relations(seserahanItems, ({ one }) => ({
+  box: one(seserahanBoxes, {
+    fields: [seserahanItems.boxId],
+    references: [seserahanBoxes.id],
+  }),
+}));
+
+export const packagesRelations = relations(packages, ({ many }) => ({
+  themes: many(themes),
+}));
+
+export const themesRelations = relations(themes, ({ one }) => ({
+  package: one(packages, {
+    fields: [themes.packageId],
+    references: [packages.id],
+  }),
+}));
+

@@ -2,9 +2,10 @@ import { User } from '@/types/user';
 import { Wedding } from '@/types/wedding';
 import { Invitation } from '@/types/invitation';
 import { Guest, RSVP, GuestbookEntry } from '@/types/guest';
-import { PlannerTask } from '@/types/planner';
+import { PlannerTask, WeddingMilestone } from '@/types/planner';
 import { BudgetItem } from '@/types/budget';
 import { Vendor } from '@/types/vendor';
+import { SeserahanBox, SeserahanItem } from '@/types/seserahan';
 
 async function fetchApi<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, {
@@ -167,6 +168,61 @@ export const api = {
     await fetchApi(`/api/vendors/${weddingId}/${vendorId}`, { method: 'DELETE' });
   },
 
+  // Milestones
+  async getMilestones(weddingId: string): Promise<WeddingMilestone[]> {
+    return fetchApi(`/api/milestones/${weddingId}`);
+  },
+  async addMilestone(weddingId: string, payload: Partial<WeddingMilestone>): Promise<WeddingMilestone> {
+    return fetchApi(`/api/milestones/${weddingId}`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+  async updateMilestone(weddingId: string, milestoneId: string, payload: Partial<WeddingMilestone>): Promise<WeddingMilestone> {
+    return fetchApi(`/api/milestones/${weddingId}/${milestoneId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  },
+  async deleteMilestone(weddingId: string, milestoneId: string): Promise<void> {
+    await fetchApi(`/api/milestones/${weddingId}/${milestoneId}`, { method: 'DELETE' });
+  },
+
+  // Seserahan
+  async getSeserahanBoxes(weddingId: string): Promise<SeserahanBox[]> {
+    return fetchApi(`/api/seserahan/${weddingId}`);
+  },
+  async addSeserahanBox(weddingId: string, payload: Partial<SeserahanBox>): Promise<SeserahanBox> {
+    return fetchApi(`/api/seserahan/${weddingId}/boxes`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+  async updateSeserahanBox(weddingId: string, boxId: string, payload: Partial<SeserahanBox>): Promise<SeserahanBox> {
+    return fetchApi(`/api/seserahan/${weddingId}/boxes/${boxId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  },
+  async deleteSeserahanBox(weddingId: string, boxId: string): Promise<void> {
+    await fetchApi(`/api/seserahan/${weddingId}/boxes/${boxId}`, { method: 'DELETE' });
+  },
+  async addSeserahanItem(weddingId: string, payload: Partial<SeserahanItem>): Promise<SeserahanItem> {
+    return fetchApi(`/api/seserahan/${weddingId}/items`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+  async updateSeserahanItem(weddingId: string, itemId: string, payload: Partial<SeserahanItem>): Promise<SeserahanItem> {
+    return fetchApi(`/api/seserahan/${weddingId}/items/${itemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  },
+  async deleteSeserahanItem(weddingId: string, itemId: string): Promise<void> {
+    await fetchApi(`/api/seserahan/${weddingId}/items/${itemId}`, { method: 'DELETE' });
+  },
+
   // Public Invitation
   async getPublicInvitation(slug: string, token?: string): Promise<{
     wedding: Wedding;
@@ -190,5 +246,32 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+  },
+
+  // Media
+  async uploadMedia(file: File): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    // We cannot use fetchApi directly because it sets Content-Type to application/json
+    // For FormData, the browser must set the Content-Type automatically with the boundary
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!res.ok) {
+      throw new Error(`Failed to upload file: ${res.statusText}`);
+    }
+    
+    return res.json();
+  },
+
+  // Themes
+  async getThemes(): Promise<any[]> {
+    return fetchApi('/api/themes');
+  },
+  async getPackages(): Promise<any[]> {
+    return fetchApi('/api/themes/packages');
   },
 };

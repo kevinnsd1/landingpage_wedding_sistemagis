@@ -133,13 +133,13 @@ export function OverviewTab({
             <span className="text-sm font-semibold text-slate-700">
               Total Tamu
             </span>
-            <div className="w-8 h-8 rounded-lg bg-neutral-100 text-slate-800 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-neutral-100 text-[#263238] flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-slate-900 mb-1">{guests.length}</p>
+          <p className="text-2xl font-bold text-[#263238] mb-1">{guests.length}</p>
           <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span className="text-emerald-700 font-medium">{attendingCount} hadir</span>
+            <span className="text-[#3D6420] font-medium">{attendingCount} hadir</span>
             <span>•</span>
             <span>{guests.filter(g => g.rsvpStatus === 'pending').length} menunggu</span>
           </div>
@@ -151,15 +151,15 @@ export function OverviewTab({
             <span className="text-sm font-semibold text-slate-700">
               RSVP Terkonfirmasi
             </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#B9DCA9]/30 text-[#3D6420] flex items-center justify-center border border-[#B9DCA9]/40">
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-slate-900 mb-1">{rsvps.length}</p>
+          <p className="text-2xl font-bold text-[#263238] mb-1">{rsvps.length}</p>
           <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span className="text-emerald-700 font-medium">{attendingCount} orang hadir</span>
+            <span className="text-[#3D6420] font-medium">{attendingCount} orang hadir</span>
             <span>•</span>
-            <span className="text-rose-600">{declinedCount} berhalangan</span>
+            <span className="text-[#B83D58]">{declinedCount} berhalangan</span>
           </div>
         </Card>
 
@@ -169,11 +169,11 @@ export function OverviewTab({
             <span className="text-sm font-semibold text-slate-700">
               Total Realisasi Biaya
             </span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#FFEAAB]/40 text-[#7A5D00] flex items-center justify-center border border-[#FFEAAB]/60">
               <Wallet className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl font-bold text-slate-900 mb-1 truncate">{formatRupiah(totalActualBudget)}</p>
+          <p className="text-xl font-bold text-[#263238] mb-1 truncate">{formatRupiah(totalActualBudget)}</p>
           <p className="text-xs text-slate-500 truncate">
             dari estimasi {formatRupiah(totalEstimatedBudget)}
           </p>
@@ -185,11 +185,11 @@ export function OverviewTab({
             <span className="text-sm font-semibold text-slate-700">
               Wedding Planner
             </span>
-            <div className="w-8 h-8 rounded-lg bg-neutral-100 text-slate-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#FCBACB]/30 text-[#7D4050] flex items-center justify-center border border-[#FCBACB]/50">
               <CheckSquare className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-slate-900 mb-1">{completedTasks.length}/{tasks.length}</p>
+          <p className="text-2xl font-bold text-[#263238] mb-1">{completedTasks.length}/{tasks.length}</p>
           <p className="text-xs text-slate-500">
             {pendingTasks.length} tugas masih berjalan
           </p>

@@ -14,9 +14,10 @@ import { User } from '@/types/user';
 import { Wedding } from '@/types/wedding';
 import { Invitation } from '@/types/invitation';
 import { Guest, RSVP, GuestbookEntry } from '@/types/guest';
-import { PlannerTask } from '@/types/planner';
+import { PlannerTask, WeddingMilestone } from '@/types/planner';
 import { BudgetItem } from '@/types/budget';
 import { Vendor } from '@/types/vendor';
+import { SeserahanItem } from '@/types/seserahan';
 import { ToastContainer, ToastMessage } from '@/components/ui/Toast';
 
 import { LandingPage } from '@/views/LandingPage';
@@ -28,6 +29,7 @@ import { OverviewTab } from '@/views/dashboard/OverviewTab';
 import { EditorTab } from '@/views/dashboard/EditorTab';
 import { GuestsTab } from '@/views/dashboard/GuestsTab';
 import { PlannerTab } from '@/views/dashboard/PlannerTab';
+import { SeserahanTab } from '@/views/dashboard/SeserahanTab';
 import { BudgetTab } from '@/views/dashboard/BudgetTab';
 import { VendorsTab } from '@/views/dashboard/VendorsTab';
 import { MediaTab } from '@/views/dashboard/MediaTab';
@@ -41,6 +43,8 @@ interface DashboardContentProps {
   rsvps: RSVP[];
   guestbook: GuestbookEntry[];
   tasks: PlannerTask[];
+  milestones: WeddingMilestone[];
+  seserahanItems: SeserahanItem[];
   budget: BudgetItem[];
   vendors: Vendor[];
   onUpdateWedding: (updated: Wedding) => Promise<void>;
@@ -52,6 +56,12 @@ interface DashboardContentProps {
   onAddTask: (payload: any) => Promise<void>;
   onUpdateTask: (updated: PlannerTask) => Promise<void>;
   onDeleteTask: (id: string) => Promise<void>;
+  onAddMilestone: (payload: any) => Promise<void>;
+  onUpdateMilestone: (updated: WeddingMilestone) => Promise<void>;
+  onDeleteMilestone: (id: string) => Promise<void>;
+  onAddSeserahanItem: (payload: any) => Promise<void>;
+  onUpdateSeserahanItem: (updated: SeserahanItem) => Promise<void>;
+  onDeleteSeserahanItem: (id: string) => Promise<void>;
   onAddBudgetItem: (payload: any) => Promise<void>;
   onUpdateBudgetItem: (updated: BudgetItem) => Promise<void>;
   onDeleteBudgetItem: (id: string) => Promise<void>;
@@ -71,6 +81,8 @@ function DashboardContent({
   rsvps,
   guestbook,
   tasks,
+  milestones,
+  seserahanItems,
   budget,
   vendors,
   onUpdateWedding,
@@ -82,6 +94,12 @@ function DashboardContent({
   onAddTask,
   onUpdateTask,
   onDeleteTask,
+  onAddMilestone,
+  onUpdateMilestone,
+  onDeleteMilestone,
+  onAddSeserahanItem,
+  onUpdateSeserahanItem,
+  onDeleteSeserahanItem,
   onAddBudgetItem,
   onUpdateBudgetItem,
   onDeleteBudgetItem,
@@ -100,6 +118,7 @@ function DashboardContent({
     'editor',
     'guests',
     'planner',
+    'seserahan',
     'budget',
     'vendors',
     'media',
@@ -165,9 +184,24 @@ function DashboardContent({
         <PlannerTab
           wedding={wedding}
           tasks={tasks}
+          milestones={milestones}
           onAddTask={onAddTask}
           onUpdateTask={onUpdateTask}
           onDeleteTask={onDeleteTask}
+          onAddMilestone={onAddMilestone}
+          onUpdateMilestone={onUpdateMilestone}
+          onDeleteMilestone={onDeleteMilestone}
+          onShowToast={showToast}
+        />
+      )}
+
+      {activeTab === 'seserahan' && (
+        <SeserahanTab
+          wedding={wedding}
+          items={seserahanItems}
+          onAddItem={onAddSeserahanItem}
+          onUpdateItem={onUpdateSeserahanItem}
+          onDeleteItem={onDeleteSeserahanItem}
           onShowToast={showToast}
         />
       )}
@@ -309,6 +343,8 @@ export function App() {
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
   const [guestbook, setGuestbook] = useState<GuestbookEntry[]>([]);
   const [tasks, setTasks] = useState<PlannerTask[]>([]);
+  const [milestones, setMilestones] = useState<WeddingMilestone[]>([]);
+  const [seserahanItems, setSeserahanItems] = useState<SeserahanItem[]>([]);
   const [budget, setBudget] = useState<BudgetItem[]>([]);
   const [vendors, setVendors] = useState<Vendor[]>([]);
 
@@ -316,7 +352,7 @@ export function App() {
   const reloadWeddingData = async (targetWedding: Wedding) => {
     setWedding(targetWedding);
     try {
-      const [inv, g, r, gb, t, b, v] = await Promise.all([
+      const [inv, g, r, gb, t, b, v, m, s] = await Promise.all([
         api.getInvitation(targetWedding.id).catch(() => INITIAL_INVITATION),
         api.getGuests(targetWedding.id).catch(() => []),
         api.getRSVPs(targetWedding.id).catch(() => []),
@@ -324,6 +360,8 @@ export function App() {
         api.getTasks(targetWedding.id).catch(() => []),
         api.getBudget(targetWedding.id).catch(() => []),
         api.getVendors(targetWedding.id).catch(() => []),
+        api.getMilestones(targetWedding.id).catch(() => []),
+        api.getSeserahanBoxes(targetWedding.id).catch(() => []),
       ]);
       setInvitation(inv);
       setGuests(g);
@@ -332,6 +370,26 @@ export function App() {
       setTasks(t);
       setBudget(b);
       setVendors(v);
+      setMilestones(m);
+      
+      // Map boxes to flat SeserahanItem structure for frontend compatibility
+      const mappedSeserahan = s.map((box: any, index: number) => ({
+        id: box.id,
+        weddingId: targetWedding.id,
+        boxNumber: index + 1,
+        boxName: box.name,
+        recipient: box.recipient,
+        title: box.name,
+        category: box.category || 'Lainnya',
+        estimatedCost: box.estimatedCost,
+        actualCost: box.estimatedCost,
+        status: box.status,
+        vendor: box.vendor,
+        notes: box.notes,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }));
+      setSeserahanItems(mappedSeserahan as any);
     } catch (err) {
       console.error('Error reloading wedding data:', err);
     }
@@ -553,6 +611,103 @@ export function App() {
     }
   };
 
+  const handleAddMilestone = async (payload: any) => {
+    try {
+      await api.addMilestone(wedding.id, payload);
+      const updated = await api.getMilestones(wedding.id);
+      setMilestones(updated);
+      showToast('Jadwal acara berhasil ditambahkan', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menambah acara', 'error');
+    }
+  };
+
+  const handleUpdateMilestone = async (updated: WeddingMilestone) => {
+    try {
+      await api.updateMilestone(wedding.id, updated.id, updated);
+      const updatedList = await api.getMilestones(wedding.id);
+      setMilestones(updatedList);
+    } catch (err: any) {
+      showToast(err.message || 'Gagal memperbarui acara', 'error');
+    }
+  };
+
+  const handleDeleteMilestone = async (id: string) => {
+    try {
+      await api.deleteMilestone(wedding.id, id);
+      setMilestones((prev) => prev.filter((m) => m.id !== id));
+      showToast('Acara berhasil dihapus', 'info');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menghapus acara', 'error');
+    }
+  };
+
+  const refreshSeserahan = async () => {
+    const s = await api.getSeserahanBoxes(wedding.id);
+    const mappedSeserahan = s.map((box: any, index: number) => ({
+      id: box.id,
+      weddingId: wedding.id,
+      boxNumber: index + 1,
+      boxName: box.name,
+      recipient: box.recipient,
+      title: box.name,
+      category: box.category || 'Lainnya',
+      estimatedCost: box.estimatedCost,
+      actualCost: box.estimatedCost,
+      status: box.status,
+      vendor: box.vendor,
+      notes: box.notes,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    setSeserahanItems(mappedSeserahan as any);
+  };
+
+  const handleAddSeserahanItem = async (payload: any) => {
+    try {
+      await api.addSeserahanBox(wedding.id, {
+        name: payload.boxName || payload.title,
+        recipient: payload.recipient,
+        category: payload.category,
+        estimatedCost: payload.estimatedCost,
+        status: payload.status,
+        vendor: payload.vendor,
+        notes: payload.notes,
+      } as any);
+      await refreshSeserahan();
+      showToast('Seserahan berhasil ditambahkan', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menambah seserahan', 'error');
+    }
+  };
+
+  const handleUpdateSeserahanItem = async (updated: SeserahanItem) => {
+    try {
+      await api.updateSeserahanBox(wedding.id, updated.id, {
+        name: updated.boxName || updated.title,
+        recipient: updated.recipient,
+        category: updated.category,
+        estimatedCost: updated.estimatedCost,
+        status: updated.status,
+        vendor: updated.vendor,
+        notes: updated.notes,
+      } as any);
+      await refreshSeserahan();
+    } catch (err: any) {
+      showToast(err.message || 'Gagal memperbarui seserahan', 'error');
+    }
+  };
+
+  const handleDeleteSeserahanItem = async (id: string) => {
+    try {
+      await api.deleteSeserahanBox(wedding.id, id);
+      await refreshSeserahan();
+      showToast('Seserahan berhasil dihapus', 'info');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menghapus seserahan', 'error');
+    }
+  };
+
   const dashboardProps: DashboardContentProps = {
     user: currentUser!,
     wedding,
@@ -561,6 +716,8 @@ export function App() {
     rsvps,
     guestbook,
     tasks,
+    milestones,
+    seserahanItems,
     budget,
     vendors,
     onUpdateWedding: handleUpdateWedding,
@@ -572,6 +729,12 @@ export function App() {
     onAddTask: handleAddTask,
     onUpdateTask: handleUpdateTask,
     onDeleteTask: handleDeleteTask,
+    onAddMilestone: handleAddMilestone,
+    onUpdateMilestone: handleUpdateMilestone,
+    onDeleteMilestone: handleDeleteMilestone,
+    onAddSeserahanItem: handleAddSeserahanItem,
+    onUpdateSeserahanItem: handleUpdateSeserahanItem,
+    onDeleteSeserahanItem: handleDeleteSeserahanItem,
     onAddBudgetItem: handleAddBudgetItem,
     onUpdateBudgetItem: handleUpdateBudgetItem,
     onDeleteBudgetItem: handleDeleteBudgetItem,

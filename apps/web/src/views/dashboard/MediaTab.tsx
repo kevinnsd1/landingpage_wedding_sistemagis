@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Lightbox } from '@/components/invitation/Lightbox';
+import { MediaUploader } from '@/components/ui/MediaUploader';
 
 export interface MediaTabProps {
   wedding: Wedding;
@@ -179,15 +180,15 @@ export function MediaTab({
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Tambah Foto Galeri"
-        description="Masukkan URL foto resolusi tinggi untuk galeri undangan pernikahan."
+        description="Pilih dan unggah foto resolusi tinggi untuk galeri undangan pernikahan."
       >
         <form onSubmit={handleAddPhoto} className="space-y-4">
-          <Input
-            label="URL Foto (Gambar)"
+          <MediaUploader
+            label="Unggah Foto Galeri"
+            description="Pilih foto dari perangkat Anda untuk ditambahkan ke galeri."
+            accept="image/*"
             value={photoUrl}
-            onChange={(e) => setPhotoUrl(e.target.value)}
-            placeholder="https://images.unsplash.com/..."
-            required
+            onChange={(url) => setPhotoUrl(url)}
           />
 
           <Input
@@ -196,20 +197,6 @@ export function MediaTab({
             onChange={(e) => setPhotoCaption(e.target.value)}
             placeholder="Contoh: Senyum bahagia saat sesi prewedding di Bromo"
           />
-
-          {photoUrl && (
-            <div className="mt-2">
-              <span className="text-xs text-neutral-400 block mb-1">Pratinjau Foto:</span>
-              <div className="w-32 h-32 rounded-lg overflow-hidden border border-neutral-200">
-                <img
-                  src={photoUrl}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                  onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
-                />
-              </div>
-            </div>
-          )}
 
           <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-neutral-100">
             <Button
