@@ -1,6 +1,13 @@
 import React from 'react';
 import { Check, UserCheck, Send } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { SectionComponentProps } from '../types';
 
 /**
@@ -135,20 +142,28 @@ export function RSVPSection({
                 <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--theme-text)' }}>
                   Jumlah Tamu Hadir
                 </label>
-                <select
-                  value={rsvpGuestCount}
-                  onChange={(e) => setRsvpGuestCount(Number(e.target.value))}
-                  className="w-full text-sm rounded-md px-3.5 py-2.5 focus:outline-none"
-                  style={{
-                    border: '1px solid var(--theme-border)',
-                    color: 'var(--theme-text)',
-                    background: 'var(--theme-surface)',
-                  }}
+                <Select
+                  value={String(rsvpGuestCount)}
+                  onValueChange={(val) => setRsvpGuestCount(Number(val))}
                 >
-                  {[1, 2, 3, 4].map((n) => (
-                    <option key={n} value={n}>{n} Orang</option>
-                  ))}
-                </select>
+                  <SelectTrigger
+                    className="w-full text-sm rounded-md px-3.5 h-10 focus:outline-none"
+                    style={{
+                      border: '1px solid var(--theme-border)',
+                      color: 'var(--theme-text)',
+                      background: 'var(--theme-surface)',
+                    }}
+                  >
+                    <SelectValue placeholder="Pilih Jumlah Tamu" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1, 2, 3, 4].map((n) => (
+                      <SelectItem key={n} value={String(n)}>
+                        {n} Orang
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             )}
 

@@ -107,9 +107,9 @@ export function MediaTab({
           variant="primary"
           size="sm"
           onClick={() => setIsAddModalOpen(true)}
-          icon={<Plus className="w-4 h-4 text-white" />}
+          icon={<Plus className="w-4 h-4" />}
         >
-          + Tambah Foto
+          Tambah Foto
         </Button>
       </div>
 

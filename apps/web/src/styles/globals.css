@@ -1,4 +1,6 @@
 @import './tokens.css';
+@import "tw-animate-css";
+@import "@fontsource-variable/geist";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,14 +8,81 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   body {
-    background-color: var(--color-brand-background);
-    color: var(--color-text-primary);
+    background-color: var(--background, #FCFCFC);
+    color: var(--foreground, #263238);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   h1, h2, h3, .font-brand {
     font-family: 'Quintessential', cursive, serif;
+  }
+  .theme {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+  }
+  :root {
+    --background: #FCFCFC;
+    --foreground: #263238;
+    --card: #FFFFFF;
+    --card-foreground: #263238;
+    --popover: #FFFFFF;
+    --popover-foreground: #263238;
+    --primary: #263238;
+    --primary-foreground: #FFFFFF;
+    --secondary: #FFF0F3;
+    --secondary-foreground: #D96F88;
+    --muted: #F8FAFC;
+    --muted-foreground: #64748B;
+    --accent: #FFF0F3;
+    --accent-foreground: #D96F88;
+    --destructive: #D9536F;
+    --destructive-foreground: #FFFFFF;
+    --border: #E8E8E8;
+    --input: #E2E8F0;
+    --ring: #FCBACB;
+    --radius: 0.625rem;
+    --sidebar: #FFFFFF;
+    --sidebar-foreground: #263238;
+    --sidebar-primary: #263238;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #FFF0F3;
+    --sidebar-accent-foreground: #D96F88;
+    --sidebar-border: #EEEEEE;
+    --sidebar-ring: #FCBACB;
+  }
+  .dark {
+    --background: #0F172A;
+    --foreground: #F8FAFC;
+    --card: #1E293B;
+    --card-foreground: #F8FAFC;
+    --popover: #1E293B;
+    --popover-foreground: #F8FAFC;
+    --primary: #F8FAFC;
+    --primary-foreground: #0F172A;
+    --secondary: #334155;
+    --secondary-foreground: #F8FAFC;
+    --muted: #334155;
+    --muted-foreground: #94A3B8;
+    --accent: #334155;
+    --accent-foreground: #F8FAFC;
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+    --border: #334155;
+    --input: #334155;
+    --ring: #FCBACB;
+    --sidebar: #1E293B;
+    --sidebar-foreground: #F8FAFC;
+    --sidebar-primary: #38BDF8;
+    --sidebar-primary-foreground: #0F172A;
+    --sidebar-accent: #334155;
+    --sidebar-accent-foreground: #F8FAFC;
+    --sidebar-border: #334155;
+    --sidebar-ring: #38BDF8;
+  }
+  * {
+    border-color: var(--border);
   }
 }
 

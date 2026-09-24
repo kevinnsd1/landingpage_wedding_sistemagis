@@ -123,7 +123,7 @@ export function LandingPage({ onNavigate, isLoggedIn, onLogout }: LandingPagePro
               variant="primary"
               size="lg"
               onClick={() => onNavigate(isLoggedIn ? 'dashboard' : 'register')}
-              icon={<Heart className="w-4 h-4 fill-current text-white" />}
+              icon={<Heart className="w-4 h-4 fill-current" />}
               className="w-full sm:w-auto shadow-sm text-sm h-12 px-8"
             >
               {isLoggedIn ? 'Buka Dashboard Saya' : 'Mulai Membuat Undangan Gratis'}

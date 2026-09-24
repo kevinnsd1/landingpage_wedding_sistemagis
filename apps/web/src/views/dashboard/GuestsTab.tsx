@@ -22,6 +22,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { generateWhatsAppInvitation } from '@/lib/utils';
 import { guestSchema } from '@/schemas/validation';
 
@@ -215,7 +222,7 @@ export function GuestsTab({
             variant="primary"
             size="sm"
             onClick={openAddModal}
-            icon={<UserPlus className="w-4 h-4 text-white" />}
+            icon={<UserPlus className="w-4 h-4" />}
           >
             Tambah Tamu
           </Button>
@@ -233,18 +240,19 @@ export function GuestsTab({
           </div>
 
           <div className="w-full sm:w-48">
-            <select
-              value={filterGroup}
-              onChange={(e) => setFilterGroup(e.target.value)}
-              className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-            >
-              <option value="all">Semua Kategori</option>
-              <option value="Keluarga">Keluarga</option>
-              <option value="Sahabat">Sahabat</option>
-              <option value="Rekan Kerja">Rekan Kerja</option>
-              <option value="VIP">VIP</option>
-              <option value="Lainnya">Lainnya</option>
-            </select>
+            <Select value={filterGroup} onValueChange={setFilterGroup}>
+              <SelectTrigger className="w-full bg-white text-xs h-10 border-neutral-200">
+                <SelectValue placeholder="Semua Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Kategori</SelectItem>
+                <SelectItem value="Keluarga">Keluarga</SelectItem>
+                <SelectItem value="Sahabat">Sahabat</SelectItem>
+                <SelectItem value="Rekan Kerja">Rekan Kerja</SelectItem>
+                <SelectItem value="VIP">VIP</SelectItem>
+                <SelectItem value="Lainnya">Lainnya</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -441,38 +449,40 @@ export function GuestsTab({
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Kategori Tamu
               </label>
-              <select
-                value={formGroup}
-                onChange={(e) => setFormGroup(e.target.value as GuestGroup)}
-                className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-              >
-                <option value="Keluarga">Keluarga</option>
-                <option value="Sahabat">Sahabat</option>
-                <option value="Rekan Kerja">Rekan Kerja</option>
-                <option value="VIP">VIP</option>
-                <option value="Lainnya">Lainnya</option>
-              </select>
+              <Select value={formGroup} onValueChange={(val) => setFormGroup(val as GuestGroup)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Keluarga">Keluarga</SelectItem>
+                  <SelectItem value="Sahabat">Sahabat</SelectItem>
+                  <SelectItem value="Rekan Kerja">Rekan Kerja</SelectItem>
+                  <SelectItem value="VIP">VIP</SelectItem>
+                  <SelectItem value="Lainnya">Lainnya</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Jumlah Pax (Slot Tamu)
               </label>
-              <select
-                value={formCount}
-                onChange={(e) => setFormCount(Number(e.target.value))}
-                className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-              >
-                <option value={1}>1 Orang</option>
-                <option value={2}>2 Orang</option>
-                <option value={3}>3 Orang</option>
-                <option value={4}>4 Orang</option>
-                <option value={5}>5 Orang</option>
-              </select>
+              <Select value={String(formCount)} onValueChange={(val) => setFormCount(Number(val))}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Pax" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">1 Orang</SelectItem>
+                  <SelectItem value="2">2 Orang</SelectItem>
+                  <SelectItem value="3">3 Orang</SelectItem>
+                  <SelectItem value="4">4 Orang</SelectItem>
+                  <SelectItem value="5">5 Orang</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

@@ -25,6 +25,14 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { plannerTaskSchema } from '@/schemas/validation';
 import { formatDateIndo } from '@/lib/utils';
 
@@ -1061,33 +1069,29 @@ export function PlannerTab({
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 mb-1">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Prioritas
               </label>
-              <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                className="w-full bg-[#FCFCFC] border border-neutral-200 text-xs rounded-lg p-2.5 focus:outline-none focus:border-slate-900"
-              >
-                <option value="low">Rendah (Low)</option>
-                <option value="medium">Sedang (Medium)</option>
-                <option value="high">Penting (High)</option>
-              </select>
+              <Select value={priority} onValueChange={(val) => setPriority(val as TaskPriority)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Prioritas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Rendah (Low)</SelectItem>
+                  <SelectItem value="medium">Sedang (Medium)</SelectItem>
+                  <SelectItem value="high">Penting (High)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                Kategori
-              </label>
-              <input
-                type="text"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="Contoh: Venue, Busana"
-                className="w-full bg-[#FCFCFC] border border-neutral-200 text-xs rounded-lg p-2.5 focus:outline-none focus:border-slate-900"
-              />
-            </div>
+            <Input
+              label="Kategori"
+              type="text"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder="Contoh: Venue, Busana"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -1098,19 +1102,20 @@ export function PlannerTab({
               onChange={(e) => setDueDate(e.target.value)}
             />
 
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 mb-1">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Kolom Status
               </label>
-              <select
-                value={columnId}
-                onChange={(e) => setColumnId(e.target.value as ColumnId)}
-                className="w-full bg-[#FCFCFC] border border-neutral-200 text-xs rounded-lg p-2.5 focus:outline-none focus:border-slate-900"
-              >
-                <option value="todo">Akan Dikerjakan (To Do)</option>
-                <option value="in_progress">Sedang Berjalan (In Progress)</option>
-                <option value="done">Selesai (Done)</option>
-              </select>
+              <Select value={columnId} onValueChange={(val) => setColumnId(val as ColumnId)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Kolom" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todo">Akan Dikerjakan (To Do)</SelectItem>
+                  <SelectItem value="in_progress">Sedang Berjalan (In Progress)</SelectItem>
+                  <SelectItem value="done">Selesai (Done)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -1174,35 +1179,32 @@ export function PlannerTab({
             onChange={(e) => setMVenue(e.target.value)}
           />
 
-          <div>
-            <label className="block text-xs font-semibold text-neutral-700 mb-1">
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
               Kategori Acara
             </label>
-            <select
-              value={mCategory}
-              onChange={(e) => setMCategory(e.target.value as MilestoneCategory)}
-              className="w-full bg-[#FCFCFC] border border-neutral-200 text-xs rounded-lg p-2.5 focus:outline-none focus:border-slate-900"
-            >
-              <option value="ceremony">Upacara Utama (Akad / Resepsi)</option>
-              <option value="traditional">Prosesi Adat (Lamaran, Siraman, Midodareni, Sangjit)</option>
-              <option value="meeting">Rapat &amp; Gladi Resik Vendor</option>
-              <option value="deadline">Tenggat Waktu Penting</option>
-              <option value="other">Acara Lainnya</option>
-            </select>
+            <Select value={mCategory} onValueChange={(val) => setMCategory(val as MilestoneCategory)}>
+              <SelectTrigger className="w-full bg-white border-neutral-200">
+                <SelectValue placeholder="Pilih Kategori Acara" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ceremony">Upacara Utama (Akad / Resepsi)</SelectItem>
+                <SelectItem value="traditional">Prosesi Adat (Lamaran, Siraman, Midodareni, Sangjit)</SelectItem>
+                <SelectItem value="meeting">Rapat &amp; Gladi Resik Vendor</SelectItem>
+                <SelectItem value="deadline">Tenggat Waktu Penting</SelectItem>
+                <SelectItem value="other">Acara Lainnya</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-neutral-700 mb-1">
-              Deskripsi / Catatan Acara (Opsional)
-            </label>
-            <textarea
-              rows={3}
-              value={mDescription}
-              onChange={(e) => setMDescription(e.target.value)}
-              placeholder="Rincian susunan acara, pakaian/dresscode, atau persiapan yang dibutuhkan..."
-              className="w-full bg-[#FCFCFC] border border-neutral-200 text-xs rounded-lg p-2.5 focus:outline-none focus:border-slate-900 resize-none"
-            />
-          </div>
+          <Textarea
+            label="Deskripsi / Catatan Acara (Opsional)"
+            rows={3}
+            value={mDescription}
+            onChange={(e) => setMDescription(e.target.value)}
+            placeholder="Rincian susunan acara, pakaian/dresscode, atau persiapan yang dibutuhkan..."
+            className="resize-none"
+          />
 
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-neutral-100">
             <Button

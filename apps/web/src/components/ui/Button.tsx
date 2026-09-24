@@ -1,50 +1,100 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "radix-ui"
+import { cn } from "@/lib/utils"
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'pink' | 'green' | 'cream';
-  size?: 'sm' | 'md' | 'lg';
-  isLoading?: boolean;
-  icon?: React.ReactNode;
+const buttonVariants = cva(
+  "group/button inline-flex items-center justify-center font-medium transition-all duration-150 rounded-lg select-none outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none active:scale-[0.98] [&_svg]:shrink-0 [&_svg]:pointer-events-none",
+  {
+    variants: {
+      variant: {
+        default: "bg-[#263238] text-white hover:bg-[#37474F] focus:ring-[#263238]/30",
+        primary: "bg-[#FCBACB] text-[#263238] font-semibold hover:bg-[#FC9FB1] focus:ring-[#FCBACB] shadow-xs",
+        secondary: "bg-transparent border border-[#FCBACB] text-[#D96F88] hover:bg-[#FFF0F3] focus:ring-[#FCBACB]",
+        outline: "bg-white border border-[#E8E8E8] text-[#263238] hover:bg-neutral-50 hover:border-neutral-300 focus:ring-neutral-200",
+        ghost: "bg-transparent text-[#263238] hover:bg-[#FFF0F3] hover:text-[#D96F88]",
+        danger: "bg-[#D9536F] text-white hover:bg-rose-600 focus:ring-rose-300 shadow-xs",
+        destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20 focus:ring-destructive/20",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "text-sm px-4 py-2 gap-2 h-10",
+        xs: "text-xs px-2.5 py-1 gap-1 h-7",
+        sm: "text-xs px-3 py-1.5 gap-1.5 h-8",
+        md: "text-sm px-4 py-2 gap-2 h-10",
+        lg: "text-base px-6 py-2.5 gap-2.5 h-11",
+        icon: "size-10 p-0",
+        "icon-xs": "size-7 p-0",
+        "icon-sm": "size-8 p-0",
+        "icon-lg": "size-11 p-0",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+  isLoading?: boolean
+  icon?: React.ReactNode
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading = false, icon, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-150 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none select-none cursor-pointer';
-
-    const variants = {
-      primary: 'bg-[#263238] text-white font-medium hover:bg-[#1E293B] focus:ring-slate-400 shadow-xs active:scale-[0.98]',
-      secondary: 'bg-white border border-[#E8E8E8] text-[#263238] hover:bg-neutral-50 hover:border-neutral-300 focus:ring-neutral-300 shadow-2xs active:scale-[0.98]',
-      outline: 'bg-transparent border border-[#E8E8E8] text-[#263238] hover:bg-neutral-50 hover:border-neutral-300 focus:ring-neutral-200 active:scale-[0.98]',
-      ghost: 'bg-transparent text-[#667085] hover:bg-neutral-100 hover:text-[#263238] active:scale-[0.98]',
-      pink: 'bg-[#FCBACB]/30 hover:bg-[#FCBACB]/50 text-[#7D4050] border border-[#FCBACB] shadow-2xs active:scale-[0.98]',
-      green: 'bg-[#B9DCA9]/30 hover:bg-[#B9DCA9]/50 text-[#3D6420] border border-[#B9DCA9] shadow-2xs active:scale-[0.98]',
-      cream: 'bg-[#FFEAAB]/40 hover:bg-[#FFEAAB]/60 text-[#7A5D00] border border-[#FFEAAB] shadow-2xs active:scale-[0.98]',
-      danger: 'bg-[#FBE1E7] border border-[#FCBACB] text-[#B83D58] hover:bg-[#F9D0DC] focus:ring-rose-300 shadow-2xs active:scale-[0.98]',
-    };
-
-    const sizes = {
-      sm: 'text-xs px-3.5 py-1.5 gap-1.5 h-8',
-      md: 'text-sm px-4 py-2 gap-2 h-10',
-      lg: 'text-base px-6 py-3 gap-2.5 h-12',
-    };
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant = "primary",
+      size = "md",
+      asChild = false,
+      isLoading = false,
+      icon,
+      children,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    if (asChild) {
+      return (
+        <Slot.Root
+          ref={ref}
+          data-slot="button"
+          data-variant={variant}
+          data-size={size}
+          className={cn(buttonVariants({ variant, size, className }))}
+          {...props}
+        >
+          {children}
+        </Slot.Root>
+      )
+    }
 
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size, className }))}
         {...props}
       >
         {isLoading ? (
-          <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-1" />
+          <span className="inline-block size-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
         ) : icon ? (
-          <span className="flex-shrink-0 inline-flex items-center justify-center text-current [&>svg]:stroke-current [&>svg]:text-current">{icon}</span>
+          <span className="inline-flex shrink-0 items-center justify-center [&>svg]:size-4">{icon}</span>
         ) : null}
         {children}
       </button>
-    );
+    )
   }
-);
+)
 
-Button.displayName = 'Button';
+Button.displayName = "Button"
+
+export { Button, buttonVariants }

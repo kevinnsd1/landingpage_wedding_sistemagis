@@ -21,6 +21,14 @@ import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { MediaUploader } from '@/components/ui/MediaUploader';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { InvitationView } from '@/views/InvitationView';
 import { getAllThemes } from '@/themes';
 import { api } from '@/lib/api';
@@ -192,7 +200,7 @@ export function EditorTab({
             size="sm"
             onClick={handleSave}
             isLoading={isSaving}
-            icon={<Save className="w-3.5 h-3.5 text-white" />}
+            icon={<Save className="w-3.5 h-3.5" />}
           >
             Simpan Perubahan
           </Button>
@@ -562,29 +570,33 @@ export function EditorTab({
                         />
                       ) : field.type === 'select' ? (
                         <div className="space-y-1.5">
-                          <label className="block text-sm font-medium text-slate-700">{field.label}</label>
+                          <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">{field.label}</label>
                           {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
-                          <select
+                          <Select
                             value={currentValue}
-                            onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
-                            className="w-full bg-white border border-neutral-200 text-sm rounded-md p-2.5 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 text-slate-900"
+                            onValueChange={(val) => handleThemeDataChange(field.key, val)}
                           >
-                            {field.options?.map((opt) => (
-                              <option key={opt.value} value={opt.value}>{opt.label}</option>
-                            ))}
-                          </select>
+                            <SelectTrigger className="w-full bg-white border-neutral-200">
+                              <SelectValue placeholder="Pilih opsi..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {field.options?.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                       ) : field.type === 'textarea' ? (
-                        <div className="space-y-1.5">
-                          <label className="block text-sm font-medium text-slate-700">{field.label}</label>
-                          {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
-                          <textarea
-                            rows={3}
-                            value={currentValue}
-                            onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
-                            className="w-full bg-white border border-neutral-200 text-sm rounded-md p-3 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 text-slate-900 resize-none"
-                          />
-                        </div>
+                        <Textarea
+                          label={field.label}
+                          helperText={field.description}
+                          rows={3}
+                          value={currentValue}
+                          onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
+                          className="resize-none"
+                        />
                       ) : field.type === 'boolean' ? (
                          <div className="flex items-center justify-between p-3 rounded-lg bg-[#FCFCFC] border border-neutral-100">
                           <div>

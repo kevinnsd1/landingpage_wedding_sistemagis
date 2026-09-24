@@ -25,6 +25,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { formatCurrency } from '@/lib/utils';
 
 export interface SeserahanTabProps {
@@ -246,7 +253,7 @@ export function SeserahanTab({
             variant="primary"
             size="sm"
             onClick={() => openAddModal()}
-            icon={<Plus className="w-4 h-4 text-white" />}
+            icon={<Plus className="w-4 h-4" />}
           >
             Tambah Baki / Barang
           </Button>
@@ -360,17 +367,20 @@ export function SeserahanTab({
           </div>
 
           {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="text-xs bg-[#FCFCFC] border border-neutral-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-slate-900 text-neutral-700"
-          >
-            <option value="all">Semua Status</option>
-            <option value="planned">Rencana</option>
-            <option value="purchased">Sudah Dibeli</option>
-            <option value="decorating">Sedang Dihias</option>
-            <option value="ready">Siap Antar</option>
-          </select>
+          <div className="w-36">
+            <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val as any)}>
+              <SelectTrigger size="sm" className="w-full bg-white text-xs border-neutral-200">
+                <SelectValue placeholder="Semua Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Status</SelectItem>
+                <SelectItem value="planned">Rencana</SelectItem>
+                <SelectItem value="purchased">Sudah Dibeli</SelectItem>
+                <SelectItem value="decorating">Sedang Dihias</SelectItem>
+                <SelectItem value="ready">Siap Antar</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* View Toggle */}
           <div className="flex items-center p-0.5 bg-neutral-100 rounded-lg border border-neutral-200">
@@ -410,7 +420,7 @@ export function SeserahanTab({
                 variant="primary"
                 size="sm"
                 onClick={() => openAddModal(1, 'Set Mahar & Perhiasan')}
-                icon={<Plus className="w-4 h-4 text-white" />}
+                icon={<Plus className="w-4 h-4" />}
               >
                 Buat Baki Pertama
               </Button>
@@ -679,37 +689,39 @@ export function SeserahanTab({
 
           {/* Category & Status */}
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 mb-1">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Kategori Barang
               </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-[#FCFCFC] border border-neutral-200 text-xs rounded-lg p-2.5 focus:outline-none focus:border-slate-900"
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+              <Select value={category} onValueChange={(val) => setCategory(val)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 mb-1">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Status Kesiapan
               </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as SeserahanStatus)}
-                className="w-full bg-[#FCFCFC] border border-neutral-200 text-xs rounded-lg p-2.5 focus:outline-none focus:border-slate-900"
-              >
-                <option value="planned">Rencana (Belum Beli)</option>
-                <option value="purchased">Sudah Dibeli</option>
-                <option value="decorating">Sedang Dihias</option>
-                <option value="ready">Siap Antar</option>
-              </select>
+              <Select value={status} onValueChange={(val) => setStatus(val as SeserahanStatus)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="planned">Rencana (Belum Beli)</SelectItem>
+                  <SelectItem value="purchased">Sudah Dibeli</SelectItem>
+                  <SelectItem value="decorating">Sedang Dihias</SelectItem>
+                  <SelectItem value="ready">Siap Antar</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

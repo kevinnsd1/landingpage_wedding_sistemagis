@@ -8,6 +8,10 @@ node_modules/
 .pnp/
 .pnp.js
 
+# Storage and Upload
+uploads/
+*/uploads/
+
 # Build Outputs & Bundles
 dist/
 **/dist/

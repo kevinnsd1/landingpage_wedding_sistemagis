@@ -18,6 +18,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { formatRupiah } from '@/lib/utils';
 import { budgetItemSchema } from '@/schemas/validation';
 
@@ -207,27 +214,30 @@ export function BudgetTab({
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-            >
-              <option value="all">Semua Kategori</option>
-              <option value="Venue & Katering">Venue & Katering</option>
-              <option value="Dekorasi">Dekorasi</option>
-              <option value="Foto & Video">Foto & Video</option>
-              <option value="Busana & Rias">Busana & Rias</option>
-              <option value="Undangan & Souvenir">Undangan & Souvenir</option>
-              <option value="Hiburan & Sound">Hiburan & Sound</option>
-              <option value="Akad / Pemberkatan">Akad / Pemberkatan</option>
-              <option value="Lain-lain">Lain-lain</option>
-            </select>
+            <div className="w-full sm:w-52">
+              <Select value={filterCategory} onValueChange={setFilterCategory}>
+                <SelectTrigger className="w-full bg-white text-xs h-10 border-neutral-200">
+                  <SelectValue placeholder="Semua Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Kategori</SelectItem>
+                  <SelectItem value="Venue & Katering">Venue & Katering</SelectItem>
+                  <SelectItem value="Dekorasi">Dekorasi</SelectItem>
+                  <SelectItem value="Foto & Video">Foto & Video</SelectItem>
+                  <SelectItem value="Busana & Rias">Busana & Rias</SelectItem>
+                  <SelectItem value="Undangan & Souvenir">Undangan & Souvenir</SelectItem>
+                  <SelectItem value="Hiburan & Sound">Hiburan & Sound</SelectItem>
+                  <SelectItem value="Akad / Pemberkatan">Akad / Pemberkatan</SelectItem>
+                  <SelectItem value="Lain-lain">Lain-lain</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             <Button
               variant="primary"
               size="sm"
               onClick={openAddModal}
-              icon={<Plus className="w-4 h-4 text-white" />}
+              icon={<Plus className="w-4 h-4" />}
             >
               Tambah Pos Biaya
             </Button>
@@ -348,24 +358,25 @@ export function BudgetTab({
             required
           />
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
               Kategori Pos
             </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as BudgetCategory)}
-              className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-            >
-              <option value="Venue & Katering">Venue & Katering</option>
-              <option value="Dekorasi">Dekorasi</option>
-              <option value="Foto & Video">Foto & Video</option>
-              <option value="Busana & Rias">Busana & Rias</option>
-              <option value="Undangan & Souvenir">Undangan & Souvenir</option>
-              <option value="Hiburan & Sound">Hiburan & Sound</option>
-              <option value="Akad / Pemberkatan">Akad / Pemberkatan</option>
-              <option value="Lain-lain">Lain-lain</option>
-            </select>
+            <Select value={category} onValueChange={(val) => setCategory(val as BudgetCategory)}>
+              <SelectTrigger className="w-full bg-white border-neutral-200">
+                <SelectValue placeholder="Pilih Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Venue & Katering">Venue & Katering</SelectItem>
+                <SelectItem value="Dekorasi">Dekorasi</SelectItem>
+                <SelectItem value="Foto & Video">Foto & Video</SelectItem>
+                <SelectItem value="Busana & Rias">Busana & Rias</SelectItem>
+                <SelectItem value="Undangan & Souvenir">Undangan & Souvenir</SelectItem>
+                <SelectItem value="Hiburan & Sound">Hiburan & Sound</SelectItem>
+                <SelectItem value="Akad / Pemberkatan">Akad / Pemberkatan</SelectItem>
+                <SelectItem value="Lain-lain">Lain-lain</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -394,19 +405,20 @@ export function BudgetTab({
               onChange={(e) => setPaidAmount(e.target.value)}
               placeholder="0"
             />
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Status Pembayaran
               </label>
-              <select
-                value={paymentStatus}
-                onChange={(e) => setPaymentStatus(e.target.value as PaymentStatus)}
-                className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-              >
-                <option value="unpaid">Belum Bayar</option>
-                <option value="partial">Sebagian (DP)</option>
-                <option value="paid">Lunas</option>
-              </select>
+              <Select value={paymentStatus} onValueChange={(val) => setPaymentStatus(val as PaymentStatus)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unpaid">Belum Bayar</SelectItem>
+                  <SelectItem value="partial">Sebagian (DP)</SelectItem>
+                  <SelectItem value="paid">Lunas</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

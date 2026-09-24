@@ -67,17 +67,17 @@ export function DashboardLayout({
         { id: 'vendors', label: 'Direktori Vendor', icon: Building2 },
       ],
     },
-    {
-      title: 'Pengaturan',
-      items: [
-        { id: 'settings', label: 'Pengaturan & Akun', icon: Settings },
-      ],
-    },
   ];
 
   const allNavItems = navSections.flatMap((section) => section.items);
-  const currentItem = allNavItems.find((n) => n.id === activeTab);
-  const currentSection = navSections.find((s) => s.items.some((i) => i.id === activeTab));
+  const currentItem =
+    allNavItems.find((n) => n.id === activeTab) ||
+    (activeTab === 'settings'
+      ? { id: 'settings', label: 'Pengaturan Akun', icon: Settings }
+      : undefined);
+  const currentSection =
+    navSections.find((s) => s.items.some((i) => i.id === activeTab)) ||
+    (activeTab === 'settings' ? { title: 'Pengaturan Akun' } : undefined);
 
   const handleSelectTab = (id: string) => {
     onTabChange(id);
@@ -194,28 +194,76 @@ export function DashboardLayout({
           ))}
         </nav>
 
-        {/* Sidebar Footer */}
-        <div className="p-3.5 border-t border-neutral-200/80 flex items-center justify-between bg-neutral-50/50 flex-shrink-0">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-[#263238] text-white font-semibold flex items-center justify-center text-xs flex-shrink-0 shadow-2xs">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-neutral-900 truncate leading-tight">
-                {user.name}
-              </p>
-              <p className="text-[11px] text-slate-500 truncate leading-tight mt-0.5">
-                {user.email}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onLogout}
-            title="Keluar dari akun"
-            className="text-slate-400 hover:text-rose-600 p-2 rounded-lg hover:bg-rose-50/80 transition-colors cursor-pointer flex-shrink-0"
+        {/* Sidebar Footer: Interactive Account Card & Settings */}
+        <div className="p-3 border-t border-neutral-200/80 bg-neutral-50/50 flex-shrink-0">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => handleSelectTab('settings')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleSelectTab('settings');
+              }
+            }}
+            className={`group w-full flex items-center justify-between p-2.5 rounded-xl transition-all cursor-pointer border select-none ${
+              activeTab === 'settings'
+                ? 'bg-[#FCBACB]/20 border-[#FCBACB]/70 shadow-2xs'
+                : 'bg-white/90 hover:bg-white border-neutral-200/70 hover:border-neutral-300/80 shadow-2xs'
+            }`}
+            title="Klik untuk membuka Pengaturan Akun"
           >
-            <LogOut className="w-4 h-4" />
-          </button>
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0 transition-colors ${
+                  activeTab === 'settings'
+                    ? 'bg-[#832B42] text-white shadow-xs'
+                    : 'bg-[#263238] text-white group-hover:bg-slate-900'
+                }`}
+              >
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+              <div className="min-w-0 text-left flex-1">
+                <p
+                  className={`text-xs font-semibold truncate leading-tight ${
+                    activeTab === 'settings'
+                      ? 'text-[#7D4050]'
+                      : 'text-neutral-900 group-hover:text-[#263238]'
+                  }`}
+                >
+                  {user.name}
+                </p>
+                <p
+                  className={`text-[11px] truncate leading-tight mt-0.5 flex items-center gap-1 ${
+                    activeTab === 'settings'
+                      ? 'text-[#832B42] font-semibold'
+                      : 'text-slate-500 group-hover:text-slate-700'
+                  }`}
+                >
+                  <Settings
+                    className={`w-3 h-3 flex-shrink-0 ${
+                      activeTab === 'settings'
+                        ? 'text-[#832B42]'
+                        : 'text-slate-400 group-hover:text-slate-600'
+                    }`}
+                  />
+                  <span>Pengaturan Akun</span>
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onLogout();
+              }}
+              title="Keluar dari akun"
+              className="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50/80 transition-colors cursor-pointer flex-shrink-0 ml-1"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </aside>
 

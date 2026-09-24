@@ -18,6 +18,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { formatRupiah } from '@/lib/utils';
 import { vendorSchema } from '@/schemas/validation';
 
@@ -165,7 +172,7 @@ export function VendorsTab({
           variant="primary"
           size="sm"
           onClick={openAddModal}
-          icon={<Plus className="w-4 h-4 text-white" />}
+          icon={<Plus className="w-4 h-4" />}
         >
           Tambah Vendor
         </Button>
@@ -182,17 +189,18 @@ export function VendorsTab({
           />
         </div>
         <div className="w-full sm:w-48">
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-          >
-            <option value="all">Semua Status</option>
-            <option value="researching">Riset</option>
-            <option value="contacted">Dihubungi</option>
-            <option value="booked">Dipesan (Deal)</option>
-            <option value="completed">Selesai</option>
-          </select>
+          <Select value={filterStatus} onValueChange={setFilterStatus}>
+            <SelectTrigger className="w-full bg-white text-xs h-10 border-neutral-200">
+              <SelectValue placeholder="Semua Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Status</SelectItem>
+              <SelectItem value="researching">Riset</SelectItem>
+              <SelectItem value="contacted">Dihubungi</SelectItem>
+              <SelectItem value="booked">Dipesan (Deal)</SelectItem>
+              <SelectItem value="completed">Selesai</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -312,42 +320,44 @@ export function VendorsTab({
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Kategori Vendor
               </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as VendorCategory)}
-                className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-              >
-                <option value="Venue">Venue</option>
-                <option value="Catering">Catering</option>
-                <option value="Decoration">Decoration</option>
-                <option value="Photography">Photography</option>
-                <option value="Videography">Videography</option>
-                <option value="Attire & Makeup">Attire & Makeup</option>
-                <option value="Wedding Organizer">Wedding Organizer</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Invitation & Souvenir">Invitation & Souvenir</option>
-                <option value="Other">Lainnya</option>
-              </select>
+              <Select value={category} onValueChange={(val) => setCategory(val as VendorCategory)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Venue">Venue</SelectItem>
+                  <SelectItem value="Catering">Catering</SelectItem>
+                  <SelectItem value="Decoration">Decoration</SelectItem>
+                  <SelectItem value="Photography">Photography</SelectItem>
+                  <SelectItem value="Videography">Videography</SelectItem>
+                  <SelectItem value="Attire & Makeup">Attire & Makeup</SelectItem>
+                  <SelectItem value="Wedding Organizer">Wedding Organizer</SelectItem>
+                  <SelectItem value="Entertainment">Entertainment</SelectItem>
+                  <SelectItem value="Invitation & Souvenir">Invitation & Souvenir</SelectItem>
+                  <SelectItem value="Other">Lainnya</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                 Status Kerja Sama
               </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as VendorStatus)}
-                className="w-full bg-white border border-neutral-200 text-xs font-medium rounded-md px-3 py-2.5 text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-              >
-                <option value="researching">Riset</option>
-                <option value="contacted">Dihubungi</option>
-                <option value="booked">Dipesan (Deal)</option>
-                <option value="completed">Selesai</option>
-              </select>
+              <Select value={status} onValueChange={(val) => setStatus(val as VendorStatus)}>
+                <SelectTrigger className="w-full bg-white border-neutral-200">
+                  <SelectValue placeholder="Pilih Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="researching">Riset</SelectItem>
+                  <SelectItem value="contacted">Dihubungi</SelectItem>
+                  <SelectItem value="booked">Dipesan (Deal)</SelectItem>
+                  <SelectItem value="completed">Selesai</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

@@ -149,10 +149,13 @@ function DashboardContent({
 
       {activeTab === 'wedding' && (
         <SettingsTab
+          user={user}
           wedding={wedding}
           onUpdateWedding={onUpdateWedding}
           onShowToast={showToast}
           onResetData={onResetData}
+          onLogout={onLogout}
+          defaultSection="wedding"
         />
       )}
 
@@ -239,10 +242,13 @@ function DashboardContent({
 
       {activeTab === 'settings' && (
         <SettingsTab
+          user={user}
           wedding={wedding}
           onUpdateWedding={onUpdateWedding}
           onShowToast={showToast}
           onResetData={onResetData}
+          onLogout={onLogout}
+          defaultSection="account"
         />
       )}
     </DashboardLayout>

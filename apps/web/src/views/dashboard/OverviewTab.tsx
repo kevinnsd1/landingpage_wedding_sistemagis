@@ -309,7 +309,7 @@ export function OverviewTab({
               variant="primary"
               size="sm"
               onClick={() => onNavigateTab('editor')}
-              icon={<Sparkles className="w-3.5 h-3.5 text-white" />}
+              icon={<Sparkles className="w-3.5 h-3.5" />}
               className="flex-1 text-xs"
             >
               Edit Undangan
