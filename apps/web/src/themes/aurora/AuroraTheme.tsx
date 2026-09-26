@@ -71,7 +71,7 @@ export function AuroraTheme({
                 <img src={wedding.coverPhoto || wedding.groomPhoto} alt={wedding.title} className="w-full h-full object-cover" />
               </div>
             )}
-            <h1 className="text-4xl sm:text-5xl mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+            <h1 className="text-4xl sm:text-5xl mb-3" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
               {wedding.groomName.split(' ')[0]} &amp; {wedding.brideName.split(' ')[0]}
             </h1>
             <p className="text-xs uppercase tracking-widest mb-8" style={{ color: 'var(--theme-text-muted)' }}>
@@ -111,7 +111,7 @@ export function AuroraTheme({
           <span className="text-[10px] uppercase tracking-[0.4em] font-semibold mb-4 block" style={{ color: 'var(--theme-text-muted)' }}>
             The Wedding of
           </span>
-          <h1 className="text-4xl sm:text-6xl mb-4" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+          <h1 className="text-4xl sm:text-6xl mb-4" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
             {wedding.groomName.split(',')[0]}
             <span className="block font-light text-2xl my-1" style={{ color: 'var(--theme-text-muted)' }}>&amp;</span>
             {wedding.brideName.split(',')[0]}
@@ -132,7 +132,7 @@ export function AuroraTheme({
 
         {/* Closing */}
         <section className="py-16 text-center text-xs flex flex-col items-center gap-2" style={{ color: 'var(--theme-text-muted)' }}>
-          <p className="text-2xl mb-1" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+          <p className="text-2xl mb-1" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
             {wedding.groomName.split(' ')[0]} &amp; {wedding.brideName.split(' ')[0]}
           </p>
           <BrandLogo variant="horizontal" theme="pink" size="sm" />

@@ -29,6 +29,8 @@ export const guestSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email('Format email tidak valid').optional().or(z.literal('')),
   group: z.enum(['Keluarga', 'Sahabat', 'Rekan Kerja', 'VIP', 'Lainnya']),
+  guestSide: z.enum(['groom', 'bride', 'both']).default('groom'),
+  invitationType: z.enum(['digital', 'physical', 'both']).default('digital'),
   guestCount: z.number().int().min(1).default(1),
 });
 

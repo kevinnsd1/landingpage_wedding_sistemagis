@@ -90,21 +90,21 @@ export function OverviewTab({
           {wedding.weddingDate ? (
             <div className="flex items-center gap-3 bg-neutral-50/80 p-4 rounded-xl border border-neutral-200/70 shadow-2xs">
               <div className="text-center px-2">
-                <span className="font-brand text-2xl font-bold text-neutral-900 block leading-none">
+                <span className="text-2xl font-bold text-neutral-900 block leading-none tabular-nums font-sans">
                   {timeLeft.days}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">Hari</span>
               </div>
               <span className="text-neutral-300 font-light">:</span>
               <div className="text-center px-2">
-                <span className="font-brand text-2xl font-bold text-neutral-900 block leading-none">
+                <span className="text-2xl font-bold text-neutral-900 block leading-none tabular-nums font-sans">
                   {timeLeft.hours}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">Jam</span>
               </div>
               <span className="text-neutral-300 font-light">:</span>
               <div className="text-center px-2">
-                <span className="font-brand text-2xl font-bold text-neutral-900 block leading-none">
+                <span className="text-2xl font-bold text-neutral-900 block leading-none tabular-nums font-sans">
                   {timeLeft.minutes}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">Menit</span>

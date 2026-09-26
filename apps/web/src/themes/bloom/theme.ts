@@ -25,6 +25,7 @@ export const bloomThemeMeta: ThemeMetadata = {
   ],
   defaultFonts: {
     heading: 'Playfair Display',
+    couple: 'Quintessential',
     body: 'Inter',
   },
   defaultTokens: {
@@ -41,6 +42,7 @@ export const bloomThemeMeta: ThemeMetadata = {
     '--theme-border': '#E8E6DC',
     '--theme-border-accent': '#B9DCA9',
     '--font-heading': "'Playfair Display', serif",
+    '--font-couple': "'Quintessential', cursive, serif",
     '--font-body': "'Inter', sans-serif",
   },
   supportedSections: [

@@ -25,7 +25,8 @@ export const serenityThemeMeta: ThemeMetadata = {
     { key: 'textMuted', label: 'Warna Teks Redup', type: 'color' },
   ],
   defaultFonts: {
-    heading: 'Quintessential',
+    heading: 'Playfair Display',
+    couple: 'Quintessential',
     body: 'Inter',
   },
   defaultTokens: {
@@ -41,7 +42,8 @@ export const serenityThemeMeta: ThemeMetadata = {
     '--theme-text-accent': '#D96F88',
     '--theme-border': '#F1F5F9',
     '--theme-border-accent': '#FCBACB',
-    '--font-heading': "'Quintessential', cursive",
+    '--font-heading': "'Playfair Display', serif",
+    '--font-couple': "'Quintessential', cursive, serif",
     '--font-body': "'Inter', sans-serif",
   },
   supportedSections: [

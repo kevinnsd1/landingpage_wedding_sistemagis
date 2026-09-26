@@ -21,6 +21,8 @@ function formatGuest(g: any) {
     phone: g.phone || '',
     email: g.email || '',
     group: g.groupName || 'Sahabat',
+    guestSide: g.guestSide || 'groom',
+    invitationType: g.invitationType || 'digital',
     invitationToken: g.invitationToken || '',
     invitationStatus: g.invitationStatus || 'pending',
     rsvpStatus: g.rsvpStatus || 'pending',
@@ -35,6 +37,8 @@ const addGuestSchema = z.object({
   phone: z.string().optional(),
   email: z.string().optional(),
   group: z.string().optional(),
+  guestSide: z.enum(['groom', 'bride', 'both']).optional(),
+  invitationType: z.enum(['digital', 'physical', 'both']).optional(),
   guestCount: z.number().optional(),
 });
 
@@ -60,6 +64,8 @@ guestsRoutes.post('/:weddingId', zValidator('json', addGuestSchema), async (c) =
     phone: data.phone || '',
     email: data.email || '',
     groupName: data.group || 'Sahabat',
+    guestSide: data.guestSide || 'groom',
+    invitationType: data.invitationType || 'digital',
     invitationToken: token,
     tokenHash,
     status: 'pending',
@@ -83,6 +89,8 @@ guestsRoutes.patch('/:weddingId/:guestId', async (c) => {
   if (body.phone !== undefined) updateFields.phone = body.phone;
   if (body.email !== undefined) updateFields.email = body.email;
   if (body.group !== undefined) updateFields.groupName = body.group;
+  if (body.guestSide !== undefined) updateFields.guestSide = body.guestSide;
+  if (body.invitationType !== undefined) updateFields.invitationType = body.invitationType;
   if (body.invitationStatus !== undefined) updateFields.invitationStatus = body.invitationStatus;
   if (body.rsvpStatus !== undefined) updateFields.rsvpStatus = body.rsvpStatus;
   if (body.guestCount !== undefined) updateFields.guestCount = body.guestCount;

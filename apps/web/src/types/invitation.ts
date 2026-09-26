@@ -13,6 +13,7 @@ export interface ThemeColors {
 
 export interface ThemeFonts {
   heading: string;
+  couple?: string;
   body: string;
 }
 

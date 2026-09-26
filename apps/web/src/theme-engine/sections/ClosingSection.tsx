@@ -37,7 +37,7 @@ export function ClosingSection({
 
       <p
         className="text-3xl"
-        style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text-accent)' }}
+        style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text-accent)' }}
       >
         {groomFirstName} &amp; {brideFirstName}
       </p>

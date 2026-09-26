@@ -34,7 +34,7 @@ class ThemeErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryStat
       return (
         <div>
           <div className="bg-amber-50 text-amber-800 text-xs px-4 py-2.5 text-center border-b border-amber-200">
-            ⚠️ Terjadi kendala saat memuat tema. Menampilkan tema standar Serenity.
+            Terjadi kendala saat memuat tema. Menampilkan tema standar Serenity.
           </div>
           <FallbackComponent {...this.props.themeProps} />
         </div>
@@ -85,6 +85,7 @@ function buildThemeStyle(
     '--theme-border-accent': colors.primary || colors.border || themeDef.defaultTokens['--theme-border-accent'],
     
     '--font-heading': `'${fonts.heading}', serif`,
+    '--font-couple': (fonts as any).couple ? `'${(fonts as any).couple}', cursive, serif` : "'Quintessential', cursive, serif",
     '--font-body': `'${fonts.body}', sans-serif`,
   };
 

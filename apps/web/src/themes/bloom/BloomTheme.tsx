@@ -58,7 +58,7 @@ export function BloomTheme({
                 <img src={wedding.coverPhoto || wedding.groomPhoto} alt={wedding.title} className="w-full h-full object-cover" />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl mb-2 leading-tight" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+            <h1 className="text-4xl sm:text-5xl mb-2 leading-tight" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
               {wedding.groomName.split(' ')[0]} &amp; {wedding.brideName.split(' ')[0]}
             </h1>
             <p className="text-xs sm:text-sm font-light tracking-wide mb-8" style={{ color: 'var(--theme-text-muted)' }}>
@@ -105,9 +105,9 @@ export function BloomTheme({
             <Leaf className="w-3.5 h-3.5" />
             Pernikahan Suci
           </span>
-          <h1 className="text-4xl sm:text-6xl mb-4 leading-tight" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+          <h1 className="text-4xl sm:text-6xl mb-4 leading-tight" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
             {wedding.groomName.split(',')[0]}
-            <span className="block text-2xl sm:text-3xl my-1" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-secondary)' }}>&amp;</span>
+            <span className="block text-2xl sm:text-3xl my-1" style={{ color: 'var(--theme-secondary)' }}>&amp;</span>
             {wedding.brideName.split(',')[0]}
           </h1>
           <p className="text-sm sm:text-base font-light mb-8" style={{ color: 'var(--theme-text-muted)' }}>
@@ -136,7 +136,7 @@ export function BloomTheme({
         {/* Closing */}
         <section className="py-16 px-6 sm:px-12 text-center flex flex-col items-center gap-2" style={{ background: 'var(--theme-surface-alt)' }}>
           <Leaf className="w-5 h-5 mx-auto mb-2" style={{ color: 'var(--theme-secondary)' }} />
-          <p className="text-2xl mb-2" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+          <p className="text-2xl mb-2" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
             {wedding.groomName.split(' ')[0]} &amp; {wedding.brideName.split(' ')[0]}
           </p>
           <BrandLogo variant="horizontal" theme="pink" size="sm" />

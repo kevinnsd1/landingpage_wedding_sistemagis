@@ -16,6 +16,7 @@ import {
   LogOut,
   Mail,
   Lock,
+  Trash2,
 } from 'lucide-react';
 import { Wedding, GiftAccount } from '@/types/wedding';
 import { User } from '@/types/user';
@@ -544,7 +545,7 @@ export function SettingsTab({
             />
             {formData.weddingDate ? (
               <span className="text-xs font-semibold text-neutral-800 bg-white px-3 py-2 rounded-lg border border-neutral-200 shadow-2xs">
-                ✨ {formatDateIndo(formData.weddingDate)}
+                {formatDateIndo(formData.weddingDate)}
               </span>
             ) : (
               <span className="text-xs text-neutral-400 italic">
@@ -742,8 +743,9 @@ export function SettingsTab({
                   type="button"
                   onClick={() => handleRemoveGift(gift.id)}
                   className="p-2 text-neutral-400 hover:text-rose-500 rounded"
+                  title="Hapus Rekening"
                 >
-                  ✕
+                  <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>

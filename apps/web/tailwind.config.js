@@ -68,6 +68,7 @@ export default {
       },
       fontFamily: {
         brand: ['Quintessential', 'cursive', 'serif'],
+        couple: ['Quintessential', 'cursive', 'serif'],
         ui: ['Inter', 'sans-serif'],
       },
       borderRadius: {

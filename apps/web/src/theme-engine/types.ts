@@ -25,6 +25,7 @@ export interface ThemeColors {
 
 export interface ThemeFonts {
   heading: string;
+  couple?: string;
   body: string;
 }
 
@@ -68,6 +69,7 @@ export interface ThemeTokens {
 
   // Typography
   '--font-heading': string;           // Font heading (brand/display)
+  '--font-couple': string;            // Font khusus nama mempelai
   '--font-body': string;              // Font body
 
   // Allow fully arbitrary custom tokens from the user

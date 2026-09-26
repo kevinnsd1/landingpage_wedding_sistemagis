@@ -1,213 +1,350 @@
-# KisahMagis — Digital Wedding Platform & Management System
+# 💍 KisahMagis — Digital Wedding Platform & Management System
 
-> **Platform digital wedding all-in-one:** Menggabungkan keindahan *Digital Wedding Invitation* interaktif dengan kekuatan *Sistem Manajemen Pernikahan* (Tamu, RSVP, Task Planner Kanban, Seserahan, Anggaran, & Vendor).
+> **Platform Digital Wedding & Sistem Manajemen Pernikahan Terintegrasi**  
+> Menggabungkan keindahan *Undangan Digital Interaktif* (Public Experience) dengan kekuatan *Sistem Manajemen Pernikahan Lengkap* (Organizer Dashboard: Buku Tamu, RSVP, Task Planner Kanban Drag-and-Drop, Seserahan, Anggaran, & Vendor).
+
+---
+
+## ⚡ Quick Start (Jalankan dalam 5 Menit)
+
+Bagi rekan developer atau **AI Coding Agent** yang baru saja melakukan clone repositori ini, berikut adalah urutan perintah ringkas untuk langsung menjalankannya:
+
+```bash
+# 1. Clone repositori & masuk ke direktori
+git clone <repository-url>
+cd "Kisahmagis apps"
+
+# 2. Install seluruh dependensi monorepo
+npm install
+
+# 3. Siapkan file konfigurasi environment
+cp .env.example .env
+
+# 4. Nyalakan database PostgreSQL via Docker
+docker compose up -d
+
+# 5. Sinkronisasi skema tabel Drizzle ke PostgreSQL
+npm run db:push
+
+# 6. Jalankan database seeder (Paket tema, katalog tema, & data demo lengkap)
+npm run db:seed
+
+# 7. Jalankan server pengembangan (Frontend & Backend sekaligus)
+npm run dev
+```
+
+### 🌐 Akses Aplikasi & Kredensial Demo
+Setelah `npm run dev` berjalan:
+- **Frontend Web App:** [http://localhost:3000](http://localhost:3000)
+- **Backend REST API:** [http://localhost:3001](http://localhost:3001) *(Healthcheck: `http://localhost:3001/api/health`)*
+- **Akun Demo Bawaan:**
+  - **Email:** `andi@kisahmagis.id`
+  - **Password:** `password123`
+  - *(Atau cukup klik tombol **"Masuk dengan Akun Demo"** di halaman login)*
+- **Contoh Undangan Tamu Personal:** [http://localhost:3000/?wedding=andi-sari&to=BudiS88](http://localhost:3000/?wedding=andi-sari&to=BudiS88)
 
 ---
 
 ## 📖 Daftar Isi
 
-1. [Tentang KisahMagis](#-tentang-kisahmagis)
-2. [Fitur Utama](#-fitur-utama)
-3. [Arsitektur Sistem & Monorepo](#-arsitektur-sistem--monorepo)
-4. [Indeks Dokumentasi Proyek (`/Docs`)](#-indeks-dokumentasi-proyek-docs)
-5. [Tech Stack](#-tech-stack)
-6. [Prasyarat & Instalasi (Getting Started)](#-prasyarat--instalasi-getting-started)
-7. [Environment Variables](#-environment-variables)
-8. [Perintah yang Tersedia (NPM Scripts)](#-perintah-yang-tersedia-npm-scripts)
-9. [Panduan Pengembangan Tema](#-panduan-pengembangan-tema)
-10. [Troubleshooting Umum](#-troubleshooting-umum)
+1. [Fitur Utama & Keunggulan](#-fitur-utama--keunggulan)
+2. [Tech Stack](#-tech-stack)
+3. [Arsitektur Monorepo](#-arsitektur-monorepo)
+4. [Panduan Instalasi Langkah-demi-Langkah](#-panduan-instalasi-langkah-demi-langkah)
+5. [Konfigurasi Environment Variables](#-konfigurasi-environment-variables)
+6. [Operasional Database (Docker, Push, & Seed)](#-operasional-database-docker-push--seed)
+7. [Daftar Perintah (NPM Scripts)](#-daftar-perintah-npm-scripts)
+8. [Standar Desain & Pedoman Kode](#-standar-desain--pedoman-kode)
+9. [Panduan untuk AI Coding Agent](#-panduan-untuk-ai-coding-agent)
+10. [Troubleshooting & FAQ](#-troubleshooting--faq)
+11. [Indeks Dokumentasi Lengkap (`/Docs`)](#-indeks-dokumentasi-lengkap-docs)
 
 ---
 
-## 💍 Tentang KisahMagis
+## ✨ Fitur Utama & Keunggulan
 
-**KisahMagis** dikembangkan oleh **Sistemagis** untuk mentransformasi pengalaman pernikahan digital. Kebanyakan platform hanya menawarkan undangan berbasis *template* kaku. KisahMagis hadir dengan dua pilar utama:
+### 1. 💌 Public Invitation Experience (Undangan Digital)
+- **Slug Personal & Tautan Tamu Unik:** Format URL ramah SEO `/:slug` dengan personalisasi nama penerima (`?to=TokenTamu`).
+- **Dynamic Theme Engine:** Tema React modular (Aurora Minimal, Floral Bloom, Cinematic Video, Full Custom).
+- **Interaksi Lengkap:** Sampul amplop animasi, musik latar otomatis dengan floating controller, hitung mundur (countdown), galeri foto interaktif, kisah cinta (love story), integrasi Google Maps untuk lokasi akad & resepsi.
+- **RSVP & Amplop Digital:** Konfirmasi kehadiran instan dan amplop digital via nomor rekening / dompet digital tanpa biaya perantara.
 
-- **Public Experience:** Undangan digital yang personal, romantis, estetik, responsif, dan interaktif (dukungan animasi modern, musik, video latar, RSVP real-time, dan amplop digital).
-- **Product Experience (Organizer/Dashboard):** Ruang kerja terstruktur bagi calon pengantin untuk mengelola daftar tamu, checklist persiapan pernikahan bergaya *Kanban*, pencatatan baki *Seserahan*, vendor, dan anggaran dalam satu antarmuka yang bersih dan praktis.
+### 2. 👥 Buku Tamu & Manajemen Undangan (Organizer Dashboard)
+- **Segmentasi Pihak Mempelai:** Pengelompokan tamu berdasarkan *Mempelai Pria*, *Mempelai Wanita*, atau *Kedua Mempelai*.
+- **Format Undangan:** Klasifikasi tamu penerima *Undangan Digital*, *Undangan Fisik (Cetak)*, maupun *Keduanya*.
+- **Kategori / Grup Tamu Bebas Pink:** Pewarnaan tematik eksklusif per kategori (*Keluarga* = Indigo, *Sahabat* = Sky, *Rekan Kerja* = Slate, *VIP* = Amber, *Lainnya* = Zinc) sehingga tidak bertabrakan dengan aksen warna mempelai wanita atau status RSVP.
+- **Asisten WhatsApp Broadcast Mandiri:** Fitur broadcast undangan personal langsung dari nomor WhatsApp pengguna via URL Web API (`api.whatsapp.com/send`) tanpa perlu berlangganan WhatsApp API pihak ketiga (hemat biaya & anti-banned).
 
----
+### 3. 📋 Wedding Planner Kanban Board
+- **Manajemen Alur Kerja Fleksibel:** Kolom tahapan acara (Rencana, Diproses, Selesai) dengan fitur *drag-and-drop* antar kolom.
+- **Pengaturan Skala Prioritas Atas-Bawah:** Kartu tugas dapat diurutkan ke atas atau ke bawah di dalam kolom untuk menentukan prioritas harian.
+- **Timeline Rangkaian Hari-H:** Timeline detail mulai dari Akad Nikah, Temu Manten, hingga Resepsi.
 
-## ✨ Fitur Utama
+### 4. 🎁 Katalog & Checklist Seserahan
+- Pencatatan baki hantaran/seserahan pengantin lengkap dengan foto barang, status pengerjaan (Disiapkan, Dibungkus, Siap), kategori, dan total estimasi nilai.
 
-- **🎨 Dynamic Theme Engine:** Arsitektur tema modular berbasis komponen React murni. Setiap tema memiliki kebebasan layout, gaya visual, animasi, dan dapat meminta input aset spesifik (*Video Cover*, *Parallax Photo*, *Puisi*) via `customFields`.
-- **💌 Undangan Publik & RSVP:** Akses undangan melalui URL slug personal (`/:slug`), personalisasi nama tamu (`?to=Nama+Tamu`), konfirmasi kehadiran (RSVP), amplop digital / hadiah fisik, serta buku tamu & ucapan online.
-- **📋 Wedding Planner (Kanban Board):** Manajemen tahapan acara pernikahan (Persiapan Awal, H-30, H-7, Hari H, Pasca Acara) dengan sistem kartu *drag-and-drop* atau status toggle.
-- **🎁 Manajemen Seserahan:** Katalog dan checklist baki hantaran/seserahan lengkap dengan status pengerjaan, kategori, dan estimasi biaya.
-- **👥 Manajemen Tamu & Kuota:** Pengelompokan tamu (Keluarga, Sahabat, VIP, Kolega), status undangan via WhatsApp, dan monitoring kehadiran real-time.
-- **🔐 Multi-Tenant & Keamanan:** Isolasi data antar-pengantin (*wedding workspace*), proteksi token, sanitasi input, dan arsitektur ramah deployment rumahan via Cloudflare Tunnel.
-
----
-
-## 🏛️ Arsitektur Sistem & Monorepo
-
-KisahMagis menggunakan struktur **Monorepo (NPM Workspaces)** yang memisahkan aplikasi (*apps*) dan pustaka bersama (*packages*):
-
-```text
-Kisahmagis apps/
-├── apps/
-│   ├── api/                      # Backend REST API (Hono + Node.js)
-│   │   ├── src/
-│   │   │   ├── db/               # Skema Drizzle ORM, migrasi, dan seeders
-│   │   │   ├── server/
-│   │   │   │   ├── routes/       # Endpoint API (auth, weddings, guests, planner, themes, dll)
-│   │   │   │   └── index.ts      # Server entry point & middleware (Port 3001)
-│   │   └── package.json
-│   │
-│   └── web/                      # Frontend Application (Vite + React 18)
-│       ├── src/
-│       │   ├── components/       # UI Komponen & Layout (Navbar, MediaUploader, dll)
-│       │   ├── themes/           # Registry tema undangan (Aurora, Bloom, dll)
-│       │   ├── views/            # Halaman Dashboard, Editor, Auth, & Public Invitation
-│       │   └── lib/              # Client API helper & state utilities
-│       ├── vite.config.ts        # Dev server & reverse proxy ke API (Port 3000)
-│       └── package.json
-│
-├── packages/
-│   ├── types/                    # Shared TypeScript interfaces (Wedding, Guest, Theme, dll)
-│   ├── validation/               # Shared Zod validation schemas
-│   └── ui/                       # Reusable base UI primitives
-│
-├── Docs/                         # Dokumentasi Arsitektur, Desain, & Keamanan (Wajib Dibaca)
-├── docker-compose.yml            # Konfigurasi container PostgreSQL
-├── package.json                  # Root package.json (Orchestrator scripts)
-└── tsconfig.json
-```
-
----
-
-## 📚 Indeks Dokumentasi Proyek (`/Docs`)
-
-Di dalam direktori [`Docs/`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs), terdapat dokumentasi acuan penting yang menjadi *single source of truth*:
-
-| Dokumen | Deskripsi & Fokus Utama |
-| :--- | :--- |
-| **[`PRD_KisahMagis.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/PRD_KisahMagis.md)** | **Product Requirements Document (PRD):** Visi produk, persona pengguna, spesifikasi lengkap modul (Undangan, RSVP, Planner, Guestbook, Seserahan), model data, dan *roadmap* rilis. |
-| **[`DESIGN_KisahMagis.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/DESIGN_KisahMagis.md)** | **Design System & UI Guidelines:** Standar visual identity, palet warna, tipografi, radius sudut, bayangan, komponen tombol, pedoman kontras, serta aturan transisi desain ke kode. |
-| **[`THEME_DEVELOPMENT.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/THEME_DEVELOPMENT.md)** | **Panduan Pembuatan Tema Baru:** Arsitektur *Dynamic Theme Engine*, cara mendaftarkan `customFields`, siklus hidup komponen tema React, serta integrasi tabel `packages` dan `themes` di database. |
-| **[`SECURITY.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/SECURITY.md)** | **Security & Hardening Guide:** Analisis ancaman (*threat model*), isolasi multi-tenant, sanitasi file upload, perlindungan privasi data tamu (PII), dan deployment aman via Cloudflare Tunnel. |
+### 5. 💰 Anggaran (Budget) & Vendor Tracker
+- Monitoring pos pengeluaran real-time (Venue, Catering, MUA, Busana, Dokumentasi, dll), pelacakan uang muka (DP), sisa tagihan, dan kontak person vendor.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend (`apps/web`)
-- **Framework:** React 18 + TypeScript + Vite 6
-- **Routing:** React Router v7
-- **Styling:** TailwindCSS 3 + Lucide Icons + Canvas Confetti
-- **State & Data Fetching:** Native fetch wrapper dengan reverse-proxy Vite
-
-### Backend (`apps/api`)
-- **Runtime & Server:** Node.js v22 + Hono Framework
-- **ORM & Database:** Drizzle ORM + PostgreSQL 15 (Docker)
-- **Validasi:** Zod
-- **Autentikasi & Keamanan:** Bcrypt.js + JWT / Session token
+| Layer | Teknologi Utama | Deskripsi |
+| :--- | :--- | :--- |
+| **Monorepo** | NPM Workspaces | Manajemen multi-package terpusat tanpa dependensi eksternal berat |
+| **Frontend** | React 18, Vite 6, TypeScript | Aplikasi web modern berperforma tinggi dengan HMR instan |
+| **Styling** | TailwindCSS v3, Radix UI Primitives, Lucide Icons | Desain custom modern, responsif, dan bebas bloatware/slop |
+| **Backend API** | Node.js (v20/v22), Hono Framework | Framework HTTP ultra-cepat, minimalis, dan type-safe |
+| **ORM & DB** | Drizzle ORM, PostgreSQL 15 (Docker) | Skema type-safe end-to-end, migrasi SQL instan |
+| **Validasi** | Zod (Shared Package) | Validasi payload konsisten antara frontend dan backend |
+| **Autentikasi** | Session-based Cookie & Bcrypt.js | Autentikasi aman tanpa overhead JWT kompleks |
 
 ---
 
-## 🚀 Prasyarat & Instalasi (Getting Started)
+## 🏛️ Arsitektur Monorepo
 
-### 1. Prasyarat Sistem
-- **Node.js:** Versi `20.x` atau `22.x` (Direkomendasikan Node.js v22)
-- **Docker & Docker Compose:** Untuk menjalankan PostgreSQL lokal
+```text
+Kisahmagis apps/
+├── apps/
+│   ├── api/                      # Backend REST API (Hono + Drizzle)
+│   │   ├── src/
+│   │   │   ├── db/               # Skema PostgreSQL, koneksi Pool, & Seeder CLI
+│   │   │   │   ├── index.ts      # Inisialisasi koneksi Drizzle ORM
+│   │   │   │   ├── schema.ts     # Definisi tabel (users, weddings, guests, planner, dll)
+│   │   │   │   └── seed.ts       # Runner seeder CLI (npm run db:seed)
+│   │   │   ├── server/
+│   │   │   │   ├── routes/       # Endpoint API (auth, weddings, guests, planner, dll)
+│   │   │   │   ├── seed.ts       # Logika data demo awal
+│   │   │   │   └── index.ts      # Server entry point (Port 3001)
+│   │   └── package.json
+│   │
+│   └── web/                      # Frontend Application (React 18 + Vite)
+│       ├── src/
+│       │   ├── components/       # Komponen UI umum (Card, Modal, Button, Badge, dll)
+│       │   ├── theme-engine/     # Dynamic Theme Renderer & Loader
+│       │   ├── themes/           # Registry template tema (Aurora, Bloom, Cinematic, dll)
+│       │   ├── views/            # Dashboard Views (GuestsTab, PlannerTab, BudgetTab, dll)
+│       │   └── lib/              # Client API helper & utilitas
+│       ├── vite.config.ts        # Reverse proxy `/api` ke port 3001
+│       └── package.json
+│
+├── packages/
+│   ├── types/                    # Shared TypeScript interfaces (Wedding, Guest, Task, dll)
+│   ├── validation/               # Shared Zod schemas (validasi payload formulir & API)
+│   └── ui/                       # Shared UI utility classes & primitives
+│
+├── Docs/                         # Dokumentasi Arsitektur, PRD, Desain, & Keamanan
+├── docker-compose.yml            # Container PostgreSQL 15
+├── .env.example                  # Template konfigurasi variabel lingkungan
+├── package.json                  # Root orchestrator scripts
+└── tsconfig.json                 # Base TypeScript compiler configuration
+```
+
+---
+
+## 🚀 Panduan Instalasi Langkah-demi-Langkah
+
+### Langkah 1: Prasyarat Sistem
+Pastikan perangkat Anda telah terpasang:
+- **Node.js:** Versi `>= 20.x` (Direkomendasikan **Node.js v22 LTS**)
+- **npm:** Versi `>= 9.x`
+- **Docker Desktop / Docker Engine:** Aktif dan berjalan
 - **Git**
 
-### 2. Clone & Install Dependensi
+### Langkah 2: Clone & Install Dependensi
 ```bash
 git clone <repository-url>
 cd "Kisahmagis apps"
 npm install
 ```
+*Catatan: `npm install` di root akan otomatis menginstal seluruh dependensi di `apps/web`, `apps/api`, dan `packages/*` berkat fitur NPM Workspaces.*
 
-### 3. Setup Konfigurasi `.env`
-Salin file template lingkungan:
+### Langkah 3: Konfigurasi Environment File
+Salin file template `.env.example` menjadi `.env`:
 ```bash
+# Untuk Linux / macOS / Git Bash:
 cp .env.example .env
+
+# Untuk Windows PowerShell:
+Copy-Item .env.example .env
 ```
-Pastikan variabel database sesuai dengan konfigurasi `docker-compose.yml`:
+
+Pastikan nilai default pada file `.env` sudah sesuai:
 ```env
+NODE_ENV=development
+PORT=3001
+APP_URL=http://localhost:3000
+API_URL=http://localhost:3001
+SESSION_SECRET=super-secret-session-key-change-in-production
+
 DB_HOST=localhost
 DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=password123
 DB_NAME=kisahmagis
-DATABASE_URL=postgresql://postgres:password123@localhost:5432/kisahmagis
-PORT=3001
-JWT_SECRET=supersecret-kisahmagis-key
+DB_SSL=false
 ```
 
-### 4. Jalankan Database Container
-Nyalakan container PostgreSQL:
+### Langkah 4: Jalankan Database PostgreSQL via Docker
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
-*Pastikan container berstatus healthy pada port 5432.*
-
-### 5. Inisialisasi Skema Database & Seeding
-Terapkan skema tabel dan isi data awal:
+Untuk memastikan container database berjalan dengan baik:
 ```bash
-# Push skema Drizzle ke PostgreSQL
+docker ps --filter "name=kisahmagis-postgres"
+```
+*(Status container harus menunjukkan `Up` dan `healthy` pada port `0.0.0.0:5432->5432/tcp`).*
+
+### Langkah 5: Terapkan Skema Database
+Gunakan Drizzle Kit untuk mendorong struktur tabel dari `apps/api/src/db/schema.ts` ke PostgreSQL:
+```bash
 npm run db:push
-
-# (Opsional) Jalankan seeding tema dan paket
-npx tsx apps/api/seedThemes.ts
 ```
 
-### 6. Jalankan Server Pengembangan
-Jalankan aplikasi Frontend dan Backend sekaligus:
+### Langkah 6: Masukkan Data Awal (Database Seeding)
+Jalankan seeder terpadu untuk mengisi paket tema, katalog tema, pengguna demo, dan data pernikahan lengkap:
+```bash
+npm run db:seed
+```
+Output terminal akan menampilkan konfirmasi data demo siap pakai.
+
+### Langkah 7: Jalankan Server Aplikasi
 ```bash
 npm run dev
 ```
-
-Aplikasi dapat diakses melalui browser:
-- **Frontend App:** [http://localhost:3000](http://localhost:3000)
-- **Backend API:** [http://localhost:3001/api/health](http://localhost:3001/api/health)
-- **Akun Demo Cepat:** Klik tombol **"Masuk dengan Akun Demo"** di halaman login.
+Perintah ini akan menjalankan backend API (port 3001) dan frontend Vite (port 3000) secara serentak via `concurrently`.
 
 ---
 
-## ⌨️ Perintah yang Tersedia (NPM Scripts)
+## 🗄️ Operasional Database (Docker, Push, & Seed)
 
-Dijalankan dari root folder proyek:
-
-| Perintah | Fungsi |
-| :--- | :--- |
-| `npm run dev` | Menjalankan Frontend (`web`) dan Backend (`api`) secara paralel via `concurrently`. |
-| `npm run dev:web` | Hanya menjalankan server Vite frontend (`apps/web`). |
-| `npm run dev:api` | Hanya menjalankan server Hono API (`apps/api`) dengan *file watcher*. |
-| `npm run db:push` | Mendorong perubahan skema Drizzle ke database PostgreSQL. |
-| `npm run db:generate` | Menghasilkan file migrasi SQL baru dari skema TypeScript. |
-| `npm run build` | Melakukan build produksi untuk semua workspace yang mendukung. |
+| Kebutuhan | Perintah | Keterangan |
+| :--- | :--- | :--- |
+| **Menyalakan Database** | `docker compose up -d` | Menjalankan container PostgreSQL di latar belakang |
+| **Menghentikan Database** | `docker compose down` | Mematikan container database |
+| **Menghapus Data Database Total** | `docker compose down -v` | Menghapus container sekaligus volume `pgdata` |
+| **Sinkronisasi Skema** | `npm run db:push` | Mendorong perubahan file `schema.ts` ke database PostgreSQL |
+| **Generate Migrasi SQL** | `npm run db:generate` | Menghasilkan file migrasi SQL baru di direktori `drizzle/` |
+| **Seeding Data Bersih** | `npm run db:seed` | Mengisi ulang paket, tema, dan data pernikahan demo |
 
 ---
 
-## 🎨 Panduan Pengembangan Tema
+## ⌨️ Daftar Perintah (NPM Scripts)
 
-Untuk membuat tema undangan baru:
-1. Buat direktori tema di `apps/web/src/themes/<nama-tema>/`.
-2. Buat file `theme.ts` yang mengekspor metadata dan `customFields` (misal kebutuhan video, quotes, dll).
-3. Buat file `<NamaTema>Theme.tsx` sebagai komponen React murni penerima `ThemeProps`.
-4. Daftarkan di `apps/web/src/themes/index.ts` ke dalam array `availableThemes`.
-5. Masukkan entri tema ke database (tabel `themes`) melalui seeder agar tema dapat dikelola hak akses dan status kustomnya oleh admin.
+Dijalankan langsung dari root direktori proyek:
 
-*Selengkapnya, pelajari panduan mendalam di [Docs/THEME_DEVELOPMENT.md](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/THEME_DEVELOPMENT.md).*
+```bash
+# Menjalankan frontend dan backend secara paralel
+npm run dev
+
+# Hanya menjalankan frontend Vite (port 3000)
+npm run dev:web
+
+# Hanya menjalankan backend API Hono (port 3001) dengan file watcher
+npm run dev:api
+
+# Sinkronisasi skema tabel Drizzle ke PostgreSQL
+npm run db:push
+
+# Inisialisasi dan seeding database demo
+npm run db:seed
+
+# Membuat migrasi SQL baru
+npm run db:generate
+
+# Build produksi untuk seluruh workspace
+npm run build
+```
 
 ---
 
-## 🔧 Troubleshooting Umum
+## 🎨 Standar Desain & Pedoman Kode
 
-### 1. `ECONNREFUSED` atau `500 Internal Server Error` saat Login/Demo
-- **Penyebab:** Container Docker PostgreSQL belum menyala saat API mencoba start, atau server API belum aktif di port 3001.
+1. **Aturan Tipografi Font Quintessential:**
+   - Font dekoratif `Quintessential` **HANYA** boleh digunakan untuk nama kedua mempelai (`groomName` & `brideName`) pada kartu undangan.
+   - Seluruh teks antarmuka dashboard, tabel buku tamu, kartu metrik, formulir, dan tombol **WAJIB** menggunakan font sans-serif standar (`Geist Variable` atau `Inter`) demi menjaga keterbacaan (*readability*).
+2. **Disiplin Warna (Bebas Pink pada Grup/Kategori):**
+   - Warna **Rose / Soft Pink** (`bg-rose-50`, `text-rose-700`) **eksklusif** hanya digunakan untuk penanda *Mempelai Wanita*.
+   - **Grup / Kategori** tidak boleh menggunakan pink:
+     - `Keluarga` = Indigo
+     - `Sahabat` = Sky
+     - `Rekan Kerja` = Slate
+     - `VIP` = Amber
+     - `Lainnya` = Zinc
+   - **Status RSVP** menggunakan warna semantik tegas:
+     - `Hadir` = Emerald (Hijau)
+     - `Tidak Hadir` = Red (Merah tegas, bukan rose-pink)
+     - `Menunggu` = Amber (Kuning)
+3. **Anti-Slop:**
+   - Dilarang memasukkan dekorasi stiker atau emoji unicode ke dalam tombol, dropdown, badge status, atau kartu metrik. Gunakan ikon rapi dari `lucide-react`.
+
+---
+
+## 🤖 Panduan untuk AI Coding Agent
+
+Jika Anda adalah agen AI yang membaca repositori ini untuk menyelesaikan instruksi tugas:
+1. **Verifikasi Lingkungan:**
+   - Cek apakah container database aktif dengan menjalankan `docker ps`.
+   - Cek apakah type-check valid dengan menjalankan `npx tsc --noEmit` di `apps/web` dan `apps/api`.
+2. **Koneksi Database:**
+   - Backend membaca `.env` dari root direktori.
+   - Skema database didefinisikan secara deklaratif di [`apps/api/src/db/schema.ts`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/apps/api/src/db/schema.ts).
+   - Setiap modifikasi kolom tabel di `schema.ts` harus selalu diikuti eksekusi `npm run db:push`.
+3. **Validasi Model Bersama:**
+   - Model TypeScript bersama terletak di [`packages/types/src/`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/packages/types/src).
+   - Skema validasi Zod bersama terletak di [`packages/validation/src/`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/packages/validation/src).
+4. **Preservasi Logika:**
+   - Jangan mengubah flow reverse proxy di [`apps/web/vite.config.ts`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/apps/web/vite.config.ts) yang mengarahkan panggilan `/api/*` ke `http://localhost:3001`.
+
+---
+
+## 🔧 Troubleshooting & FAQ
+
+### 1. Database Error: `connect ECONNREFUSED 127.0.0.1:5432`
+- **Penyebab:** Container Docker PostgreSQL belum berjalan atau port 5432 belum siap menerima koneksi.
 - **Solusi:**
-  1. Pastikan Docker aktif: jalankan `docker-compose up -d`.
-  2. Pastikan port 5432 aktif: `netstat -ano | findstr 5432`.
-  3. Hentikan `npm run dev` (`Ctrl + C`), lalu jalankan kembali `npm run dev`.
+  ```bash
+  docker compose up -d
+  # Pastikan container berstatus Up:
+  docker ps
+  ```
 
-### 2. Modifikasi Skema Database Tidak Terlihat
-- **Solusi:** Jalankan `npm run db:push` di terminal untuk menyinkronkan definisi `apps/api/src/db/schema.ts` ke database PostgreSQL.
+### 2. Port Conflict: `port 5432 is already allocated`
+- **Penyebab:** Terdapat service PostgreSQL lokal (di luar Docker) yang sedang memakai port 5432.
+- **Solusi:**
+  - Hentikan service PostgreSQL lokal pada services Windows / macOS, ATAU
+  - Ubah `DB_PORT=5433` di file `.env` dan `docker-compose.yml`, lalu jalankan `docker compose up -d`.
+
+### 3. Error saat Login Demo: `Email atau kata sandi tidak cocok`
+- **Penyebab:** Database belum terisi data demo awal.
+- **Solusi:** Jalankan seeder via terminal:
+  ```bash
+  npm run db:seed
+  ```
+  Lalu coba masuk kembali menggunakan email `andi@kisahmagis.id` dan password `password123`.
+
+### 4. Perubahan Kolom Tabel Tidak Dikenali API
+- **Penyebab:** Skema TypeScript telah diubah namun belum didorong ke database fisik PostgreSQL.
+- **Solusi:** Jalankan perintah sinkronisasi:
+  ```bash
+  npm run db:push
+  ```
 
 ---
 
-## 📄 Lisensi & Kredit
+## 📚 Indeks Dokumentasi Lengkap (`/Docs`)
+
+Dokumentasi arsitektural mendalam tersedia di direktori [`Docs/`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs):
+
+| Dokumen | Deskripsi & Isi Utama |
+| :--- | :--- |
+| **[`PRD.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/PRD.md)** | **Product Requirements Document (Ringkasan Eksekutif):** Visi produk, spesifikasi modul, diagram arsitektur, dan alur pengguna. |
+| **[`Docs/PRD_KisahMagis.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/PRD_KisahMagis.md)** | **Spesifikasi Detail PRD:** Dokumentasi teknis komprehensif seluruh modul sistem KisahMagis. |
+| **[`Docs/THEME_DEVELOPMENT.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/THEME_DEVELOPMENT.md)** | **Panduan Pembuatan Tema:** Tata cara membuat tema baru, pendaftaran `customFields`, dan integrasi database `packages` & `themes`. |
+| **[`Docs/DESIGN_KisahMagis.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/DESIGN_KisahMagis.md)** | **Design System & UI Guidelines:** Palet warna, hirarki tipografi, radius sudut, dan pedoman komponen visual. |
+| **[`Docs/SECURITY.md`](file:///d:/Work/Sistemagis/Kisahmagis/Kisahmagis%20apps/Docs/SECURITY.md)** | **Security & Deployment Guide:** Model ancaman keamanan, proteksi PII data tamu, dan konfigurasi Cloudflare Tunnel. |
+
+---
 
 Hak Cipta © 2026 **KisahMagis** by **Sistemagis**. Seluruh hak cipta dilindungi undang-undang.

@@ -37,7 +37,7 @@ export function CoupleSection({ wedding }: Pick<SectionComponentProps, 'wedding'
       )}
       <h3
         className="text-2xl mb-1 text-center"
-        style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}
+        style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}
       >
         {name}
       </h3>

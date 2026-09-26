@@ -13,7 +13,8 @@
     "dev:api": "npm run dev -w @kisahmagis/api",
     "build": "npm run build --workspaces --if-present",
     "db:generate": "npm run db:generate -w @kisahmagis/api",
-    "db:push": "npm run db:push -w @kisahmagis/api"
+    "db:push": "npm run db:push -w @kisahmagis/api",
+    "db:seed": "npm run db:seed -w @kisahmagis/api"
   },
   "devDependencies": {
     "concurrently": "^10.0.5"

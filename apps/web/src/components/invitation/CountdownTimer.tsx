@@ -77,8 +77,8 @@ export function CountdownTimer({ targetDate }: { targetDate?: string }) {
           }}
         >
           <span
-            className="text-2xl sm:text-4xl font-semibold leading-none"
-            style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}
+            className="text-2xl sm:text-4xl font-bold leading-none tabular-nums font-sans"
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--theme-text)' }}
           >
             {String(unit.value).padStart(2, '0')}
           </span>

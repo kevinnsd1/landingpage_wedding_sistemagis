@@ -1982,3 +1982,44 @@ Systematic · Clean · Practical
 ```
 
 Both should remain connected through the same color palette, typography system, logo, spacing language, and component identity.
+
+---
+
+# 42. Developer & AI Agent Operational Guide
+
+Untuk rekan rekayasa perangkat lunak maupun AI Coding Agent yang bekerja pada repositori ini:
+
+## 42.1 Langkah Cepat Menjalankan Proyek (5 Menit)
+
+```bash
+# 1. Install dependensi monorepo
+npm install
+
+# 2. Siapkan file environment
+cp .env.example .env
+
+# 3. Jalankan container PostgreSQL
+docker compose up -d
+
+# 4. Sinkronisasi skema tabel Drizzle ORM ke PostgreSQL
+npm run db:push
+
+# 5. Jalankan database seeder
+npm run db:seed
+
+# 6. Jalankan dev server (Web port 3000 & API port 3001)
+npm run dev
+```
+
+## 42.2 Endpoint & Akses Pengujian
+- **Aplikasi Frontend:** `http://localhost:3000`
+- **Backend API:** `http://localhost:3001`
+- **Akun Demo Bawaan:** `andi@kisahmagis.id` / `password123`
+- **Tautan Undangan Tamu Personal:** `http://localhost:3000/?wedding=andi-sari&to=BudiS88`
+
+## 42.3 Aturan Arsitektur & Desain Mutlak
+1. **Restriksi Font Quintessential:** Hanya diperbolehkan untuk nama kedua mempelai (`groomName` & `brideName`). Seluruh UI form, tabel, kartu, dan dashboard wajib menggunakan `Geist Variable` atau `Inter`.
+2. **Disiplin Warna (Bebas Pink):** Warna Soft Rose/Pink (`bg-rose-50 text-rose-700`) dikhususkan hanya untuk *Mempelai Wanita*. Grup kategori tamu menggunakan warna khusus: Keluarga (Indigo), Sahabat (Sky), Rekan Kerja (Slate), VIP (Amber), Lainnya (Zinc).
+3. **Anti-Slop:** Hindari penggunaan emoji/stiker generik pada antarmuka profesional.
+4. **WhatsApp Blast Mandiri:** Menghasilkan tautan `api.whatsapp.com/send` langsung dari WhatsApp pengguna tanpa memerlukan WhatsApp Business API pihak ketiga yang berbayar.
+

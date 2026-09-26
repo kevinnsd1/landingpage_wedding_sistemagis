@@ -101,6 +101,8 @@ export async function seedDemoData(forceReset = false) {
       phone: g.phone,
       email: g.email,
       groupName: g.group,
+      guestSide: g.guestSide || 'groom',
+      invitationType: g.invitationType || 'digital',
       invitationToken: g.invitationToken,
       tokenHash,
       status: g.invitationStatus,

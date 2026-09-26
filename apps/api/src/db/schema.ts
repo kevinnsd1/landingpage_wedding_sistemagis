@@ -49,6 +49,8 @@ export const guests = pgTable('guests', {
   phone: varchar('phone', { length: 50 }),
   email: varchar('email', { length: 255 }),
   groupName: varchar('group_name', { length: 100 }).default('Sahabat'),
+  guestSide: varchar('guest_side', { length: 50 }).default('groom'),
+  invitationType: varchar('invitation_type', { length: 50 }).default('digital'),
   invitationToken: varchar('invitation_token', { length: 100 }),
   tokenHash: text('token_hash').notNull().unique(),
   status: varchar('status', { length: 50 }).default('pending'),

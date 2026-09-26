@@ -30,7 +30,7 @@ export function AuthView({
 
   // Login form
   const [loginEmail, setLoginEmail] = useState('andi@kisahmagis.id');
-  const [loginPassword, setLoginPassword] = useState('rahasia123');
+  const [loginPassword, setLoginPassword] = useState('password123');
   const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   // Register form

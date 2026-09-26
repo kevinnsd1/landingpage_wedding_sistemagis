@@ -108,7 +108,7 @@ export function LandingPage({ onNavigate, isLoggedIn, onLogout }: LandingPagePro
           </div>
 
           {/* Heading */}
-          <h1 className="font-brand text-5xl sm:text-7xl text-neutral-900 max-w-4xl mx-auto leading-tight tracking-tight mb-6">
+          <h1 className="text-4xl sm:text-6xl font-extrabold text-neutral-900 max-w-4xl mx-auto leading-[1.15] tracking-tight mb-6">
             Satu tempat untuk merangkai <span className="text-brand-gradient">kisah magis</span> dan persiapan pernikahanmu.
           </h1>
 
@@ -232,7 +232,7 @@ export function LandingPage({ onNavigate, isLoggedIn, onLogout }: LandingPagePro
             <span className="text-xs font-semibold text-slate-500 block mb-2">
               Satu Ekosistem Terpadu
             </span>
-            <h2 className="font-brand text-3xl sm:text-5xl text-neutral-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 mb-4 tracking-tight">
               Semua Kebutuhan Pernikahan Tanpa Ribet
             </h2>
             <p className="text-xs sm:text-sm text-neutral-500 font-light">
@@ -261,7 +261,7 @@ export function LandingPage({ onNavigate, isLoggedIn, onLogout }: LandingPagePro
             <span className="text-xs font-semibold text-slate-500 block mb-2">
               Koleksi Estetik
             </span>
-            <h2 className="font-brand text-3xl sm:text-5xl text-neutral-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 mb-4 tracking-tight">
               Pilihan Tema yang Menawan
             </h2>
             <p className="text-xs sm:text-sm text-neutral-500 font-light">
@@ -309,7 +309,7 @@ export function LandingPage({ onNavigate, isLoggedIn, onLogout }: LandingPagePro
             <span className="text-xs font-semibold text-slate-500 block mb-2">
               Pilihan Paket
             </span>
-            <h2 className="font-brand text-3xl sm:text-5xl text-neutral-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 mb-4 tracking-tight">
               Investasi Menuju Hari Bahagia
             </h2>
             <p className="text-xs sm:text-sm text-neutral-500 font-light">
@@ -425,7 +425,7 @@ export function LandingPage({ onNavigate, isLoggedIn, onLogout }: LandingPagePro
       <section className="py-20 bg-neutral-50/70 text-center border-t border-neutral-200/80">
         <div className="max-w-3xl mx-auto px-4">
           <Heart className="w-8 h-8 fill-slate-900 text-slate-900 mx-auto mb-4" />
-          <h2 className="font-brand text-4xl sm:text-5xl text-neutral-900 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 mb-4 tracking-tight">
             Rangkai Kisah Bahagiamu Sekarang
           </h2>
           <p className="text-xs sm:text-sm text-neutral-500 font-light mb-8 max-w-lg mx-auto">

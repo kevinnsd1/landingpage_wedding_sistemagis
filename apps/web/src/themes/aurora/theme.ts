@@ -52,6 +52,7 @@ export const auroraThemeMeta: ThemeMetadata = {
   ],
   defaultFonts: {
     heading: 'Cormorant Garamond',
+    couple: 'Quintessential',
     body: 'Inter',
   },
   defaultTokens: {
@@ -68,6 +69,7 @@ export const auroraThemeMeta: ThemeMetadata = {
     '--theme-border': '#E5E7EB',
     '--theme-border-accent': '#B0BEC5',
     '--font-heading': "'Cormorant Garamond', serif",
+    '--font-couple': "'Quintessential', cursive, serif",
     '--font-body': "'Inter', sans-serif",
   },
   supportedSections: [

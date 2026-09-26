@@ -11,7 +11,7 @@ export function useThemeConfig(invitation: Invitation) {
       themeId: 'serenity',
       themeVersion: '1.0.0',
       colors: { primary: '#FCBACB', secondary: '#FC9FB1', background: '#FCFCFC', accent: '#FFEAAB' },
-      fonts: { heading: 'Quintessential', body: 'Inter' },
+      fonts: { heading: 'Playfair Display', couple: 'Quintessential', body: 'Inter' },
       sections: [],
       music: { enabled: false, title: '', artist: '', url: '' },
       gallery: { layout: 'grid', images: [] },

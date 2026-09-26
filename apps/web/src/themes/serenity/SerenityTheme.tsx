@@ -57,7 +57,7 @@ export function SerenityTheme({
                 <img src={wedding.coverPhoto || wedding.groomPhoto} alt={wedding.title} className="w-full h-full object-cover" />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl mb-2 leading-tight" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+            <h1 className="text-4xl sm:text-5xl mb-2 leading-tight" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
               {wedding.groomName.split(' ')[0]} &amp; {wedding.brideName.split(' ')[0]}
             </h1>
             <p className="text-xs sm:text-sm font-light tracking-wide mb-8" style={{ color: 'var(--theme-text-muted)' }}>
@@ -106,9 +106,9 @@ export function SerenityTheme({
             <span className="text-xs tracking-[0.3em] font-semibold uppercase block mb-3" style={{ color: 'var(--theme-text-accent)' }}>
               Walimatul &apos;Ursy
             </span>
-            <h1 className="text-4xl sm:text-6xl mb-4 leading-tight" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text)' }}>
+            <h1 className="text-4xl sm:text-6xl mb-4 leading-tight" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text)' }}>
               {wedding.groomName.split(',')[0]}
-              <span className="block text-2xl sm:text-3xl my-1" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-secondary)' }}>&amp;</span>
+              <span className="block text-2xl sm:text-3xl my-1" style={{ color: 'var(--theme-secondary)' }}>&amp;</span>
               {wedding.brideName.split(',')[0]}
             </h1>
             <p className="text-sm sm:text-base font-light mb-8" style={{ color: 'var(--theme-text-muted)' }}>
@@ -155,7 +155,7 @@ export function SerenityTheme({
           <p className="text-xs font-light max-w-sm mx-auto mb-6" style={{ color: 'var(--theme-text-muted)' }}>
             Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
           </p>
-          <p className="text-3xl" style={{ fontFamily: 'var(--font-heading)', color: 'var(--theme-text-accent)' }}>
+          <p className="text-3xl" style={{ fontFamily: "var(--font-couple, 'Quintessential', cursive)", color: 'var(--theme-text-accent)' }}>
             {wedding.groomName.split(' ')[0]} &amp; {wedding.brideName.split(' ')[0]}
           </p>
           <div className="mt-12 pt-6 border-t flex flex-col items-center gap-1.5" style={{ borderColor: 'var(--theme-border)' }}>

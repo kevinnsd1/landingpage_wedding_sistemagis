@@ -17,6 +17,7 @@ import {
   CalendarCheck2,
   CalendarPlus,
   Tag,
+  GripVertical,
 } from 'lucide-react';
 import { Wedding } from '@/types/wedding';
 import { PlannerTask, ColumnId, TaskPriority, WeddingMilestone, MilestoneCategory } from '@/types/planner';
@@ -63,6 +64,19 @@ export function PlannerTab({
 }: PlannerTabProps) {
   // View Switcher state: 'kanban' | 'calendar' | 'timeline'
   const [viewMode, setViewMode] = useState<'kanban' | 'calendar' | 'timeline'>('kanban');
+
+  // Drag and Drop state for Kanban
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [dragOverColumnId, setDragOverColumnId] = useState<ColumnId | null>(null);
+  const [dragOverTaskId, setDragOverTaskId] = useState<string | null>(null);
+  const [dropPosition, setDropPosition] = useState<'before' | 'after' | null>(null);
+
+  const resetDragState = () => {
+    setDraggedTaskId(null);
+    setDragOverColumnId(null);
+    setDragOverTaskId(null);
+    setDropPosition(null);
+  };
 
   // Task Modal state
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -246,6 +260,102 @@ export function PlannerTab({
     onShowToast(`Tugas dipindahkan ke "${columns.find((c) => c.id === targetCol)?.title}"`, 'info');
   };
 
+  // Drag and Drop Card-Level Handlers for Vertical Priority Reordering
+  const handleCardDragOver = (e: React.DragEvent, targetTask: PlannerTask) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'move';
+
+    if (draggedTaskId === targetTask.id) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const offset = e.clientY - rect.top;
+    const isTopHalf = offset < rect.height / 2;
+    const pos = isTopHalf ? 'before' : 'after';
+
+    setDragOverTaskId(targetTask.id);
+    setDropPosition(pos);
+    setDragOverColumnId(targetTask.columnId);
+  };
+
+  const handleCardDrop = (e: React.DragEvent, targetTask: PlannerTask) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const sourceTaskId = e.dataTransfer.getData('text/plain') || draggedTaskId;
+    if (!sourceTaskId || sourceTaskId === targetTask.id) {
+      resetDragState();
+      return;
+    }
+
+    const sourceTask = tasks.find((t) => t.id === sourceTaskId);
+    if (!sourceTask) {
+      resetDragState();
+      return;
+    }
+
+    const targetColumnId = targetTask.columnId;
+    // Get all tasks in target column sorted by order, excluding the dragged task
+    const targetColTasks = tasks
+      .filter((t) => t.columnId === targetColumnId && t.id !== sourceTaskId)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    const targetIndex = targetColTasks.findIndex((t) => t.id === targetTask.id);
+    const insertIndex = dropPosition === 'before' ? targetIndex : targetIndex + 1;
+
+    // Insert source task into targetColTasks
+    const updatedColTasks = [...targetColTasks];
+    const safeInsertIndex = insertIndex >= 0 ? insertIndex : 0;
+    updatedColTasks.splice(safeInsertIndex, 0, {
+      ...sourceTask,
+      columnId: targetColumnId,
+    });
+
+    // Update each task with its new sequence order
+    updatedColTasks.forEach((t, idx) => {
+      if (t.order !== idx || t.id === sourceTask.id || (t.id === sourceTask.id && sourceTask.columnId !== targetColumnId)) {
+        onUpdateTask({
+          ...t,
+          order: idx,
+          columnId: targetColumnId,
+        });
+      }
+    });
+
+    onShowToast(`Prioritas & posisi tugas berhasil diperbarui`, 'info');
+    resetDragState();
+  };
+
+  const handleColumnDrop = (e: React.DragEvent, colId: ColumnId) => {
+    e.preventDefault();
+    const sourceTaskId = e.dataTransfer.getData('text/plain') || draggedTaskId;
+    if (!sourceTaskId) {
+      resetDragState();
+      return;
+    }
+
+    const sourceTask = tasks.find((t) => t.id === sourceTaskId);
+    if (!sourceTask) {
+      resetDragState();
+      return;
+    }
+
+    // If dropped directly on the column background (not on a specific card)
+    const targetColTasks = tasks
+      .filter((t) => t.columnId === colId && t.id !== sourceTaskId)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    const newOrder = targetColTasks.length;
+    onUpdateTask({
+      ...sourceTask,
+      columnId: colId,
+      order: newOrder,
+    });
+
+    onShowToast(`Tugas dipindahkan ke "${columns.find((c) => c.id === colId)?.title}"`, 'info');
+    resetDragState();
+  };
+
   // Milestone Modal Handlers
   const openAddMilestoneModal = (presetDate?: string) => {
     setEditingMilestone(null);
@@ -389,388 +499,365 @@ export function PlannerTab({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-150">
-      {/* ── Top Header & Mode Switcher ────────────────────────────── */}
-      <div className="bg-white p-6 rounded-2xl border border-neutral-100 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="p-2 bg-slate-100 text-slate-800 rounded-lg">
-              <CheckSquare className="w-5 h-5" />
-            </span>
-            <h2 className="text-xl font-bold text-slate-900">Perencanaan &amp; Agenda Pernikahan</h2>
-          </div>
-          <p className="text-xs text-neutral-500 max-w-xl">
-            Pantau alur persiapan melalui Papan Kanban, atau lihat jadwal acara penting (Akad, Resepsi, Lamaran, dll.) berdasarkan tanggal kalender.
-          </p>
-        </div>
-
-        {/* View Switcher Controls */}
-        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-          <div className="flex items-center p-1 bg-neutral-100 rounded-xl">
-            <button
-              onClick={() => setViewMode('kanban')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'kanban'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900'
-              }`}
-            >
-              <Columns className="w-3.5 h-3.5" />
-              <span>Papan Kanban</span>
-            </button>
-
-            <button
-              onClick={() => setViewMode('calendar')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'calendar'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900'
-              }`}
-            >
-              <CalendarIcon className="w-3.5 h-3.5" />
-              <span>Kalender Acara</span>
-            </button>
-
-            <button
-              onClick={() => setViewMode('timeline')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'timeline'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900'
-              }`}
-            >
-              <CalendarCheck2 className="w-3.5 h-3.5" />
-              <span>Timeline Rangkaian</span>
-            </button>
-          </div>
-
-          {/* Quick Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => openAddTaskModal('todo')}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 active:scale-[0.98] cursor-pointer shadow-xs ${
-                viewMode === 'kanban'
-                  ? 'bg-[#263238] text-white hover:bg-[#1E293B]'
-                  : 'bg-white hover:bg-neutral-50 text-[#263238] border border-[#E8E8E8]'
-              }`}
-            >
-              <Plus className={`w-4 h-4 stroke-[2.2] ${viewMode === 'kanban' ? 'text-white' : 'text-[#263238]'}`} />
-              <span>Tambah Tugas</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => openAddMilestoneModal(selectedDateStr)}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 active:scale-[0.98] cursor-pointer shadow-xs ${
-                viewMode !== 'kanban'
-                  ? 'bg-[#263238] text-white hover:bg-[#1E293B]'
-                  : 'bg-[#FFEAAB]/35 hover:bg-[#FFEAAB]/55 text-[#7A5D00] border border-[#FFEAAB]'
-              }`}
-            >
-              <CalendarPlus className={`w-4 h-4 stroke-[2] ${viewMode !== 'kanban' ? 'text-white' : 'text-[#7A5D00]'}`} />
-              <span>Tambah Acara</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Progress & Quick Stats ─────────────────────────────────── */}
+      {/* ── 1. Progress & Quick Stats ──────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Kanban Task Progress */}
-        <div className="bg-white p-4 rounded-xl border border-neutral-100 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-semibold mb-1">
-            <span className="text-neutral-600">Progres Checklist Tugas</span>
-            <span className="text-[#3D6420] font-bold">{progressPercent}% Selesai</span>
+        <Card className="p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#B9DCA9]/30 text-[#3D6420] flex items-center justify-center flex-shrink-0 border border-[#B9DCA9]/40">
+            <CheckSquare className="w-5 h-5" />
           </div>
-          <div className="w-full h-2 bg-[#B9DCA9]/20 rounded-full overflow-hidden mt-2">
-            <div
-              className="h-full bg-[#74A12E] rounded-full transition-all duration-300"
-              style={{ width: `${progressPercent}%` }}
-            />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-[#667085] font-medium">Progres Checklist</span>
+              <span className="text-[#3D6420] font-bold">{progressPercent}% Selesai</span>
+            </div>
+            <div className="w-full h-2 bg-[#B9DCA9]/20 rounded-full overflow-hidden mt-1">
+              <div
+                className="h-full bg-[#74A12E] rounded-full transition-all duration-300"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <span className="text-[10px] text-neutral-400 mt-1 block">
+              {completedCount} dari {tasks.length} tugas terselesaikan
+            </span>
           </div>
-          <span className="text-[10px] text-neutral-400 mt-1.5 block">
-            {completedCount} dari {tasks.length} tugas terselesaikan
-          </span>
-        </div>
+        </Card>
 
         {/* Milestone Agenda Count */}
-        <div className="bg-white p-4 rounded-xl border border-neutral-100 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-semibold mb-1">
-            <span className="text-neutral-600">Agenda &amp; Rangkaian Acara</span>
-            <Sparkles className="w-4 h-4 text-amber-500" />
+        <Card className="p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#FFEAAB]/40 text-[#7A5D00] flex items-center justify-center flex-shrink-0 border border-[#FFEAAB]/60">
+            <Sparkles className="w-5 h-5" />
           </div>
-          <p className="text-xl font-bold text-slate-900 mt-1">
-            {uniqueMilestones.length} Acara Penting
-          </p>
-          <span className="text-[10px] text-neutral-400 mt-1 block">
-            {uniqueMilestones.filter((m) => m.isCompleted).length} prosesi telah selesai dilaksanakan
-          </span>
-        </div>
+          <div>
+            <p className="text-xs text-[#667085] font-medium">Agenda &amp; Acara</p>
+            <p className="text-xl font-bold text-[#263238] mt-0.5">{uniqueMilestones.length} Acara Penting</p>
+            <span className="text-[10px] text-neutral-400 mt-0.5 block">
+              {uniqueMilestones.filter((m) => m.isCompleted).length} prosesi telah dilaksanakan
+            </span>
+          </div>
+        </Card>
 
         {/* Target Wedding Date */}
-        <div className="bg-white p-4 rounded-xl border border-neutral-100 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-semibold mb-1">
-            <span className="text-neutral-600">Hari Bahagia (H-Day)</span>
-            <CalendarIcon className="w-4 h-4 text-[#FC9FB1]" />
+        <Card className="p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#FCBACB]/30 text-[#7D4050] flex items-center justify-center flex-shrink-0 border border-[#FCBACB]/50">
+            <CalendarIcon className="w-5 h-5" />
           </div>
-          <p className="text-lg font-bold text-[#7D4050] mt-1">
-            {wedding.weddingDate ? formatDateIndo(wedding.weddingDate) : 'Belum Ditentukan'}
-          </p>
-          <span className="text-[10px] text-neutral-400 mt-1 block">
-            {wedding.akadEvent?.venue || 'Venue Belum Diatur'}
-          </span>
-        </div>
+          <div>
+            <p className="text-xs text-[#667085] font-medium">Hari Bahagia (H-Day)</p>
+            <p className="text-base font-bold text-[#7D4050] mt-0.5">
+              {wedding.weddingDate ? formatDateIndo(wedding.weddingDate) : 'Belum Ditentukan'}
+            </p>
+            <span className="text-[10px] text-neutral-400 mt-0.5 block">
+              {wedding.akadEvent?.venue || 'Venue Belum Diatur'}
+            </span>
+          </div>
+        </Card>
       </div>
 
-      {/* ── 1. KANBAN VIEW ────────────────────────────────────────── */}
-      {viewMode === 'kanban' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-          {columns.map((col) => {
-            const colTasks = tasks.filter((t) => t.columnId === col.id);
+      {/* ── 2. Unified Planner Card (Header Controls + View Content) ─ */}
+      <Card className="space-y-6">
+        {/* Card Toolbar Header */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-neutral-100">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="p-1.5 bg-[#263238]/5 text-[#263238] rounded-lg">
+                <CheckSquare className="w-4 h-4" />
+              </span>
+              <h3 className="text-base font-bold text-[#263238]">Perencanaan &amp; Agenda Pernikahan</h3>
+            </div>
+            <p className="text-xs text-neutral-500">
+              Kelola daftar tugas persiapan melalui Papan Kanban interaktif, atau pantau jadwal kalender dan timeline rangkaian prosesi.
+            </p>
+          </div>
 
-            return (
-              <div
-                key={col.id}
-                className={`rounded-2xl border p-4 flex flex-col min-h-[500px] ${col.bg} ${col.border}`}
+          {/* View Switcher Controls & Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            <div className="flex items-center p-1 bg-neutral-100 rounded-xl">
+              <button
+                type="button"
+                onClick={() => setViewMode('kanban')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  viewMode === 'kanban'
+                    ? 'bg-white text-[#263238] shadow-2xs'
+                    : 'text-neutral-500 hover:text-[#263238]'
+                }`}
               >
-                {/* Column Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-neutral-200/50 mb-4">
-                  <div>
-                    <h3 className={`font-bold text-sm flex items-center gap-2 ${col.text}`}>
-                      {col.title}
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${col.badge}`}>
-                        {colTasks.length}
-                      </span>
-                    </h3>
-                    <span className="text-[10px] text-neutral-400 block">{col.subtitle}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => openAddTaskModal(col.id)}
-                    className="p-1.5 rounded-lg text-neutral-400 hover:text-[#263238] hover:bg-white hover:shadow-2xs transition-all active:scale-95 cursor-pointer"
-                    title="Tambah tugas di kolom ini"
-                  >
-                    <Plus className="w-4 h-4 stroke-[2.2]" />
-                  </button>
-                </div>
+                <Columns className="w-3.5 h-3.5" />
+                <span>Papan Kanban</span>
+              </button>
 
-                {/* Tasks List */}
-                <div className="space-y-3 flex-1 overflow-y-auto pr-1">
-                  {colTasks.length === 0 ? (
-                    <div className="h-36 flex flex-col items-center justify-center border-2 border-dashed border-neutral-200/90 rounded-xl text-neutral-400 text-xs p-4">
-                      <span className="text-neutral-500 font-medium">Belum ada tugas</span>
-                      <button
-                        type="button"
-                        onClick={() => openAddTaskModal(col.id)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 mt-2 rounded-lg text-xs font-semibold text-[#7A5D00] bg-[#FFEAAB]/35 hover:bg-[#FFEAAB]/55 border border-[#FFEAAB] transition-all active:scale-95 cursor-pointer shadow-2xs"
-                      >
-                        <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
-                        <span>+ Buat tugas baru</span>
-                      </button>
-                    </div>
-                  ) : (
-                    colTasks.map((task) => (
-                      <Card
-                        key={task.id}
-                        hoverable
-                        className="p-4 bg-white border border-neutral-200/70 shadow-xs flex flex-col justify-between"
-                      >
-                        <div>
-                          <div className="flex items-center justify-between gap-2 mb-2">
-                            <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                              {task.category}
-                            </span>
-                            <Badge
-                              variant={
-                                task.priority === 'high'
-                                  ? 'error'
-                                  : task.priority === 'medium'
-                                  ? 'warning'
-                                  : 'neutral'
-                              }
-                              size="sm"
-                            >
-                              {task.priority === 'high' ? 'Penting' : task.priority === 'medium' ? 'Sedang' : 'Rendah'}
-                            </Badge>
-                          </div>
+              <button
+                type="button"
+                onClick={() => setViewMode('calendar')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  viewMode === 'calendar'
+                    ? 'bg-white text-[#263238] shadow-2xs'
+                    : 'text-neutral-500 hover:text-[#263238]'
+                }`}
+              >
+                <CalendarIcon className="w-3.5 h-3.5" />
+                <span>Kalender Acara</span>
+              </button>
 
-                          <h4 className="text-sm font-semibold text-neutral-900 mb-1 leading-snug">
-                            {task.title}
-                          </h4>
+              <button
+                type="button"
+                onClick={() => setViewMode('timeline')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  viewMode === 'timeline'
+                    ? 'bg-white text-[#263238] shadow-2xs'
+                    : 'text-neutral-500 hover:text-[#263238]'
+                }`}
+              >
+                <CalendarCheck2 className="w-3.5 h-3.5" />
+                <span>Timeline Rangkaian</span>
+              </button>
+            </div>
 
-                          {task.description && (
-                            <p className="text-xs text-neutral-500 line-clamp-2 mb-3 font-light leading-relaxed">
-                              {task.description}
-                            </p>
-                          )}
-                        </div>
+            {/* Quick Action Buttons */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === 'kanban' ? 'primary' : 'outline'}
+                size="sm"
+                onClick={() => openAddTaskModal('todo')}
+                icon={<Plus className="w-4 h-4 stroke-[2.2]" />}
+              >
+                Tambah Tugas
+              </Button>
 
-                        {/* Card Footer: Due date & Actions */}
-                        <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
-                          {task.dueDate ? (
-                            <span className="flex items-center gap-1 text-[11px] text-neutral-400">
-                              <CalendarIcon className="w-3 h-3 text-neutral-400" />
-                              {task.dueDate}
-                            </span>
-                          ) : (
-                            <span className="text-[10px] text-neutral-300 italic">Tanpa tenggat</span>
-                          )}
-
-                          <div className="flex items-center gap-1">
-                            {col.id !== 'todo' && (
-                              <button
-                                onClick={() => moveColumn(task, col.id === 'done' ? 'in_progress' : 'todo')}
-                                className="p-1 text-neutral-400 hover:text-neutral-700 rounded hover:bg-neutral-100"
-                                title="Pindahkan ke kolom sebelumnya"
-                              >
-                                <ChevronLeft className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-
-                            {col.id !== 'done' && (
-                              <button
-                                onClick={() => moveColumn(task, col.id === 'todo' ? 'in_progress' : 'done')}
-                                className="p-1 text-neutral-400 hover:text-neutral-700 rounded hover:bg-neutral-100"
-                                title="Pindahkan ke kolom berikutnya"
-                              >
-                                <ChevronRight className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-
-                            <button
-                              onClick={() => openEditTaskModal(task)}
-                              className="p-1 text-neutral-400 hover:text-neutral-700 rounded hover:bg-neutral-100"
-                              title="Edit tugas"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-
-                            <button
-                              onClick={() => {
-                                if (confirm(`Hapus tugas "${task.title}"?`)) {
-                                  onDeleteTask(task.id);
-                                  onShowToast('Tugas dihapus.', 'info');
-                                }
-                              }}
-                              className="p-1 text-neutral-400 hover:text-rose-600 rounded hover:bg-neutral-100"
-                              title="Hapus tugas"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </div>
-                      </Card>
-                    ))
-                  )}
-                </div>
-              </div>
-            );
-          })}
+              <Button
+                variant={viewMode !== 'kanban' ? 'primary' : 'outline'}
+                size="sm"
+                onClick={() => openAddMilestoneModal(selectedDateStr)}
+                icon={<CalendarPlus className="w-4 h-4 stroke-[2]" />}
+              >
+                Tambah Acara
+              </Button>
+            </div>
+          </div>
         </div>
-      )}
 
-      {/* ── 2. CALENDAR VIEW ──────────────────────────────────────── */}
-      {viewMode === 'calendar' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left: Monthly Calendar Grid (8 cols) */}
-          <div className="lg:col-span-8 bg-white p-6 rounded-2xl border border-neutral-100 shadow-xs">
-            {/* Calendar Month Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-neutral-100 mb-4">
-              <div>
-                <h3 className="text-base font-bold text-slate-900">
-                  {monthNamesIndo[month]} {year}
-                </h3>
-                <span className="text-xs text-neutral-400">
-                  Pilih tanggal untuk melihat jadwal dan tenggat tugas
-                </span>
-              </div>
+        {/* ── Active View Content ─────────────────────────────────── */}
 
-              <div className="flex items-center gap-1.5">
-                <Button variant="ghost" size="sm" onClick={handlePrevMonth}>
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCalendarMonth(new Date(initialCalendarDate.getFullYear(), initialCalendarDate.getMonth(), 1))}
-                >
-                  Bulan Hari-H
-                </Button>
-                <Button variant="ghost" size="sm" onClick={handleNextMonth}>
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
+        {/* ── 1. KANBAN VIEW ────────────────────────────────────────── */}
+        {viewMode === 'kanban' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between text-xs text-neutral-400 px-1">
+              <span className="flex items-center gap-1.5">
+                <GripVertical className="w-3.5 h-3.5 text-neutral-400" />
+                <span>Geser &amp; lepas (drag &amp; drop) tugas antar kolom atau geser atas-bawah untuk mengatur skala prioritas urutan.</span>
+              </span>
             </div>
 
-            {/* Days of week header */}
-            <div className="grid grid-cols-7 text-center font-semibold text-neutral-400 text-xs py-2 border-b border-neutral-100 mb-2">
-              <span className="text-rose-500">Min</span>
-              <span>Sen</span>
-              <span>Sel</span>
-              <span>Rab</span>
-              <span>Kam</span>
-              <span>Jum</span>
-              <span className="text-emerald-600">Sab</span>
-            </div>
-
-            {/* 7-column Calendar Cells */}
-            <div className="grid grid-cols-7 gap-1.5">
-              {calendarCells.map((cell, idx) => {
-                const isSelected = cell.dateStr === selectedDateStr;
-                const cellMilestones = uniqueMilestones.filter((m) => m.date === cell.dateStr);
-                const cellTasks = tasks.filter((t) => t.dueDate === cell.dateStr);
-                const isWeddingDay = wedding.weddingDate && cell.dateStr === wedding.weddingDate.slice(0, 10);
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+              {columns.map((col) => {
+                const colTasks = tasks
+                  .filter((t) => t.columnId === col.id)
+                  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+                const isDragOver = dragOverColumnId === col.id;
 
                 return (
                   <div
-                    key={idx}
-                    onClick={() => setSelectedDateStr(cell.dateStr)}
-                    className={`min-h-[85px] p-1.5 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
-                      !cell.isCurrentMonth
-                        ? 'opacity-30 bg-neutral-50/50 border-transparent'
-                        : isSelected
-                        ? 'border-slate-900 bg-neutral-50 shadow-xs'
-                        : isWeddingDay
-                        ? 'border-pink-300 bg-pink-50/40 hover:border-pink-400'
-                        : 'border-neutral-100 hover:border-neutral-300 bg-white'
+                    key={col.id}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                      if (dragOverColumnId !== col.id) {
+                        setDragOverColumnId(col.id);
+                      }
+                    }}
+                    onDragLeave={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setDragOverColumnId(null);
+                      }
+                    }}
+                    onDrop={(e) => handleColumnDrop(e, col.id)}
+                    className={`rounded-2xl border p-4 flex flex-col min-h-[500px] transition-all duration-200 ${col.bg} ${
+                      isDragOver
+                        ? 'ring-2 ring-[#263238] ring-offset-2 border-[#263238]/60 bg-white shadow-md scale-[1.01]'
+                        : col.border
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full ${
-                          isSelected
-                            ? 'bg-slate-900 text-white'
-                            : isWeddingDay
-                            ? 'bg-pink-500 text-white'
-                            : 'text-neutral-700'
-                        }`}
+                    {/* Column Header */}
+                    <div className="flex items-center justify-between pb-3 border-b border-neutral-200/50 mb-4">
+                      <div>
+                        <h3 className={`font-bold text-sm flex items-center gap-2 ${col.text}`}>
+                          {col.title}
+                          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${col.badge}`}>
+                            {colTasks.length}
+                          </span>
+                        </h3>
+                        <span className="text-[10px] text-neutral-400 block">{col.subtitle}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => openAddTaskModal(col.id)}
+                        className="p-1.5 rounded-lg text-neutral-400 hover:text-[#263238] hover:bg-white hover:shadow-2xs transition-all active:scale-95 cursor-pointer"
+                        title="Tambah tugas di kolom ini"
                       >
-                        {cell.dayNumber}
-                      </span>
-
-                      {isWeddingDay && (
-                        <span className="text-[9px] font-bold text-pink-600 uppercase tracking-tighter">
-                          Hari-H
-                        </span>
-                      )}
+                        <Plus className="w-4 h-4 stroke-[2.2]" />
+                      </button>
                     </div>
 
-                    {/* Indicators on Day */}
-                    <div className="space-y-1 mt-1">
-                      {cellMilestones.slice(0, 1).map((m) => (
+                    {/* Tasks List */}
+                    <div className="space-y-3 flex-1 overflow-y-auto pr-1">
+                      {colTasks.length === 0 ? (
                         <div
-                          key={m.id}
-                          className="text-[9px] font-semibold truncate px-1.5 py-0.5 rounded bg-pink-100 text-pink-800"
-                          title={m.title}
+                          className={`h-36 flex flex-col items-center justify-center border-2 border-dashed rounded-xl text-xs p-4 transition-all duration-200 ${
+                            isDragOver
+                              ? 'border-[#263238] bg-[#263238]/5 text-[#263238] font-semibold scale-[0.99]'
+                              : 'border-neutral-200/90 text-neutral-400'
+                          }`}
                         >
-                          ★ {m.title}
+                          <span className="font-medium">
+                            {isDragOver ? 'Lepaskan tugas di sini' : 'Belum ada tugas'}
+                          </span>
+                          {!isDragOver && (
+                            <button
+                              type="button"
+                              onClick={() => openAddTaskModal(col.id)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 mt-2 rounded-lg text-xs font-semibold text-[#7A5D00] bg-[#FFEAAB]/35 hover:bg-[#FFEAAB]/55 border border-[#FFEAAB] transition-all active:scale-95 cursor-pointer shadow-2xs"
+                            >
+                              <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+                              <span>+ Buat tugas baru</span>
+                            </button>
+                          )}
                         </div>
-                      ))}
-                      {cellTasks.length > 0 && (
-                        <div className="text-[9px] text-neutral-500 flex items-center gap-1 font-medium px-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
-                          <span>{cellTasks.length} tugas</span>
-                        </div>
+                      ) : (
+                        colTasks.map((task) => {
+                          const isDragging = draggedTaskId === task.id;
+                          const isDragOverThis = dragOverTaskId === task.id && !isDragging;
+
+                          return (
+                            <div key={task.id} className="relative flex flex-col">
+                              {/* Visual Drop Line - Insert Before */}
+                              {isDragOverThis && dropPosition === 'before' && (
+                                <div className="h-1.5 w-full bg-[#263238] rounded-full mb-2 shadow-xs transition-all animate-pulse" />
+                              )}
+
+                              <div
+                                onDragOver={(e) => handleCardDragOver(e, task)}
+                                onDragLeave={(e) => {
+                                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                                    if (dragOverTaskId === task.id) {
+                                      setDragOverTaskId(null);
+                                      setDropPosition(null);
+                                    }
+                                  }
+                                }}
+                                onDrop={(e) => handleCardDrop(e, task)}
+                              >
+                                <Card
+                                  draggable
+                                  onDragStart={(e) => {
+                                    e.dataTransfer.setData('text/plain', task.id);
+                                    e.dataTransfer.effectAllowed = 'move';
+                                    setDraggedTaskId(task.id);
+                                  }}
+                                  onDragEnd={resetDragState}
+                                  hoverable={!isDragging}
+                                  className={`p-4 bg-white border border-neutral-200/70 shadow-xs flex flex-col justify-between cursor-grab active:cursor-grabbing transition-all duration-150 select-none ${
+                                    isDragging
+                                      ? 'opacity-30 scale-95 border-dashed border-[#263238] shadow-inner'
+                                      : 'hover:-translate-y-0.5'
+                                  }`}
+                                >
+                                  <div>
+                                    <div className="flex items-center justify-between gap-2 mb-2">
+                                      <div className="flex items-center gap-1.5">
+                                        <GripVertical className="w-3.5 h-3.5 text-neutral-300 hover:text-neutral-600 transition-colors" />
+                                        <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                                          {task.category}
+                                        </span>
+                                      </div>
+                                      <Badge
+                                        variant={
+                                          task.priority === 'high'
+                                            ? 'error'
+                                            : task.priority === 'medium'
+                                            ? 'warning'
+                                            : 'neutral'
+                                        }
+                                        size="sm"
+                                      >
+                                        {task.priority === 'high' ? 'Penting' : task.priority === 'medium' ? 'Sedang' : 'Rendah'}
+                                      </Badge>
+                                    </div>
+
+                                    <h4 className="text-sm font-semibold text-neutral-900 mb-1 leading-snug">
+                                      {task.title}
+                                    </h4>
+
+                                    {task.description && (
+                                      <p className="text-xs text-neutral-500 line-clamp-2 mb-3 font-light leading-relaxed">
+                                        {task.description}
+                                      </p>
+                                    )}
+                                  </div>
+
+                                  {/* Card Footer: Due date & Actions */}
+                                  <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs">
+                                    {task.dueDate ? (
+                                      <span className="flex items-center gap-1 text-[11px] text-neutral-400">
+                                        <CalendarIcon className="w-3 h-3 text-neutral-400" />
+                                        {task.dueDate}
+                                      </span>
+                                    ) : (
+                                      <span className="text-[10px] text-neutral-300 italic">Tanpa tenggat</span>
+                                    )}
+
+                                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                                      {col.id !== 'todo' && (
+                                        <button
+                                          onClick={() => moveColumn(task, col.id === 'done' ? 'in_progress' : 'todo')}
+                                          className="p-1 text-neutral-400 hover:text-neutral-700 rounded hover:bg-neutral-100 transition-colors"
+                                          title="Pindahkan ke kolom sebelumnya"
+                                        >
+                                          <ChevronLeft className="w-3.5 h-3.5" />
+                                        </button>
+                                      )}
+
+                                      {col.id !== 'done' && (
+                                        <button
+                                          onClick={() => moveColumn(task, col.id === 'todo' ? 'in_progress' : 'done')}
+                                          className="p-1 text-neutral-400 hover:text-neutral-700 rounded hover:bg-neutral-100 transition-colors"
+                                          title="Pindahkan ke kolom berikutnya"
+                                        >
+                                          <ChevronRight className="w-3.5 h-3.5" />
+                                        </button>
+                                      )}
+
+                                      <button
+                                        onClick={() => openEditTaskModal(task)}
+                                        className="p-1 text-neutral-400 hover:text-neutral-700 rounded hover:bg-neutral-100 transition-colors"
+                                        title="Edit tugas"
+                                      >
+                                        <Edit2 className="w-3.5 h-3.5" />
+                                      </button>
+
+                                      <button
+                                        onClick={() => {
+                                          if (confirm(`Hapus tugas "${task.title}"?`)) {
+                                            onDeleteTask(task.id);
+                                            onShowToast('Tugas dihapus.', 'info');
+                                          }
+                                        }}
+                                        className="p-1 text-neutral-400 hover:text-rose-600 rounded hover:bg-neutral-100 transition-colors"
+                                        title="Hapus tugas"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </Card>
+                              </div>
+
+                              {/* Visual Drop Line - Insert After */}
+                              {isDragOverThis && dropPosition === 'after' && (
+                                <div className="h-1.5 w-full bg-[#263238] rounded-full mt-2 shadow-xs transition-all animate-pulse" />
+                              )}
+                            </div>
+                          );
+                        })
                       )}
                     </div>
                   </div>
@@ -778,261 +865,354 @@ export function PlannerTab({
               })}
             </div>
           </div>
+        )}
 
-          {/* Right: Selected Date Agenda Details (4 cols) */}
-          <div className="lg:col-span-4 bg-white p-6 rounded-2xl border border-neutral-100 shadow-xs space-y-5">
-            <div className="pb-3 border-b border-neutral-100 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] uppercase font-semibold text-neutral-400 tracking-wider">
-                  Agenda Tanggal Terpilih
-                </span>
-                <h3 className="text-sm font-bold text-slate-900">
-                  {selectedDateStr ? formatDateIndo(selectedDateStr) : 'Pilih Tanggal'}
-                </h3>
+        {/* ── 2. CALENDAR VIEW ──────────────────────────────────────── */}
+        {viewMode === 'calendar' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left: Monthly Calendar Grid (8 cols) */}
+            <div className="lg:col-span-8 bg-neutral-50/50 p-5 rounded-2xl border border-neutral-200/70 space-y-4">
+              {/* Calendar Month Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-200/60 mb-2">
+                <div>
+                  <h4 className="text-base font-bold text-slate-900">
+                    {monthNamesIndo[month]} {year}
+                  </h4>
+                  <span className="text-xs text-neutral-400">
+                    Pilih tanggal untuk melihat jadwal dan tenggat tugas
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <Button variant="ghost" size="sm" onClick={handlePrevMonth}>
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCalendarMonth(new Date(initialCalendarDate.getFullYear(), initialCalendarDate.getMonth(), 1))}
+                  >
+                    Bulan Hari-H
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={handleNextMonth}>
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={() => openAddMilestoneModal(selectedDateStr)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FFEAAB]/35 hover:bg-[#FFEAAB]/55 text-[#7A5D00] border border-[#FFEAAB] rounded-lg text-xs font-semibold shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer"
-                title="Tambah agenda pada tanggal ini"
-              >
-                <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
-                <span>Tambah Acara</span>
-              </button>
+
+              {/* Days of week header */}
+              <div className="grid grid-cols-7 text-center font-semibold text-neutral-400 text-xs py-1.5 border-b border-neutral-200/50 mb-1">
+                <span className="text-rose-500">Min</span>
+                <span>Sen</span>
+                <span>Sel</span>
+                <span>Rab</span>
+                <span>Kam</span>
+                <span>Jum</span>
+                <span className="text-emerald-600">Sab</span>
+              </div>
+
+              {/* 7-column Calendar Cells */}
+              <div className="grid grid-cols-7 gap-1.5">
+                {calendarCells.map((cell, idx) => {
+                  const isSelected = cell.dateStr === selectedDateStr;
+                  const cellMilestones = uniqueMilestones.filter((m) => m.date === cell.dateStr);
+                  const cellTasks = tasks.filter((t) => t.dueDate === cell.dateStr);
+                  const isWeddingDay = wedding.weddingDate && cell.dateStr === wedding.weddingDate.slice(0, 10);
+
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => setSelectedDateStr(cell.dateStr)}
+                      className={`min-h-[85px] p-1.5 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
+                        !cell.isCurrentMonth
+                          ? 'opacity-30 bg-neutral-100/50 border-transparent'
+                          : isSelected
+                          ? 'border-slate-900 bg-white shadow-xs'
+                          : isWeddingDay
+                          ? 'border-pink-300 bg-pink-50/50 hover:border-pink-400'
+                          : 'border-neutral-200/70 hover:border-neutral-300 bg-white'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full ${
+                            isSelected
+                              ? 'bg-slate-900 text-white'
+                              : isWeddingDay
+                              ? 'bg-pink-500 text-white'
+                              : 'text-neutral-700'
+                          }`}
+                        >
+                          {cell.dayNumber}
+                        </span>
+
+                        {isWeddingDay && (
+                          <span className="text-[9px] font-bold text-pink-600 uppercase tracking-tighter">
+                            Hari-H
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Indicators on Day */}
+                      <div className="space-y-1 mt-1">
+                        {cellMilestones.slice(0, 1).map((m) => (
+                          <div
+                            key={m.id}
+                            className="text-[9px] font-semibold truncate px-1.5 py-0.5 rounded bg-pink-100 text-pink-800"
+                            title={m.title}
+                          >
+                            {m.title}
+                          </div>
+                        ))}
+                        {cellTasks.length > 0 && (
+                          <div className="text-[9px] text-neutral-500 flex items-center gap-1 font-medium px-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+                            <span>{cellTasks.length} tugas</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Milestones on Selected Date */}
-            <div>
-              <span className="text-xs font-semibold text-slate-800 block mb-2">
-                Acara / Prosesi Penting ({selectedMilestones.length})
-              </span>
-              {selectedMilestones.length === 0 ? (
-                <p className="text-xs text-neutral-400 italic">Tidak ada acara penting di tanggal ini.</p>
-              ) : (
-                <div className="space-y-2">
-                  {selectedMilestones.map((m) => (
-                    <div
-                      key={m.id}
-                      className="p-3 rounded-xl border border-pink-100 bg-pink-50/30 flex items-start justify-between gap-2"
-                    >
-                      <div>
-                        <Badge variant="primary" size="sm" className="mb-1">
-                          {categoryLabels[m.category]?.label || m.category}
-                        </Badge>
-                        <h4 className="text-xs font-bold text-slate-900">{m.title}</h4>
-                        <div className="text-[11px] text-neutral-500 space-y-0.5 mt-1 font-light">
-                          {m.time && (
-                            <p className="flex items-center gap-1">
-                              <Clock className="w-3 h-3 text-neutral-400" />
-                              <span>Pukul {m.time} WIB</span>
-                            </p>
-                          )}
-                          {m.venue && (
-                            <p className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-neutral-400" />
-                              <span>{m.venue}</span>
-                            </p>
+            {/* Right: Selected Date Agenda Details (4 cols) */}
+            <div className="lg:col-span-4 bg-neutral-50/50 p-5 rounded-2xl border border-neutral-200/70 space-y-5">
+              <div className="pb-3 border-b border-neutral-200/60 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-semibold text-neutral-400 tracking-wider">
+                    Agenda Tanggal Terpilih
+                  </span>
+                  <h4 className="text-sm font-bold text-slate-900">
+                    {selectedDateStr ? formatDateIndo(selectedDateStr) : 'Pilih Tanggal'}
+                  </h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => openAddMilestoneModal(selectedDateStr)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FFEAAB]/35 hover:bg-[#FFEAAB]/55 text-[#7A5D00] border border-[#FFEAAB] rounded-lg text-xs font-semibold shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer"
+                  title="Tambah agenda pada tanggal ini"
+                >
+                  <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+                  <span>Tambah Acara</span>
+                </button>
+              </div>
+
+              {/* Milestones on Selected Date */}
+              <div>
+                <span className="text-xs font-semibold text-slate-800 block mb-2">
+                  Acara / Prosesi Penting ({selectedMilestones.length})
+                </span>
+                {selectedMilestones.length === 0 ? (
+                  <p className="text-xs text-neutral-400 italic">Tidak ada acara penting di tanggal ini.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {selectedMilestones.map((m) => (
+                      <div
+                        key={m.id}
+                        className="p-3 rounded-xl border border-pink-100 bg-pink-50/40 flex items-start justify-between gap-2"
+                      >
+                        <div>
+                          <Badge variant="primary" size="sm" className="mb-1">
+                            {categoryLabels[m.category]?.label || m.category}
+                          </Badge>
+                          <h4 className="text-xs font-bold text-slate-900">{m.title}</h4>
+                          <div className="text-[11px] text-neutral-500 space-y-0.5 mt-1 font-light">
+                            {m.time && (
+                              <p className="flex items-center gap-1">
+                                <Clock className="w-3 h-3 text-neutral-400" />
+                                <span>Pukul {m.time} WIB</span>
+                              </p>
+                            )}
+                            {m.venue && (
+                              <p className="flex items-center gap-1">
+                                <MapPin className="w-3 h-3 text-neutral-400" />
+                                <span>{m.venue}</span>
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => openEditMilestoneModal(m)}
+                            className="p-1 text-neutral-400 hover:text-slate-900 rounded"
+                            title="Edit acara"
+                          >
+                            <Edit2 className="w-3 h-3" />
+                          </button>
+                          {onDeleteMilestone && (
+                            <button
+                              onClick={() => {
+                                if (confirm(`Hapus acara "${m.title}"?`)) {
+                                  onDeleteMilestone(m.id);
+                                  onShowToast('Acara dihapus.', 'info');
+                                }
+                              }}
+                              className="p-1 text-neutral-400 hover:text-rose-600 rounded"
+                              title="Hapus acara"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
                           )}
                         </div>
                       </div>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => openEditMilestoneModal(m)}
-                          className="p-1 text-neutral-400 hover:text-slate-900 rounded"
-                          title="Edit acara"
-                        >
-                          <Edit2 className="w-3 h-3" />
-                        </button>
-                        {onDeleteMilestone && (
-                          <button
-                            onClick={() => {
-                              if (confirm(`Hapus acara "${m.title}"?`)) {
-                                onDeleteMilestone(m.id);
-                                onShowToast('Acara dihapus.', 'info');
-                              }
-                            }}
-                            className="p-1 text-neutral-400 hover:text-rose-600 rounded"
-                            title="Hapus acara"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Tasks on Selected Date */}
-            <div>
-              <span className="text-xs font-semibold text-slate-800 block mb-2">
-                Tenggat Tugas Planner ({selectedTasks.length})
-              </span>
-              {selectedTasks.length === 0 ? (
-                <p className="text-xs text-neutral-400 italic">Tidak ada deadline tugas di tanggal ini.</p>
-              ) : (
-                <div className="space-y-2">
-                  {selectedTasks.map((t) => (
-                    <div
-                      key={t.id}
-                      className="p-3 rounded-xl border border-neutral-100 bg-[#FCFCFC] flex items-center justify-between gap-2"
-                    >
-                      <div>
-                        <p className={`text-xs font-semibold ${t.columnId === 'done' ? 'line-through text-neutral-400' : 'text-slate-900'}`}>
-                          {t.title}
-                        </p>
-                        <span className="text-[10px] text-neutral-400">{t.category}</span>
-                      </div>
-                      <Badge variant={t.columnId === 'done' ? 'success' : 'neutral'} size="sm">
-                        {t.columnId === 'done' ? 'Selesai' : t.columnId === 'in_progress' ? 'Berjalan' : 'To Do'}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── 3. TIMELINE VIEW ──────────────────────────────────────── */}
-      {viewMode === 'timeline' && (
-        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-neutral-100 shadow-xs space-y-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-neutral-100">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Timeline Kronologis Rangkaian Acara
-              </h3>
-              <p className="text-xs text-neutral-500">
-                Urutan agenda pernikahan mulai dari lamaran keluarga, prosesi adat, hingga resepsi pernikahan.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => openAddMilestoneModal()}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-white bg-[#263238] hover:bg-[#1E293B] shadow-xs transition-all duration-150 active:scale-[0.98] cursor-pointer"
-            >
-              <CalendarPlus className="w-4 h-4 stroke-[2] text-white" />
-              <span>Tambah Rangkaian Acara</span>
-            </button>
-          </div>
-
-          {/* Timeline Feed */}
-          {uniqueMilestones.length === 0 ? (
-            <div className="py-16 text-center bg-neutral-50/60 rounded-2xl border border-dashed border-neutral-200 p-8 flex flex-col items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-3">
-                <CalendarCheck2 className="w-6 h-6" />
+                    ))}
+                  </div>
+                )}
               </div>
-              <h4 className="text-sm font-bold text-slate-900 mb-1">Belum Ada Rangkaian Acara</h4>
-              <p className="text-xs text-neutral-500 max-w-sm mb-4">
-                Buat susunan agenda pernikahan seperti Lamaran, Siraman, Pengajian, Akad Nikah, dan Resepsi.
-              </p>
-              <button
-                type="button"
-                onClick={() => openAddMilestoneModal()}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-white bg-[#263238] hover:bg-[#1E293B] shadow-xs active:scale-[0.98] transition-all cursor-pointer"
-              >
-                <Plus className="w-4 h-4 text-white stroke-[2.2]" />
-                <span>Tambah Acara Pertama</span>
-              </button>
-            </div>
-          ) : (
-            <div className="relative pl-6 sm:pl-8 border-l-2 border-neutral-200 space-y-8 my-4">
-            {uniqueMilestones.map((m) => {
-              const isWeddingDay = wedding.weddingDate && m.date === wedding.weddingDate.slice(0, 10);
 
-              return (
-                <div key={m.id} className="relative group">
-                  {/* Timeline Node Icon */}
-                  <div
-                    onClick={() => toggleMilestoneComplete(m)}
-                    className={`absolute -left-[31px] sm:-left-[39px] top-0.5 w-6 h-6 rounded-full border-2 cursor-pointer flex items-center justify-center transition-all ${
-                      m.isCompleted
-                        ? 'bg-emerald-500 border-emerald-500 text-white'
-                        : isWeddingDay
-                        ? 'bg-pink-500 border-pink-500 text-white animate-pulse'
-                        : 'bg-white border-slate-900 text-transparent hover:text-slate-400'
-                    }`}
-                    title="Klik untuk menandai selesai"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                  </div>
-
-                  {/* Timeline Event Card */}
-                  <div className="bg-[#FCFCFC] p-4 sm:p-5 rounded-2xl border border-neutral-200/80 hover:border-neutral-300 transition-all shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div className="space-y-1.5 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant={categoryLabels[m.category]?.badge || 'neutral'} size="sm">
-                          {categoryLabels[m.category]?.label || m.category}
-                        </Badge>
-                        <span className="text-xs font-semibold text-pink-600 bg-pink-50 px-2 py-0.5 rounded">
-                          {formatDateIndo(m.date)}
-                        </span>
-                        {m.isCompleted && (
-                          <Badge variant="success" size="sm">
-                            Selesai Dilaksanakan
-                          </Badge>
-                        )}
-                      </div>
-
-                      <h4 className="text-base font-bold text-slate-900">{m.title}</h4>
-
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500 font-light">
-                        {m.time && (
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5 text-neutral-400" />
-                            Pukul {m.time} WIB
-                          </span>
-                        )}
-                        {m.venue && (
-                          <span className="flex items-center gap-1.5">
-                            <MapPin className="w-3.5 h-3.5 text-neutral-400" />
-                            {m.venue}
-                          </span>
-                        )}
-                      </div>
-
-                      {m.description && (
-                        <p className="text-xs text-neutral-600 leading-relaxed font-light pt-1">
-                          {m.description}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Timeline Event Actions */}
-                    <div className="flex items-center gap-2 flex-shrink-0 self-end md:self-center">
-                      <button
-                        onClick={() => openEditMilestoneModal(m)}
-                        className="p-2 text-neutral-400 hover:text-slate-900 rounded-lg hover:bg-white border border-transparent hover:border-neutral-200 transition-colors"
-                        title="Edit acara"
+              {/* Tasks on Selected Date */}
+              <div>
+                <span className="text-xs font-semibold text-slate-800 block mb-2">
+                  Tenggat Tugas Planner ({selectedTasks.length})
+                </span>
+                {selectedTasks.length === 0 ? (
+                  <p className="text-xs text-neutral-400 italic">Tidak ada deadline tugas di tanggal ini.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {selectedTasks.map((t) => (
+                      <div
+                        key={t.id}
+                        className="p-3 rounded-xl border border-neutral-200/70 bg-white flex items-center justify-between gap-2"
                       >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      {onDeleteMilestone && (
-                        <button
-                          onClick={() => {
-                            if (confirm(`Hapus acara "${m.title}"?`)) {
-                              onDeleteMilestone(m.id);
-                              onShowToast('Acara dihapus.', 'info');
-                            }
-                          }}
-                          className="p-2 text-neutral-400 hover:text-rose-600 rounded-lg hover:bg-white border border-transparent hover:border-neutral-200 transition-colors"
-                          title="Hapus acara"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
+                        <div>
+                          <p className={`text-xs font-semibold ${t.columnId === 'done' ? 'line-through text-neutral-400' : 'text-slate-900'}`}>
+                            {t.title}
+                          </p>
+                          <span className="text-[10px] text-neutral-400">{t.category}</span>
+                        </div>
+                        <Badge variant={t.columnId === 'done' ? 'success' : 'neutral'} size="sm">
+                          {t.columnId === 'done' ? 'Selesai' : t.columnId === 'in_progress' ? 'Berjalan' : 'To Do'}
+                        </Badge>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              );
-            })}
+                )}
+              </div>
+            </div>
           </div>
-          )}
-        </div>
-      )}
+        )}
+
+        {/* ── 3. TIMELINE VIEW ──────────────────────────────────────── */}
+        {viewMode === 'timeline' && (
+          <div className="space-y-6">
+            {/* Timeline Feed */}
+            {uniqueMilestones.length === 0 ? (
+              <div className="py-16 text-center bg-neutral-50/60 rounded-2xl border border-dashed border-neutral-200 p-8 flex flex-col items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-3">
+                  <CalendarCheck2 className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm font-bold text-slate-900 mb-1">Belum Ada Rangkaian Acara</h4>
+                <p className="text-xs text-neutral-500 max-w-sm mb-4">
+                  Buat susunan agenda pernikahan seperti Lamaran, Siraman, Pengajian, Akad Nikah, dan Resepsi.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => openAddMilestoneModal()}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-white bg-[#263238] hover:bg-[#1E293B] shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  <Plus className="w-4 h-4 text-white stroke-[2.2]" />
+                  <span>Tambah Acara Pertama</span>
+                </button>
+              </div>
+            ) : (
+              <div className="relative pl-6 sm:pl-8 border-l-2 border-neutral-200 space-y-8 my-4">
+                {uniqueMilestones.map((m) => {
+                  const isWeddingDay = wedding.weddingDate && m.date === wedding.weddingDate.slice(0, 10);
+
+                  return (
+                    <div key={m.id} className="relative group">
+                      {/* Timeline Node Icon */}
+                      <div
+                        onClick={() => toggleMilestoneComplete(m)}
+                        className={`absolute -left-[31px] sm:-left-[39px] top-0.5 w-6 h-6 rounded-full border-2 cursor-pointer flex items-center justify-center transition-all ${
+                          m.isCompleted
+                            ? 'bg-emerald-500 border-emerald-500 text-white'
+                            : isWeddingDay
+                            ? 'bg-pink-500 border-pink-500 text-white animate-pulse'
+                            : 'bg-white border-slate-900 text-transparent hover:text-slate-400'
+                        }`}
+                        title="Klik untuk menandai selesai"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      </div>
+
+                      {/* Timeline Event Card */}
+                      <div className="bg-[#FCFCFC] p-4 sm:p-5 rounded-2xl border border-neutral-200/80 hover:border-neutral-300 transition-all shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div className="space-y-1.5 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge variant={categoryLabels[m.category]?.badge || 'neutral'} size="sm">
+                              {categoryLabels[m.category]?.label || m.category}
+                            </Badge>
+                            <span className="text-xs font-semibold text-pink-600 bg-pink-50 px-2 py-0.5 rounded">
+                              {formatDateIndo(m.date)}
+                            </span>
+                            {m.isCompleted && (
+                              <Badge variant="success" size="sm">
+                                Selesai Dilaksanakan
+                              </Badge>
+                            )}
+                          </div>
+
+                          <h4 className="text-base font-bold text-slate-900">{m.title}</h4>
+
+                          <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500 font-light">
+                            {m.time && (
+                              <span className="flex items-center gap-1.5">
+                                <Clock className="w-3.5 h-3.5 text-neutral-400" />
+                                Pukul {m.time} WIB
+                              </span>
+                            )}
+                            {m.venue && (
+                              <span className="flex items-center gap-1.5">
+                                <MapPin className="w-3.5 h-3.5 text-neutral-400" />
+                                <span>{m.venue}</span>
+                              </span>
+                            )}
+                          </div>
+
+                          {m.description && (
+                            <p className="text-xs text-neutral-600 leading-relaxed font-light pt-1">
+                              {m.description}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Timeline Event Actions */}
+                        <div className="flex items-center gap-2 flex-shrink-0 self-end md:self-center">
+                          <button
+                            onClick={() => openEditMilestoneModal(m)}
+                            className="p-2 text-neutral-400 hover:text-slate-900 rounded-lg hover:bg-white border border-transparent hover:border-neutral-200 transition-colors"
+                            title="Edit acara"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          {onDeleteMilestone && (
+                            <button
+                              onClick={() => {
+                                if (confirm(`Hapus acara "${m.title}"?`)) {
+                                  onDeleteMilestone(m.id);
+                                  onShowToast('Acara dihapus.', 'info');
+                                }
+                              }}
+                              className="p-2 text-neutral-400 hover:text-rose-600 rounded-lg hover:bg-white border border-transparent hover:border-neutral-200 transition-colors"
+                              title="Hapus acara"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+      </Card>
 
       {/* ── Modal Add / Edit Task ─────────────────────────────────── */}
       <Modal

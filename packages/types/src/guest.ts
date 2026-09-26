@@ -1,4 +1,6 @@
 export type GuestGroup = 'Keluarga' | 'Sahabat' | 'Rekan Kerja' | 'VIP' | 'Lainnya';
+export type GuestSide = 'groom' | 'bride' | 'both';
+export type InvitationType = 'digital' | 'physical' | 'both';
 export type InvitationStatus = 'pending' | 'sent' | 'viewed';
 export type RsvpStatus = 'attending' | 'declined' | 'pending';
 
@@ -9,6 +11,8 @@ export interface Guest {
   phone?: string;
   email?: string;
   group: GuestGroup;
+  guestSide?: GuestSide;
+  invitationType?: InvitationType;
   invitationToken: string;
   invitationStatus: InvitationStatus;
   rsvpStatus: RsvpStatus;

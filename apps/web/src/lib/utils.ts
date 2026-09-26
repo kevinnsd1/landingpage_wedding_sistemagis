@@ -67,7 +67,8 @@ export function calculateTimeLeft(targetDate?: string | null): TimeLeft {
 export function generateWhatsAppInvitation(
   groomBride: string,
   guestName: string,
-  invitationUrl: string
+  invitationUrl: string,
+  phone?: string | null
 ): string {
   const message = `Kepada Yth.
 *${guestName}*
@@ -86,5 +87,16 @@ Terima kasih.
 Salam hangat,
 *${groomBride}*`;
 
-  return `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+  let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+  
+  if (phone) {
+    let formattedPhone = phone.replace(/\D/g, '');
+    // Konversi nomor 08... menjadi 628...
+    if (formattedPhone.startsWith('0')) {
+      formattedPhone = '62' + formattedPhone.substring(1);
+    }
+    url += `&phone=${formattedPhone}`;
+  }
+
+  return url;
 }
