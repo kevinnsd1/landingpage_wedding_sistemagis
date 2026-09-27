@@ -262,6 +262,39 @@ function InvitationRoute({
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const guestToken = searchParams.get('to') || undefined;
+  const themeParam = searchParams.get('theme') || invitation?.config?.themeId;
+
+  if (themeParam === 'theme1') {
+    return (
+      <Theme1
+        eventTitle={wedding.title}
+        brideName={wedding.brideName}
+        groomName={wedding.groomName}
+        brideFullName={wedding.brideName}
+        groomFullName={wedding.groomName}
+        brideParents={wedding.brideParents}
+        groomParents={wedding.groomParents}
+        bridePhoto={wedding.bridePhoto}
+        groomPhoto={wedding.groomPhoto}
+        coverPhoto={wedding.coverPhoto}
+        weddingDate={wedding.date}
+        targetDate={wedding.date}
+        guestName={guestToken || 'Bapak/Ibu/Saudara/i'}
+        akadTitle={wedding.akadEvent?.title}
+        akadDate={wedding.akadEvent?.date}
+        akadTime={wedding.akadEvent?.time}
+        akadLocation={wedding.akadEvent?.venue}
+        akadAddress={wedding.akadEvent?.address}
+        resepsiTitle={wedding.receptionEvent?.title}
+        resepsiDate={wedding.receptionEvent?.date}
+        resepsiTime={wedding.receptionEvent?.time}
+        resepsiLocation={wedding.receptionEvent?.venue}
+        resepsiAddress={wedding.receptionEvent?.address}
+        gallery={invitation?.gallery}
+        musicUrl={invitation?.config?.music?.url}
+      />
+    );
+  }
 
   return (
     <InvitationView
