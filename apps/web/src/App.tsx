@@ -24,6 +24,7 @@ import { LandingPage } from '@/views/LandingPage';
 import { AuthView } from '@/views/AuthView';
 import { InvitationView } from '@/views/InvitationView';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { Theme1 } from '@kisahmagis/ui';
 
 import { OverviewTab } from '@/views/dashboard/OverviewTab';
 import { EditorTab } from '@/views/dashboard/EditorTab';
@@ -267,6 +268,46 @@ function InvitationRoute({
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const guestToken = searchParams.get('to') || undefined;
+  const themeParam = searchParams.get('theme') || invitation?.config?.themeId;
+
+  if (themeParam === 'theme1') {
+    return (
+      <Theme1
+        eventTitle={wedding.title}
+        brideName={wedding.brideName}
+        groomName={wedding.groomName}
+        brideFullName={wedding.brideName}
+        groomFullName={wedding.groomName}
+        brideParents={wedding.brideParents}
+        groomParents={wedding.groomParents}
+        bridePhoto={wedding.bridePhoto}
+        groomPhoto={wedding.groomPhoto}
+        coverPhoto={wedding.coverPhoto}
+        weddingDate={wedding.weddingDate}
+        targetDate={wedding.weddingDate}
+        guestName={guestToken || 'Bapak/Ibu/Saudara/i'}
+        akadTitle={wedding.akadEvent?.title}
+        akadDate={wedding.akadEvent?.date}
+        akadTime={wedding.akadEvent?.time}
+        akadLocation={wedding.akadEvent?.venue}
+        akadAddress={wedding.akadEvent?.address}
+        resepsiTitle={wedding.receptionEvent?.title}
+        resepsiDate={wedding.receptionEvent?.date}
+        resepsiTime={wedding.receptionEvent?.time}
+        resepsiLocation={wedding.receptionEvent?.venue}
+        resepsiAddress={wedding.receptionEvent?.address}
+        gallery={invitation?.config?.gallery?.images}
+        loveStory={wedding.stories}
+        bankAccounts={wedding.gifts?.map((g) => ({
+          bankName: g.bankName,
+          accountNumber: g.accountNumber,
+          accountHolder: g.accountHolder,
+          qrUrl: g.qrisUrl,
+        }))}
+        musicUrl={invitation?.config?.music?.url}
+      />
+    );
+  }
 
   return (
     <InvitationView
@@ -843,6 +884,12 @@ export function App() {
             />
           }
         />
+
+        {/* THEME 1 PREVIEW */}
+        <Route path="/theme1" element={<Theme1 />} />
+        <Route path="/theme/theme1" element={<Theme1 />} />
+        <Route path="/pages/theme1" element={<Theme1 />} />
+        <Route path="/pages/theme/theme1" element={<Theme1 />} />
 
         {/* 5. COUPLE MANAGEMENT DASHBOARD */}
         <Route

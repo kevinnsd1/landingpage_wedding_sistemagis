@@ -4,3 +4,5 @@ export * from './Card';
 export * from './Badge';
 export * from './Modal';
 export * from './Toast';
+export * from './Icons';
+export * from './pages/theme1';
