@@ -24,6 +24,7 @@ import { LandingPage } from '@/views/LandingPage';
 import { AuthView } from '@/views/AuthView';
 import { InvitationView } from '@/views/InvitationView';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { Theme1 } from '@kisahmagis/ui';
 
 import { OverviewTab } from '@/views/dashboard/OverviewTab';
 import { EditorTab } from '@/views/dashboard/EditorTab';
@@ -837,6 +838,12 @@ export function App() {
             />
           }
         />
+
+        {/* THEME 1 PREVIEW */}
+        <Route path="/theme1" element={<Theme1 />} />
+        <Route path="/theme/theme1" element={<Theme1 />} />
+        <Route path="/pages/theme1" element={<Theme1 />} />
+        <Route path="/pages/theme/theme1" element={<Theme1 />} />
 
         {/* 5. COUPLE MANAGEMENT DASHBOARD */}
         <Route
