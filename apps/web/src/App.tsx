@@ -277,8 +277,8 @@ function InvitationRoute({
         bridePhoto={wedding.bridePhoto}
         groomPhoto={wedding.groomPhoto}
         coverPhoto={wedding.coverPhoto}
-        weddingDate={wedding.date}
-        targetDate={wedding.date}
+        weddingDate={wedding.weddingDate}
+        targetDate={wedding.weddingDate}
         guestName={guestToken || 'Bapak/Ibu/Saudara/i'}
         akadTitle={wedding.akadEvent?.title}
         akadDate={wedding.akadEvent?.date}
@@ -290,7 +290,14 @@ function InvitationRoute({
         resepsiTime={wedding.receptionEvent?.time}
         resepsiLocation={wedding.receptionEvent?.venue}
         resepsiAddress={wedding.receptionEvent?.address}
-        gallery={invitation?.gallery}
+        gallery={invitation?.config?.gallery?.images}
+        loveStory={wedding.stories}
+        bankAccounts={wedding.gifts?.map((g) => ({
+          bankName: g.bankName,
+          accountNumber: g.accountNumber,
+          accountHolder: g.accountHolder,
+          qrUrl: g.qrisUrl,
+        }))}
         musicUrl={invitation?.config?.music?.url}
       />
     );
