@@ -47,5 +47,36 @@ export const theme1ThemeMeta: ThemeMetadata = {
     supportsGift: true,
     supportsLoveStory: true,
   },
+  customFields: [
+    {
+      key: 'framePhoto',
+      label: 'Foto Bingkai Utama (Cover Depan)',
+      section: 'Halaman 1: Cover Depan',
+      description: 'Foto pasangan untuk diletakkan di dalam bingkai bunga lingkaran cover utama.',
+      type: 'image',
+    },
+    {
+      key: 'salamText',
+      label: 'Teks Salam & Pembuka',
+      section: 'Halaman 2: Profil Mempelai',
+      description: 'Teks mukadimah undangan di atas foto kedua mempelai.',
+      type: 'textarea',
+      defaultValue: 'Dengan memohon rahmat dan ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan putra-putri kami sebagai ungkapan rasa syukur atas telah dilangsungkannya akad nikah.',
+    },
+    {
+      key: 'groomFramePhoto',
+      label: 'Foto Mempelai Pria (Bingkai Frame 2)',
+      section: 'Halaman 2: Profil Mempelai',
+      description: 'Foto mempelai pria di dalam bingkai lengkung penari pria.',
+      type: 'image',
+    },
+    {
+      key: 'brideFramePhoto',
+      label: 'Foto Mempelai Wanita (Bingkai Frame 3)',
+      section: 'Halaman 2: Profil Mempelai',
+      description: 'Foto mempelai wanita di dalam bingkai lengkung penari wanita.',
+      type: 'image',
+    },
+  ],
   tags: ['traditional', 'batik', 'elegant'],
 };

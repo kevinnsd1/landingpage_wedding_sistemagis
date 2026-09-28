@@ -150,7 +150,7 @@ export const INITIAL_INVITATION: Invitation = {
         { id: 'img-3', url: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80', caption: 'Janji suci di hadapan alam' },
         { id: 'img-4', url: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80', caption: 'Tertawa bersama melangkah' },
         { id: 'img-5', url: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80', caption: 'Keindahan dalam kesederhanaan' },
-        { id: 'img-6', url: 'https://images.unsplash.com/photo-1519225429980-715cb0215aed?auto=format&fit=crop&w=800&q=80', caption: 'Dekorasi hangat dan intim' },
+        { id: 'img-6', url: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=800&q=80', caption: 'Dekorasi hangat dan intim' },
       ],
     },
     quote: {

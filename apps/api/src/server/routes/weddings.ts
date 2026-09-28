@@ -122,9 +122,52 @@ singleWedding.patch('/:weddingId', async (c) => {
 singleWedding.get('/:weddingId/invitation', async (c) => {
   const weddingId = parseInt(c.req.param('weddingId'), 10);
   const invList = await db.select().from(invitations).where(eq(invitations.weddingId, weddingId));
-  const inv = invList[0];
+  let inv = invList[0];
   if (!inv) {
-    return c.json({ error: 'Undangan belum dibuat' }, 404);
+    const [newInv] = await db.insert(invitations).values({
+      weddingId,
+      themeId: 'theme1',
+      status: 'draft',
+      config: {
+        themeId: 'theme1',
+        themeVersion: '1.0.0',
+        colors: {
+          primary: '#401017',
+          secondary: '#4A151B',
+          background: '#380E14',
+          accent: '#EAD4BE',
+        },
+        fonts: {
+          heading: 'Playfair Display',
+          couple: 'Great Vibes',
+          body: 'Inter',
+        },
+        sections: [
+          { type: 'cover', enabled: true, order: 1 },
+          { type: 'couple', enabled: true, order: 2 },
+          { type: 'story', enabled: true, order: 3 },
+          { type: 'event', enabled: true, order: 4 },
+          { type: 'countdown', enabled: true, order: 5 },
+          { type: 'gallery', enabled: true, order: 6 },
+          { type: 'gift', enabled: true, order: 7 },
+          { type: 'rsvp', enabled: true, order: 8 },
+          { type: 'guestbook', enabled: true, order: 9 },
+          { type: 'closing', enabled: true, order: 10 },
+        ],
+        music: {
+          enabled: true,
+          title: '',
+          artist: '',
+          url: '',
+        },
+        gallery: {
+          layout: 'masonry',
+          images: [],
+        },
+        themeData: {},
+      },
+    }).returning();
+    inv = newInv;
   }
   return c.json({
     id: String(inv.id),
@@ -160,12 +203,26 @@ singleWedding.patch('/:weddingId/invitation', async (c) => {
   if (body.status !== undefined) updateFields.status = body.status;
   if (body.themeId !== undefined && updateFields.themeId === undefined) updateFields.themeId = body.themeId;
 
-  const updated = await db.update(invitations)
-    .set(updateFields)
-    .where(eq(invitations.weddingId, weddingId))
-    .returning();
+  const existing = await db.select().from(invitations).where(eq(invitations.weddingId, weddingId));
+  let inv: any;
+  if (existing.length > 0) {
+    const updated = await db.update(invitations)
+      .set(updateFields)
+      .where(eq(invitations.weddingId, weddingId))
+      .returning();
+    inv = updated[0];
+  } else {
+    const created = await db.insert(invitations)
+      .values({
+        weddingId,
+        themeId: updateFields.themeId || 'theme1',
+        status: updateFields.status || 'draft',
+        config: updateFields.config || {},
+      })
+      .returning();
+    inv = created[0];
+  }
 
-  const inv = updated[0];
   return c.json({
     id: String(inv.id),
     weddingId: String(inv.weddingId),

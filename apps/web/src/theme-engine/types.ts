@@ -167,6 +167,7 @@ export type FieldType = 'text' | 'textarea' | 'image' | 'video' | 'select' | 'bo
 export interface CustomFieldDefinition {
   key: string;
   label: string;
+  section?: string;
   description?: string;
   type: FieldType;
   options?: { label: string; value: string }[];

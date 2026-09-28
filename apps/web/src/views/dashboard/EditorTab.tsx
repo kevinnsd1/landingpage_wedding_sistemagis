@@ -53,8 +53,16 @@ export function EditorTab({
 }: EditorTabProps) {
   const [config, setConfig] = useState(invitation.config);
   const [activeSubTab, setActiveSubTab] = useState<'theme' | 'colors' | 'sections' | 'music' | 'quote' | 'theme-settings'>('theme');
+  const [activeThemeStep, setActiveThemeStep] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [dbThemes, setDbThemes] = useState<any[]>([]);
+
+  // Sync state when real invitation arrives from backend API
+  useEffect(() => {
+    if (invitation?.config) {
+      setConfig(invitation.config);
+    }
+  }, [invitation]);
 
   // Responsive scale for phone preview
   const VIRTUAL_WIDTH = 390;
@@ -570,92 +578,238 @@ export function EditorTab({
           )}
 
           {/* Sub-tab 5: Theme Specific Settings */}
-          {activeSubTab === 'theme-settings' && activeTheme.customFields && (
-            <Card className="space-y-6">
-              <div>
-                <h3 className="text-sm font-semibold text-slate-900">Pengaturan Khusus Tema</h3>
-                <p className="text-xs text-neutral-500">
-                  Konfigurasi eksklusif yang hanya ada pada tema <strong>{activeTheme.name}</strong>.
-                </p>
-              </div>
+          {activeSubTab === 'theme-settings' && activeTheme.customFields && (() => {
+            const sections = Array.from(
+              new Set(activeTheme.customFields.map((f) => f.section || 'Pengaturan Umum'))
+            );
+            const validStep = activeThemeStep < sections.length ? activeThemeStep : 0;
+            const currentSection = sections[validStep];
+            const currentFields = activeTheme.customFields.filter(
+              (f) => (f.section || 'Pengaturan Umum') === currentSection
+            );
 
-              <div className="space-y-5">
-                {activeTheme.customFields.map((field) => {
-                  const currentValue = config.themeData?.[field.key] ?? field.defaultValue ?? '';
-                  
-                  return (
-                    <div key={field.key} className="space-y-1.5">
-                      {field.type === 'image' || field.type === 'video' ? (
-                        <MediaUploader
-                          label={field.label}
-                          description={field.description}
-                          value={currentValue}
-                          onChange={(url) => handleThemeDataChange(field.key, url)}
-                          accept={field.type === 'video' ? 'video/*' : 'image/*'}
-                        />
-                      ) : field.type === 'select' ? (
-                        <div className="space-y-1.5">
-                          <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">{field.label}</label>
-                          {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
-                          <Select
-                            value={currentValue}
-                            onValueChange={(val) => handleThemeDataChange(field.key, val)}
-                          >
-                            <SelectTrigger className="w-full bg-white border-neutral-200">
-                              <SelectValue placeholder="Pilih opsi..." />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {field.options?.map((opt) => (
-                                <SelectItem key={opt.value} value={opt.value}>
-                                  {opt.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      ) : field.type === 'textarea' ? (
-                        <Textarea
-                          label={field.label}
-                          helperText={field.description}
-                          rows={3}
-                          value={currentValue}
-                          onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
-                          className="resize-none"
-                        />
-                      ) : field.type === 'boolean' ? (
-                         <div className="flex items-center justify-between p-3 rounded-lg bg-[#FCFCFC] border border-neutral-100">
-                          <div>
-                            <span className="block text-sm font-medium text-slate-700">{field.label}</span>
-                            {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handleThemeDataChange(field.key, !currentValue)}
-                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${
-                              currentValue ? 'bg-slate-900' : 'bg-neutral-200'
-                            }`}
-                          >
-                            <span
-                              className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                                currentValue ? 'translate-x-4' : 'translate-x-1'
-                              }`}
+            return (
+              <Card className="space-y-5">
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Pengaturan Khusus Tema</h3>
+                  <p className="text-xs text-neutral-500">
+                    Konfigurasi eksklusif untuk tema <strong>{activeTheme.name}</strong> per tahapan halaman.
+                  </p>
+                </div>
+
+                {/* Stepper Tabs (Tahapan Halaman) */}
+                {sections.length > 1 && (
+                  <div className="flex items-center gap-1.5 p-1 bg-neutral-100/90 rounded-xl border border-neutral-200/60">
+                    {sections.map((secName, idx) => (
+                      <button
+                        key={secName}
+                        type="button"
+                        onClick={() => setActiveThemeStep(idx)}
+                        className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                          validStep === idx
+                            ? 'bg-white text-slate-900 shadow-xs border border-neutral-200/80 font-bold'
+                            : 'text-neutral-500 hover:text-slate-800'
+                        }`}
+                      >
+                        <span
+                          className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold transition-colors ${
+                            validStep === idx ? 'bg-slate-900 text-white' : 'bg-neutral-300 text-neutral-600'
+                          }`}
+                        >
+                          {idx + 1}
+                        </span>
+                        <span className="truncate">{secName.replace(/Halaman \d+:\s*/, '')}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Active Section Title */}
+                <div className="pt-1 pb-1 border-b border-neutral-100 flex items-center justify-between">
+                  <h4 className="text-xs font-bold tracking-wider uppercase text-slate-800 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-rose-500" />
+                    {currentSection}
+                  </h4>
+                  <span className="text-[11px] text-neutral-400 font-medium">
+                    {currentFields.length} pengaturan
+                  </span>
+                </div>
+
+                {/* Fields for Current Step */}
+                <div className="space-y-6">
+                  {currentFields.map((field) => {
+                    const currentValue = config.themeData?.[field.key] ?? field.defaultValue ?? '';
+                    
+                    return (
+                      <div key={field.key} className="space-y-3">
+                        {field.type === 'image' || field.type === 'video' ? (
+                          <div className="space-y-3">
+                            <MediaUploader
+                              label={field.label}
+                              description={field.description}
+                              value={currentValue}
+                              onChange={(url) => handleThemeDataChange(field.key, url)}
+                              accept={field.type === 'video' ? 'video/*' : 'image/*'}
                             />
-                          </button>
-                        </div>
-                      ) : (
-                        <Input
-                          label={field.label}
-                          value={currentValue}
-                          onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
-                          placeholder={field.description}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          )}
+                            {field.type === 'image' && config.gallery?.images && config.gallery.images.length > 0 && (
+                              <div className="pt-3 border-t border-neutral-100 space-y-2.5">
+                                <div className="flex items-center justify-between">
+                                  <p className="text-xs font-semibold text-neutral-800">
+                                    Pilih Cepat dari Galeri Foto:
+                                  </p>
+                                  {currentValue && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleThemeDataChange(field.key, '')}
+                                      className="text-[11px] text-neutral-500 hover:text-slate-900 underline transition-colors"
+                                    >
+                                      Reset ke Default
+                                    </button>
+                                  )}
+                                </div>
+                                <div className="grid grid-cols-4 gap-2">
+                                  {config.gallery.images.map((img, idx) => {
+                                    const isSelected = currentValue === img.url;
+                                    const isDefaultActive = !currentValue && idx === 0;
+
+                                    return (
+                                      <button
+                                        key={img.id || idx}
+                                        type="button"
+                                        title={img.caption || `Foto Galeri ${idx + 1}`}
+                                        onClick={() => handleThemeDataChange(field.key, img.url)}
+                                        className={`group relative aspect-square rounded-xl overflow-hidden border-2 transition-all cursor-pointer bg-neutral-100 ${
+                                          isSelected
+                                            ? 'border-slate-900 ring-2 ring-slate-900/20 scale-[0.97] shadow-sm'
+                                            : isDefaultActive
+                                            ? 'border-amber-400/80 hover:border-slate-900'
+                                            : 'border-transparent hover:border-neutral-300 opacity-80 hover:opacity-100'
+                                        }`}
+                                      >
+                                        <img
+                                          src={img.url}
+                                          alt={img.caption || `Gallery ${idx + 1}`}
+                                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                          onError={(e) => {
+                                            (e.target as HTMLImageElement).src =
+                                              'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80';
+                                          }}
+                                        />
+                                        {isSelected && (
+                                          <div className="absolute inset-0 bg-slate-900/50 flex flex-col items-center justify-center text-white">
+                                            <Check className="w-4 h-4 stroke-[3]" />
+                                            <span className="text-[9px] font-medium mt-0.5">Dipilih</span>
+                                          </div>
+                                        )}
+                                        {isDefaultActive && !isSelected && (
+                                          <div className="absolute top-1 right-1 px-1 py-0.5 rounded bg-amber-500 text-[8px] font-bold text-white shadow-xs leading-none">
+                                            Aktif
+                                          </div>
+                                        )}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : field.type === 'select' ? (
+                          <div className="space-y-1.5">
+                            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">{field.label}</label>
+                            {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
+                            <Select
+                              value={currentValue}
+                              onValueChange={(val) => handleThemeDataChange(field.key, val)}
+                            >
+                              <SelectTrigger className="w-full bg-white border-neutral-200">
+                                <SelectValue placeholder="Pilih opsi..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {field.options?.map((opt) => (
+                                  <SelectItem key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        ) : field.type === 'textarea' ? (
+                          <Textarea
+                            label={field.label}
+                            helperText={field.description}
+                            rows={4}
+                            value={currentValue}
+                            onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
+                            className="resize-none text-sm leading-relaxed"
+                          />
+                        ) : field.type === 'boolean' ? (
+                           <div className="flex items-center justify-between p-3 rounded-lg bg-[#FCFCFC] border border-neutral-100">
+                            <div>
+                              <span className="block text-sm font-medium text-slate-700">{field.label}</span>
+                              {field.description && <p className="text-xs text-neutral-500">{field.description}</p>}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleThemeDataChange(field.key, !currentValue)}
+                              className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${
+                                currentValue ? 'bg-slate-900' : 'bg-neutral-200'
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                                  currentValue ? 'translate-x-4' : 'translate-x-1'
+                                }`}
+                              />
+                            </button>
+                          </div>
+                        ) : (
+                          <Input
+                            label={field.label}
+                            value={currentValue}
+                            onChange={(e) => handleThemeDataChange(field.key, e.target.value)}
+                            placeholder={field.description}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Step Navigation Buttons (Prev / Next) */}
+                {sections.length > 1 && (
+                  <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
+                    <button
+                      type="button"
+                      disabled={validStep === 0}
+                      onClick={() => setActiveThemeStep((prev) => Math.max(0, prev - 1))}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                        validStep === 0
+                          ? 'border-neutral-200 text-neutral-300 cursor-not-allowed'
+                          : 'border-neutral-200 text-slate-700 hover:bg-neutral-50 cursor-pointer'
+                      }`}
+                    >
+                      ← Halaman Sebelumnya
+                    </button>
+                    <span className="text-xs text-neutral-400 font-medium">
+                      Halaman {validStep + 1} dari {sections.length}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={validStep === sections.length - 1}
+                      onClick={() => setActiveThemeStep((prev) => Math.min(sections.length - 1, prev + 1))}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                        validStep === sections.length - 1
+                          ? 'border-neutral-200 text-neutral-300 cursor-not-allowed'
+                          : 'bg-slate-900 text-white border-slate-900 hover:bg-slate-800 cursor-pointer shadow-xs'
+                      }`}
+                    >
+                      Halaman Selanjutnya →
+                    </button>
+                  </div>
+                )}
+              </Card>
+            );
+          })()}
         </div>
 
         {/* Right Preview Frame (7 cols) */}

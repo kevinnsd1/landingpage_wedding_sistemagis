@@ -117,6 +117,14 @@ export function InvitationView({
 
   return (
     <div className="relative w-full h-full min-h-full">
+      {invitation?.config?.music?.enabled && invitation.config.music.url && !isPreview && (
+        <MusicPlayer
+          url={invitation.config.music.url}
+          title={invitation.config.music.title || 'Lagu Pernikahan'}
+          artist={invitation.config.music.artist || 'KisahMagis'}
+          autoPlayTrigger={musicTrigger}
+        />
+      )}
       {/* Template Engine Dynamic Theme Renderer */}
       <ThemeRenderer {...themeProps} />
     </div>
