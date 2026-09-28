@@ -11,6 +11,7 @@ export interface InvitationViewProps {
   wedding: Wedding;
   invitation: Invitation;
   guestToken?: string;
+  themeId?: string;
   onBackToDashboard?: () => void;
   isPreview?: boolean;
 }
@@ -19,6 +20,7 @@ export function InvitationView({
   wedding: initialWedding,
   invitation: initialInvitation,
   guestToken,
+  themeId,
   onBackToDashboard,
   isPreview = false,
 }: InvitationViewProps) {
@@ -104,6 +106,7 @@ export function InvitationView({
     onSubmitRSVP: handleRSVPSubmit,
     onOpenInvitation: handleOpenInvitation,
     isPreview,
+    themeId,
   };
 
   return (

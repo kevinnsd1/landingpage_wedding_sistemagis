@@ -29,13 +29,17 @@ export interface ThemeFonts {
   body: string;
 }
 
-export type ThemeCategory =
-  | 'Romantic Classic'
-  | 'Modern Minimalist'
-  | 'Botanical Nature'
-  | 'Luxe Elegant'
-  | 'Cultural Traditional'
-  | 'Playful Festive';
+export const THEME_CATEGORIES = [
+  'Romantic Classic',
+  'Modern Minimalist',
+  'Botanical Nature',
+  'Luxe Elegant',
+  'Cultural Traditional',
+  'Traditional',
+  'Playful Festive',
+] as const;
+
+export type ThemeCategory = typeof THEME_CATEGORIES[number];
 
 // ---------------------------------------------------------------------------
 // CSS Token System — Full user-customizable CSS variables

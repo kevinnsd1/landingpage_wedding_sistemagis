@@ -142,7 +142,7 @@ export const galleryImageSchema = z.object({
 });
 
 export const invitationConfigSchema = z.object({
-  themeId: z.enum(['serenity', 'bloom', 'aurora']),
+  themeId: z.string(),
   themeVersion: z.string().default('1.0.0'),
   colors: themeColorsSchema,
   fonts: themeFontsSchema,
@@ -161,6 +161,7 @@ export const invitationConfigSchema = z.object({
     text: z.string(),
     source: z.string().optional(),
   }).optional(),
+  themeData: z.record(z.any()).optional(),
 });
 
 export type InvitationConfigInput = z.infer<typeof invitationConfigSchema>;

@@ -16,6 +16,7 @@ import { registerLazyTheme } from '@/theme-engine';
 import { serenityThemeMeta } from './serenity/theme';
 import { bloomThemeMeta } from './bloom/theme';
 import { auroraThemeMeta } from './aurora/theme';
+import { theme1ThemeMeta } from './theme1/theme';
 
 // Daftarkan semua tema ke registry engine secara lazy-loaded.
 // Ini memastikan komponen React tema hanya dimuat saat diakses (code-splitting),
@@ -28,6 +29,9 @@ registerLazyTheme(bloomThemeMeta, () =>
 );
 registerLazyTheme(auroraThemeMeta, () => 
   import('./aurora/AuroraTheme').then(m => ({ default: m.AuroraTheme }))
+);
+registerLazyTheme(theme1ThemeMeta, () => 
+  import('./theme1/Theme1').then(m => ({ default: m.Theme1 }))
 );
 
 // Re-export semua API engine dari satu titik (backwards compatibility)
