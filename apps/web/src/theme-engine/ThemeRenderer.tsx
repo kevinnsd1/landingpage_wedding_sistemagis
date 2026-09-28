@@ -137,7 +137,7 @@ export function ThemeRenderer(props: ThemeRendererProps) {
 
   return (
     <div
-      className="theme-container min-h-screen w-full relative"
+      className="theme-container w-full h-full min-h-full relative"
       style={themeStyle}
       data-theme={themeDef.id}
       data-theme-version={themeDef.version}

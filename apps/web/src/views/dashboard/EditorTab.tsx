@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Palette,
   Eye,
@@ -52,6 +52,28 @@ export function EditorTab({
   const [activeSubTab, setActiveSubTab] = useState<'theme' | 'colors' | 'sections' | 'music' | 'quote' | 'theme-settings'>('theme');
   const [isSaving, setIsSaving] = useState(false);
   const [dbThemes, setDbThemes] = useState<any[]>([]);
+
+  // Responsive scale for phone preview
+  const VIRTUAL_WIDTH = 390;
+  const VIRTUAL_HEIGHT = 844;
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [previewScale, setPreviewScale] = useState(300 / 390);
+
+  const updateScale = useCallback(() => {
+    if (frameRef.current) {
+      const padding = 20; // p-2.5 = 10px each side
+      const innerW = frameRef.current.clientWidth - padding;
+      const scale = innerW / VIRTUAL_WIDTH;
+      setPreviewScale(scale);
+    }
+  }, []);
+
+  useEffect(() => {
+    updateScale();
+    const ro = new ResizeObserver(updateScale);
+    if (frameRef.current) ro.observe(frameRef.current);
+    return () => ro.disconnect();
+  }, [updateScale]);
 
   useEffect(() => {
     api.getThemes().then(setDbThemes).catch(console.error);
@@ -645,18 +667,35 @@ export function EditorTab({
             </Badge>
           </div>
 
-          {/* Realistic Mobile Device Frame */}
-          <div className="relative w-full max-w-[420px] h-[780px] bg-neutral-900 rounded-[44px] p-3 shadow-2xl ring-1 ring-neutral-700/50">
+          {/* Realistic Mobile Device Frame — responsive via ResizeObserver */}
+          <div
+            ref={frameRef}
+            className="relative w-full max-w-[320px] bg-neutral-900 rounded-[36px] p-2.5 shadow-2xl ring-1 ring-neutral-700/50"
+            style={{ height: `${Math.round(VIRTUAL_HEIGHT * previewScale) + 20}px` }}
+          >
             {/* Camera notch */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-4 bg-black rounded-full z-30" />
+            <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-16 h-3 bg-black rounded-full z-30" />
 
-            {/* Screen inner wrapper */}
-            <div className="w-full h-full bg-white rounded-[36px] overflow-y-auto overflow-x-hidden relative">
-              <InvitationView
-                wedding={wedding}
-                invitation={currentInvitation}
-                isPreview={true}
-              />
+            {/* Screen inner wrapper — clips scaled content */}
+            <div className="w-full h-full bg-white rounded-[28px] overflow-hidden relative no-scrollbar">
+              {/* Scale container: renders at 390×844 then scaled to fit */}
+              <div
+                style={{
+                  width: `${VIRTUAL_WIDTH}px`,
+                  height: `${VIRTUAL_HEIGHT}px`,
+                  transform: `scale(${previewScale})`,
+                  transformOrigin: 'top left',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                }}
+              >
+                <InvitationView
+                  wedding={wedding}
+                  invitation={currentInvitation}
+                  isPreview={true}
+                />
+              </div>
             </div>
           </div>
         </div>

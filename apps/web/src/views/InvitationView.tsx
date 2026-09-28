@@ -110,28 +110,7 @@ export function InvitationView({
   };
 
   return (
-    <div className="relative">
-      {/* Floating Back to Dashboard Button when previewing from dashboard */}
-      {onBackToDashboard && (
-        <button
-          onClick={onBackToDashboard}
-          className="fixed top-4 left-4 z-50 flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 shadow-md text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-950 transition-all active:scale-95 group"
-        >
-          <ArrowLeft className="w-3.5 h-3.5 text-slate-500 group-hover:-translate-x-0.5 transition-transform" />
-          <span>Kembali ke Dashboard</span>
-        </button>
-      )}
-
-      {/* Floating Background Music Player */}
-      {invitation?.config?.music?.enabled && (
-        <MusicPlayer
-          url={invitation.config.music.url}
-          title={invitation.config.music.title}
-          artist={invitation.config.music.artist}
-          autoPlayTrigger={musicTrigger}
-        />
-      )}
-
+    <div className="relative w-full h-full min-h-full">
       {/* Template Engine Dynamic Theme Renderer */}
       <ThemeRenderer {...themeProps} />
     </div>
