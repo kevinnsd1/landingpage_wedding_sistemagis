@@ -28,6 +28,11 @@ app.get('/api/health', (c) => {
   return c.json({ status: 'ok' });
 });
 
+app.onError((err, c) => {
+  console.error('API Error:', err);
+  return c.json({ error: err.message || 'Internal Server Error' }, 500);
+});
+
 import guests from './routes/guests.js';
 import planner from './routes/planner.js';
 import budget from './routes/budget.js';

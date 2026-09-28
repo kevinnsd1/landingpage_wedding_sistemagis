@@ -27,10 +27,10 @@ export function Theme1({
   // Scale responsif untuk mode standalone (preview dihandle EditorTab)
   const [scale, setScale] = useState(1);
 
-  // Ambil nama pasangan dan tamu dari data wedding & guest
-  const groomName = wedding?.groomName?.split(' ')[0] || 'Mia';
-  const brideName = wedding?.brideName?.split(' ')[0] || 'Dimas';
-  const guestName = guest?.name || 'VISIDEA';
+  // Ambil data dinamis dari props (sesuai THEME_DEVELOPMENT.md & endpoint backend)
+  const groomName = wedding?.groomName || 'Mempelai Pria';
+  const brideName = wedding?.brideName || 'Mempelai Wanita';
+  const guestName = guest?.name || (isPreview ? 'Nama Tamu Undangan' : 'Tamu Undangan');
 
   useEffect(() => {
     if (isPreview) return;
@@ -117,64 +117,51 @@ export function Theme1({
 
         {/* Nama Pasangan Pengantin */}
         <div
-          className="absolute top-[48%] -translate-y-1/2 inset-x-0 flex flex-col items-center justify-center text-center z-20 pointer-events-none animate-fade-in leading-tight"
+          className="absolute top-[45.5%] -translate-y-1/2 inset-x-0 flex flex-col items-center justify-center text-center z-20 pointer-events-none animate-fade-in leading-tight"
           style={{ animationDelay: "0.9s" }}
         >
           <h2
-            className="text-4xl text-white drop-shadow-lg tracking-wide"
-            style={{ fontFamily: "'Alex Brush', 'Great Vibes', cursive" }}
+            className="text-[58px] text-white drop-shadow-xl tracking-wide font-normal leading-none"
+            style={{ fontFamily: "'Pinyon Script', cursive" }}
           >
             {groomName}
           </h2>
           <span
-            className="text-xl text-[#F0C98A] font-serif italic my-0.5"
+            className="text-3xl text-[#F0C98A] font-serif italic my-0.5 drop-shadow-md leading-none"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             &
           </span>
           <h2
-            className="text-4xl text-white drop-shadow-lg tracking-wide"
-            style={{ fontFamily: "'Alex Brush', 'Great Vibes', cursive" }}
+            className="text-[58px] text-white drop-shadow-xl tracking-wide font-normal leading-none"
+            style={{ fontFamily: "'Pinyon Script', cursive" }}
           >
             {brideName}
           </h2>
         </div>
 
-        {/* Kotak Tamu Undangan */}
+        {/* Kotak Tamu Undangan (Kepada Yth) */}
         <div
-          className="absolute top-[64%] -translate-y-1/2 left-1/2 -translate-x-1/2 w-[240px] rounded-2xl border border-[#F0C98A]/35 bg-black/25 backdrop-blur-[2px] px-4 py-2.5 flex flex-col items-center justify-center text-center z-20 pointer-events-none animate-fade-in shadow-xl"
+          className="absolute top-[67%] -translate-y-1/2 inset-x-0 flex justify-center z-20 pointer-events-none animate-fade-in"
           style={{ animationDelay: "1.1s" }}
         >
-          <p
-            className="text-xs italic text-white/90 font-serif tracking-wide"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Kepada Yth. Bapak/Ibu
-          </p>
-          <p
-            className="text-base font-bold tracking-[0.2em] uppercase text-[#F5E6D3] my-1 drop-shadow"
-            style={{ fontFamily: "'Cinzel', 'Playfair Display', serif" }}
-          >
-            {guestName}
-          </p>
-          <p className="text-[8px] text-white/70 italic tracking-tight leading-tight">
-            *Mohon Maaf bila ada kesalahan penulisan nama atau gelar
-          </p>
-        </div>
-
-        {/* Tombol Masuk / Buka Undangan */}
-        <div
-          className="absolute top-[75%] -translate-y-1/2 left-1/2 -translate-x-1/2 z-30 animate-fade-in"
-          style={{ animationDelay: "1.3s" }}
-        >
-          <button
-            type="button"
-            onClick={onOpenInvitation}
-            className="px-8 py-2 rounded-full bg-[#DFBE99] hover:bg-[#E8CEAD] text-[#3D1016] font-serif font-bold text-xs tracking-widest uppercase shadow-2xl transition-all active:scale-95 cursor-pointer flex items-center justify-center border border-[#F6DFCA]"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Masuk
-          </button>
+          <div className="w-[275px] rounded-2xl border border-[#F0C98A]/40 bg-black/30 backdrop-blur-[2px] px-5 py-3.5 flex flex-col items-center justify-center text-center shadow-2xl">
+            <p
+              className="text-sm italic text-white/95 font-serif tracking-wider"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              Kepada Yth. Bapak/Ibu
+            </p>
+            <p
+              className="text-lg font-bold tracking-[0.2em] uppercase text-[#F5E6D3] my-1.5 drop-shadow-md"
+              style={{ fontFamily: "'Cinzel', 'Playfair Display', serif" }}
+            >
+              {guestName}
+            </p>
+            <p className="text-[9.5px] text-white/75 italic tracking-tight leading-snug">
+              *Mohon Maaf bila ada kesalahan penulisan nama atau gelar
+            </p>
+          </div>
         </div>
 
         {/* Penari 1 (Kiri - Ditarik ke atas & Ditimpa Batik 2) */}
@@ -213,19 +200,19 @@ export function Theme1({
           />
         </div>
 
-        {/* Bunga 3 (Bunga Tengah Bawah di belakang Tombol Masuk / di atas Batik) */}
+        {/* Bunga 3 (Di tengah-tengah antara penari & ditimpa Batik 2) */}
         <div
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-44 z-[15] pointer-events-none select-none animate-fade-in"
+          className="absolute bottom-2 inset-x-0 flex justify-center z-[8] pointer-events-none select-none animate-fade-in"
           style={{ animationDelay: "1.2s" }}
         >
           <img
             src={bunga3}
             alt="Bunga Bawah"
-            className="w-full object-contain drop-shadow-xl"
+            className="w-48 object-contain drop-shadow-xl translate-x-2"
           />
         </div>
 
-        {/* Batik 2 (ABSOLUTE - tepi BAWAH, menimpa kaki penari) */}
+        {/* Batik 2 (ABSOLUTE - tepi BAWAH, menimpa kaki penari & bunga 3) */}
         <div className="absolute bottom-0 left-0 right-0 z-10 leading-none pointer-events-none">
           <img
             src={batik2}
