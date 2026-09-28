@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Wedding } from '@/types/wedding';
 import { Invitation, ThemeId, SectionType, ThemeColors } from '@/types/invitation';
+import { Guest } from '@/types/guest';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -36,6 +37,7 @@ import { api } from '@/lib/api';
 export interface EditorTabProps {
   wedding: Wedding;
   invitation: Invitation;
+  guests?: Guest[];
   onSaveInvitation: (invitation: Invitation) => void;
   onViewInvitation: () => void;
   onShowToast: (message: string, type?: 'success' | 'error' | 'info') => void;
@@ -44,6 +46,7 @@ export interface EditorTabProps {
 export function EditorTab({
   wedding,
   invitation,
+  guests,
   onSaveInvitation,
   onViewInvitation,
   onShowToast,
@@ -693,6 +696,7 @@ export function EditorTab({
                 <InvitationView
                   wedding={wedding}
                   invitation={currentInvitation}
+                  guest={guests && guests.length > 0 ? guests[0] : undefined}
                   isPreview={true}
                 />
               </div>

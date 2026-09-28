@@ -10,6 +10,7 @@ import { ArrowLeft } from 'lucide-react';
 export interface InvitationViewProps {
   wedding: Wedding;
   invitation: Invitation;
+  guest?: Guest;
   guestToken?: string;
   themeId?: string;
   onBackToDashboard?: () => void;
@@ -19,6 +20,7 @@ export interface InvitationViewProps {
 export function InvitationView({
   wedding: initialWedding,
   invitation: initialInvitation,
+  guest: initialGuest,
   guestToken,
   themeId,
   onBackToDashboard,
@@ -26,7 +28,7 @@ export function InvitationView({
 }: InvitationViewProps) {
   const [wedding, setWedding] = useState<Wedding>(initialWedding);
   const [invitation, setInvitation] = useState<Invitation>(initialInvitation);
-  const [guest, setGuest] = useState<Guest | undefined>(undefined);
+  const [guest, setGuest] = useState<Guest | undefined>(initialGuest);
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
   const [guestbook, setGuestbook] = useState<GuestbookEntry[]>([]);
   const [musicTrigger, setMusicTrigger] = useState(false);
@@ -34,6 +36,10 @@ export function InvitationView({
   useEffect(() => {
     setWedding(initialWedding);
   }, [initialWedding]);
+
+  useEffect(() => {
+    setGuest(initialGuest);
+  }, [initialGuest]);
 
   useEffect(() => {
     setInvitation(initialInvitation);

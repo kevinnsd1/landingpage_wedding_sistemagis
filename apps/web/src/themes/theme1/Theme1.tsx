@@ -30,7 +30,7 @@ export function Theme1({
   // Ambil data dinamis dari props (sesuai THEME_DEVELOPMENT.md & endpoint backend)
   const groomName = wedding?.groomName || 'Mempelai Pria';
   const brideName = wedding?.brideName || 'Mempelai Wanita';
-  const guestName = guest?.name || (isPreview ? 'Nama Tamu Undangan' : 'Tamu Undangan');
+  const guestName = guest?.name || 'Tamu Undangan';
 
   useEffect(() => {
     if (isPreview) return;

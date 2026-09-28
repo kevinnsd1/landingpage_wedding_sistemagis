@@ -163,6 +163,7 @@ function DashboardContent({
         <EditorTab
           wedding={wedding}
           invitation={invitation}
+          guests={guests}
           onSaveInvitation={onUpdateInvitation}
           onViewInvitation={() => navigate('/invitation')}
           onShowToast={showToast}
